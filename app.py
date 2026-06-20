@@ -1,36 +1,66 @@
 import os
 import json
+import re
 import logging
 import datetime
-from flask import Flask, request, jsonify
+from pathlib import Path
+
 import requests
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 
-from diagnostics_engine import diagnose_user_text, format_user_response
-from online_sources.source_manager import get_vehicle_from_vin
 from session_store import (
     create_or_update_session,
     add_user_action,
     get_session_summary,
-    clear_session
+    clear_session,
 )
 
-load_dotenv()
+try:
+    from online_sources.source_manager import get_vehicle_from_vin
+except Exception:
+    get_vehicle_from_vin = None
 
+# ==========================================================
+# AutoElektrikas AI - Telegram Webhook
+# V4 app.py
+# ==========================================================
+
+load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("autoelektrikas_ai")
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "")
-
+BASE_DIR = Path(__file__).parent
+DATA_DIR = BASE_DIR / "data"
 app = Flask(__name__)
+
+
+def load_json(name: str, default):
+    path = DATA_DIR / name
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+FAULTS = load_json("top_100_faults_lt.json", [])
+ALIASES = load_json("symptom_aliases_lt.json", {})
+OBD = load_json("obd_codes_starter_lt.json", {})
+BRANDS = load_json("brand_specific_lt.json", {})
+FAULT_BY_ID = {f.get("id"): f for f in FAULTS if f.get("id")}
+
+
+def esc(value):
+    return str(value or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def telegram_api(method: str, payload: dict):
     if not BOT_TOKEN:
         logger.warning("TELEGRAM_BOT_TOKEN is missing")
         return None
-
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
     try:
         r = requests.post(url, json=payload, timeout=20)
@@ -57,36 +87,353 @@ def send_message(chat_id, text, reply_markup=None):
 def main_menu():
     return {
         "inline_keyboard": [
-            [{"text": "🚗 Nauja diagnostika", "callback_data": "new_diag"}],
-            [{"text": "✅ Atlikau patikrinimą", "callback_data": "add_action"}],
-            [{"text": "⏭️ Praleisti žingsnį", "callback_data": "skip_step"}],
-            [{"text": "📋 Diagnostikos santrauka", "callback_data": "summary"}],
+            [{"text": "🔍 Pradėti diagnostiką", "callback_data": "new_diag"}],
+            [{"text": "🔧 Atlikti patikrą", "callback_data": "add_action"}],
+            [{"text": "⏭️ Tęsti diagnostiką", "callback_data": "continue_diag"}],
+            [{"text": "📄 Diagnostikos santrauka", "callback_data": "summary"}],
             [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
         ]
     }
 
 
-START_TEXT = """🚗 <b>AutoElektrikas AI V2</b>
+START_TEXT = """🚗 <b>Sveiki atvykę į AutoElektrikas AI</b>
 
-Parašykite automobilio problemą paprastai.
+Surašykite automobilio duomenis ir gedimą.
 
 Pavyzdžiai:
 • BMW F30 po nakties neužsiveda
-• VW Golf dega ABS
-• Audi A4 neveikia centrinis
+• VW Golf dega ABS lemputė
+• Audi A4 neveikia centrinis užraktas
 • P0301
 
-Sistema nerodo kainų. Rodomas tik apytikslis diagnostikos ir remonto laikas.
-"""
+Taip pat galite įrašyti VIN numerį."""
+
+
+def normalize(text: str) -> str:
+    return (text or "").lower().strip()
+
+
+def detect_brand(text: str):
+    t = normalize(text)
+    for brand in BRANDS:
+        if brand.lower() in t:
+            return brand
+    aliases = {
+        "vw": "Volkswagen", "mb": "Mercedes-Benz", "mersedes": "Mercedes-Benz", "mersas": "Mercedes-Benz",
+        "bmw": "BMW", "audi": "Audi", "volvo": "Volvo", "toyota": "Toyota", "ford": "Ford",
+        "opel": "Opel", "peugeot": "Peugeot", "renault": "Renault",
+    }
+    for key, brand in aliases.items():
+        if re.search(rf"\b{re.escape(key)}\b", t):
+            return brand
+    return None
+
+
+def detect_model(text: str):
+    t = normalize(text)
+    models = ["i3", "i4", "i5", "i7", "ix", "f30", "f10", "e90", "e60", "g30", "golf", "passat", "tiguan", "touran", "a3", "a4", "a6", "q5", "q7", "corolla", "avensis", "yaris"]
+    for model in models:
+        if re.search(rf"\b{re.escape(model)}\b", t):
+            return model.upper() if model.startswith(("f", "e", "g", "q")) else model
+    return None
+
+
+def detect_year(text: str):
+    m = re.search(r"\b(19[8-9]\d|20[0-3]\d)\b", text)
+    return m.group(1) if m else None
+
+
+def detect_obd(text: str):
+    m = re.search(r"\b([PBUC][0-9A-F]{4})\b", text.upper())
+    return m.group(1) if m else None
+
+
+def is_ev_vehicle(text: str, brand=None, model=None):
+    t = normalize(text)
+    ev_terms = ["elektromobil", "electric", "ev", "bev", "hybrid", "hibrid", "bmw i3", "bmw i4", "bmw i5", "bmw i7", "bmw ix"]
+    if any(x in t for x in ev_terms):
+        return True
+    return brand == "BMW" and model and model.lower() in ["i3", "i4", "i5", "i7", "ix"]
+
+
+def extract_voltage(text: str):
+    m = re.search(r"(\d{1,2}(?:[.,]\d{1,2})?)\s*(v|volt|voltų)?\b", text.lower())
+    if not m:
+        return None
+    try:
+        value = float(m.group(1).replace(",", "."))
+    except ValueError:
+        return None
+    if value > 20:
+        return None
+    return value
+
+
+def voltage_context(text: str):
+    t = normalize(text)
+    if any(x in t for x in ["dc/dc", "dcdc", "dc dc", "keitiklis"]):
+        return "dcdc"
+    if any(x in t for x in ["generator", "krov", "krauna", "įkrov", "ikrov"]):
+        return "charging"
+    if any(x in t for x in ["akum", "bater", "12v"]):
+        return "battery"
+    return "battery"
+
+
+def evaluate_battery_voltage(value: float):
+    if value >= 12.6:
+        return ("🟢", "Akumuliatoriaus įtampa normali", "Pagal pateiktą matavimą 12 V akumuliatorius nėra pagrindinė įtariama priežastis.", "🟢 Aukštas atitikimas", "🟢 Galima naudoti, jei nėra kitų įspėjimų skydelyje.")
+    if 12.4 <= value < 12.6:
+        return ("🟡", "Akumuliatorius dalinai išsikrovęs", "Įtampa nėra kritinė, bet rekomenduojama patikrinti įkrovimą ir kontaktus.", "🟡 Vidutinis atitikimas", "🟡 Galima naudoti ribotai.")
+    if 12.2 <= value < 12.4:
+        return ("🟠", "Akumuliatorius silpnas", "Įtampa žema. Gali būti sunkus užvedimas arba elektronikos klaidos.", "🟢 Aukštas atitikimas", "🟡 Galima naudoti ribotai, bet gali neužsivesti po stovėjimo.")
+    if 11.8 < value < 12.2:
+        return ("🔴", "Akumuliatorius labai išsikrovęs", "Įtampa per maža. Reikalingas įkrovimas ir papildomas patikrinimas.", "🟢 Aukštas atitikimas", "🔴 Nerekomenduojama naudoti, kol nepatikrinta 12 V sistema.")
+    return ("🔴", "Kritinė akumuliatoriaus būklė", "Įtampa kritiškai maža. Gali neveikti automobilio elektronika.", "🟢 Aukštas atitikimas", "🔴 Nerekomenduojama naudoti.")
+
+
+def evaluate_charging_voltage(value: float, ev: bool):
+    name = "DC/DC keitiklio krovimas" if ev else "Įkrovimo sistemos įtampa"
+    if 13.8 <= value <= 14.8:
+        return name, "🟢", "Krovimas leistinose ribose", "Pagal pateiktą matavimą krovimas yra normaliose ribose.", "🟢 Galima naudoti, jei nėra kitų gedimo požymių."
+    if 13.2 <= value < 13.8:
+        return name, "🟠", "Krovimas per mažas", "Įtampa žemesnė nei įprasta. Reikalingas papildomas patikrinimas su apkrova.", "🟡 Galima naudoti ribotai."
+    if value < 13.2:
+        return name, "🔴", "Krovimas per mažas", "Įtampa per maža. 12 V akumuliatorius gali būti nepakankamai kraunamas.", "🔴 Nerekomenduojama naudoti, kol nepatikrinta 12 V sistema."
+    return name, "🔴", "Krovimas per didelis", "Per didelė įtampa gali pažeisti 12 V elektroniką.", "🔴 Nerekomenduojama naudoti."
+
+
+def format_measurement_response(text, brand, model, year, ev):
+    value = extract_voltage(text)
+    if value is None:
+        return None
+    ctx = voltage_context(text)
+    car_line = " ".join([x for x in [brand, model, year] if x]) or "Nenurodyta"
+
+    if ctx == "battery":
+        icon, title, detail, match, drive = evaluate_battery_voltage(value)
+        checks = [
+            "Patikrinti, ar įsijungia READY režimas" if ev else "Patikrinti įkrovimo sistemos veikimą",
+            "Patikrinti DC/DC keitiklio 12 V krovimą" if ev else "Patikrinti akumuliatoriaus gnybtus ir masę",
+            "Patikrinti 12 V akumuliatoriaus gnybtus ir masę" if ev else "Patikrinti, ar problema atsiranda po ilgesnio stovėjimo",
+            "Patikrinti, ar skydelyje nėra EV sistemos įspėjimų" if ev else "Patikrinti srovės nuotėkį stovint",
+        ]
+        checks_text = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(checks)])
+        return f"""📌 <b>Patikrinimo rezultatas</b>
+
+🚗 Automobilis:
+{esc(car_line)}
+
+Patikrinta:
+12 V akumuliatorius
+
+Rezultatas:
+<b>{value:.1f} V</b>
+
+Vertinimas:
+{icon} {esc(title)}
+
+Išvada:
+{esc(detail)}
+
+Atitikimas:
+{esc(match)}
+
+🔧 Ką tikrinti toliau:
+{checks_text}
+
+🚦 Ar galima važiuoti?
+{esc(drive)}
+
+⏱ Diagnostikos laikas:
+15–45 min.
+
+🛠 Remonto laikas:
+30 min. – 3 val."""
+
+    name, icon, title, detail, drive = evaluate_charging_voltage(value, ev)
+    checks = [
+        "Patikrinti READY režimą" if ev else "Patikrinti generatoriaus diržą",
+        "Pamatuoti 12 V įtampą READY režime" if ev else "Pamatuoti įtampą su elektros apkrova",
+        "Patikrinti 12 V akumuliatoriaus gnybtus ir masę" if ev else "Patikrinti gnybtus ir masės jungtis",
+    ]
+    checks_text = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(checks)])
+    return f"""📌 <b>Patikrinimo rezultatas</b>
+
+🚗 Automobilis:
+{esc(car_line)}
+
+Patikrinta:
+{esc(name)}
+
+Rezultatas:
+<b>{value:.1f} V</b>
+
+Vertinimas:
+{icon} {esc(title)}
+
+Išvada:
+{esc(detail)}
+
+Atitikimas:
+🟡 Vidutinis atitikimas
+
+🔧 Ką tikrinti toliau:
+{checks_text}
+
+🚦 Ar galima važiuoti?
+{esc(drive)}
+
+⏱ Diagnostikos laikas:
+15–45 min.
+
+🛠 Remonto laikas:
+30 min. – 3 val."""
+
+
+def score_fault(text, fault):
+    t = normalize(text)
+    score = 0
+    for w in normalize(fault.get("title", "")).replace("/", " ").split():
+        if len(w) > 3 and w in t:
+            score += 3
+    for cause in fault.get("common_causes", []):
+        for w in normalize(cause).split():
+            if len(w) > 5 and w in t:
+                score += 1
+    return score
+
+
+def find_fault_from_text(text):
+    t = normalize(text)
+    for alias, ids in ALIASES.items():
+        if alias in t and ids:
+            return FAULT_BY_ID.get(ids[0])
+    scored = sorted([(score_fault(text, f), f) for f in FAULTS], key=lambda x: x[0], reverse=True)
+    if scored and scored[0][0] > 0:
+        return scored[0][1]
+    return None
+
+
+def format_obd_response(code, brand, model, year):
+    car_line = " ".join([x for x in [brand, model, year] if x]) or "Nenurodyta"
+    if code in OBD:
+        obd = OBD[code]
+        checks_text = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(obd.get("first_checks", [])[:3])])
+        return f"""⚡ <b>OBD kodas: {esc(code)}</b>
+
+🚗 Automobilis:
+{esc(car_line)}
+
+Ką rodo kodas:
+{esc(obd.get('meaning', 'Kodo aprašymas nerastas.'))}
+
+Svarbu:
+Klaidos kodas nėra galutinė diagnozė.
+
+Atitikimas:
+🟡 Vidutinis atitikimas
+
+🔧 Ką tikrinti pirmiausia:
+{checks_text}
+
+🚦 Ar galima važiuoti?
+{esc(obd.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}
+
+⏱ Diagnostikos laikas:
+{esc(obd.get('diagnostic_time', '30–90 min.'))}"""
+    return f"""⚡ <b>OBD kodas: {esc(code)}</b>
+
+Šio kodo dar nėra vietinėje bazėje.
+
+Ką daryti dabar:
+1. Parašykite automobilio markę, modelį ir metus.
+2. Parašykite pagrindinį simptomą.
+3. Jei yra daugiau klaidų kodų, įrašykite juos kartu.
+
+Būsena:
+🟡 Reikalingi papildomi duomenys."""
+
+
+def format_fault_response(text, brand, model, year, ev):
+    fault = find_fault_from_text(text)
+    car_line = " ".join([x for x in [brand, model, year] if x]) or "Nenurodyta"
+    if not fault:
+        return f"""📌 <b>Problema užregistruota</b>
+
+🚗 Automobilis:
+{esc(car_line)}
+
+Ką daryti dabar:
+1. Parašykite, kas tiksliai neveikia.
+2. Jei yra klaidos kodas, įrašykite jį.
+3. Jei atlikote matavimą, parašykite rezultatą, pvz. 12.4 V.
+
+Atitikimas:
+⚪ Žemas atitikimas
+
+Būsena:
+🟡 Reikalinga papildoma informacija."""
+
+    checks = fault.get("first_checks", [])[:3]
+    causes = fault.get("common_causes", [])[:4]
+    if ev:
+        def ev_replace(s):
+            return (s.replace("generatoriaus", "DC/DC keitiklio")
+                     .replace("Generatoriaus", "DC/DC keitiklio")
+                     .replace("generatorių", "DC/DC keitiklį")
+                     .replace("generatorius", "DC/DC keitiklis")
+                     .replace("įkrovimo sistemos", "12 V sistemos"))
+        checks = [ev_replace(x) for x in checks]
+        causes = [ev_replace(x) for x in causes]
+
+    checks_text = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(checks)])
+    causes_text = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(causes)])
+
+    return f"""📌 <b>Nustatyta problema</b>
+
+🚗 Automobilis:
+{esc(car_line)}
+
+Problema:
+{esc(fault.get('title', 'Problema'))}
+
+🎯 Galimos priežastys:
+{causes_text}
+
+Atitikimas:
+🟡 Vidutinis atitikimas
+
+🔧 Ką tikrinti pirmiausia:
+{checks_text}
+
+🚦 Ar galima važiuoti?
+{esc(fault.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}
+
+⏱ Diagnostikos laikas:
+{esc(fault.get('diagnostic_time', '15–60 min.'))}
+
+🛠 Remonto laikas:
+{esc(fault.get('repair_time', '30 min. – 3 val.'))}"""
+
+
+def diagnose_text(text):
+    brand = detect_brand(text)
+    model = detect_model(text)
+    year = detect_year(text)
+    ev = is_ev_vehicle(text, brand, model)
+    obd = detect_obd(text)
+    if obd:
+        return format_obd_response(obd, brand, model, year)
+    measurement = format_measurement_response(text, brand, model, year, ev)
+    if measurement:
+        return measurement
+    return format_fault_response(text, brand, model, year, ev)
 
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({
-        "status": "ok",
-        "service": "AutoElektrikas AI V2",
-        "time": datetime.datetime.utcnow().isoformat()
-    })
+    return jsonify({"status": "ok", "service": "AutoElektrikas AI V4", "time": datetime.datetime.now(datetime.UTC).isoformat()})
 
 
 @app.route("/telegram-webhook", methods=["POST"])
@@ -100,19 +447,19 @@ def telegram_webhook():
 
         if data == "new_diag":
             clear_session(chat_id)
-            send_message(chat_id, "🚗 Nauja diagnostika pradėta.\n\nParašykite problemą vienu sakiniu.")
+            send_message(chat_id, "🔍 Diagnostika pradėta.\n\nSurašykite automobilio duomenis ir gedimą.", main_menu())
         elif data == "add_action":
-            send_message(chat_id, "Parašykite, ką patikrinote ir rezultatą.\n\nPvz.: Patikrinau akumuliatorių – 12.4 V")
-        elif data == "skip_step":
-            add_user_action(chat_id, "Vartotojas praleido siūlytą žingsnį.")
-            send_message(chat_id, "Žingsnis praleistas. Galite parašyti, kurią kryptį norite tikrinti toliau.")
+            send_message(chat_id, "Parašykite, ką patikrinote ir rezultatą.\n\nPavyzdžiai:\n• Akumuliatorius 12.7 V\n• DC/DC krovimas 13.9 V\n• Starteris suka\n• P0301", main_menu())
+        elif data == "continue_diag":
+            add_user_action(chat_id, "Vartotojas pasirinko tęsti diagnostiką.")
+            send_message(chat_id, "Tęsiame diagnostiką.\n\nKą patikrinote arba pastebėjote toliau?\n\nPavyzdžiai:\n• Akumuliatorius 12.7 V\n• DC/DC krovimas 13.9 V\n• Starteris suka\n• Dega ABS lemputė", main_menu())
         elif data == "summary":
             send_message(chat_id, get_session_summary(chat_id), main_menu())
         elif data == "clear":
             clear_session(chat_id)
             send_message(chat_id, "Diagnostikos byla išvalyta. Galite pradėti iš naujo.", main_menu())
         else:
-            send_message(chat_id, "Pasirinkimas neatpažintas.")
+            send_message(chat_id, "Pasirinkimas neatpažintas.", main_menu())
         return jsonify({"ok": True})
 
     message = update.get("message", {})
@@ -123,50 +470,52 @@ def telegram_webhook():
     if not chat_id:
         return jsonify({"ok": True})
 
-    if text in ["/start", "start", "Start"]:
+    if text.lower() in ["/start", "start"]:
         send_message(chat_id, START_TEXT, main_menu())
         return jsonify({"ok": True})
 
     if not text:
-        send_message(chat_id, "Parašykite problemą tekstu arba įveskite OBD kodą.", main_menu())
+        send_message(chat_id, "Surašykite automobilio duomenis ir gedimą.", main_menu())
         return jsonify({"ok": True})
 
     clean_text = text.replace(" ", "").strip()
-    if len(clean_text) == 17 and clean_text.isalnum():
+    if len(clean_text) == 17 and clean_text.isalnum() and get_vehicle_from_vin:
         vin_result = get_vehicle_from_vin(clean_text)
         if vin_result.get("ok"):
             vin_msg = f"""🚗 <b>VIN dekodavimas</b>
 
 Šaltinis:
-{vin_result.get('source')}
+{esc(vin_result.get('source'))}
 
 Markė:
-{vin_result.get('make')}
+{esc(vin_result.get('make'))}
 
 Modelis:
-{vin_result.get('model')}
+{esc(vin_result.get('model'))}
 
 Metai:
-{vin_result.get('model_year')}
+{esc(vin_result.get('model_year'))}
 
 Kėbulas:
-{vin_result.get('body_class') or 'Nenurodyta'}
+{esc(vin_result.get('body_class') or 'Nenurodyta')}
 
 Variklis:
-{vin_result.get('engine_model') or 'Nenurodyta'}
+{esc(vin_result.get('engine_model') or 'Nenurodyta')}
 
 Kuro tipas:
-{vin_result.get('fuel_type') or 'Nenurodyta'}
+{esc(vin_result.get('fuel_type') or 'Nenurodyta')}
 
-Toliau parašykite problemą."""
+Toliau parašykite gedimą."""
             send_message(chat_id, vin_msg, main_menu())
             return jsonify({"ok": True})
 
-    result = diagnose_user_text(text)
-    create_or_update_session(chat_id, text, result)
-    response = format_user_response(result)
-    send_message(chat_id, response, main_menu())
+    response = diagnose_text(text)
+    try:
+        create_or_update_session(chat_id, text, {"status": "🟡 Reikalingas papildomas patikrinimas", "brand": detect_brand(text), "fault": None})
+    except Exception:
+        logger.exception("Session update failed")
 
+    send_message(chat_id, response, main_menu())
     return jsonify({"ok": True})
 
 
