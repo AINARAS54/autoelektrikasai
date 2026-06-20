@@ -1,0 +1,106 @@
+{
+  "akumas nusėda": [
+    "F001",
+    "F009",
+    "F010",
+    "F011"
+  ],
+  "išsikrauna akumuliatorius": [
+    "F001",
+    "F009",
+    "F014",
+    "F015"
+  ],
+  "po nakties neužsiveda": [
+    "F001",
+    "F010",
+    "F016"
+  ],
+  "starteris nesuka": [
+    "F003",
+    "F016",
+    "F021",
+    "F029"
+  ],
+  "tik spragteli": [
+    "F004",
+    "F028"
+  ],
+  "generatorius nekrauna": [
+    "F005",
+    "F007",
+    "F013"
+  ],
+  "dega akumuliatoriaus lemputė": [
+    "F007",
+    "F005"
+  ],
+  "start stop neveikia": [
+    "F008",
+    "F015"
+  ],
+  "check engine": [
+    "F031",
+    "F032",
+    "F033"
+  ],
+  "trūkčioja": [
+    "F034",
+    "F033",
+    "F044",
+    "F045"
+  ],
+  "netraukia": [
+    "F035",
+    "F041",
+    "F042"
+  ],
+  "neveikia šviesos": [
+    "F046",
+    "F047",
+    "F048",
+    "F049"
+  ],
+  "neveikia centrinis": [
+    "F056",
+    "F066",
+    "F070"
+  ],
+  "neveikia langas": [
+    "F058",
+    "F059"
+  ],
+  "nešaldo kondicionierius": [
+    "F071",
+    "F072",
+    "F079"
+  ],
+  "dega abs": [
+    "F081",
+    "F083",
+    "F084"
+  ],
+  "dega esp": [
+    "F082",
+    "F081",
+    "F090"
+  ],
+  "dega airbag": [
+    "F088",
+    "F089"
+  ],
+  "nėra ryšio su diagnostika": [
+    "F091",
+    "F094",
+    "F095"
+  ],
+  "can klaida": [
+    "F095",
+    "F097"
+  ],
+  "po akumuliatoriaus keitimo klaidos": [
+    "F098",
+    "F015",
+    "F008"
+  ]
+}

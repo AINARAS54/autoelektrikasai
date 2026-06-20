@@ -1,0 +1,132 @@
+{
+  "P0300": {
+    "meaning": "Atsitiktiniai / kelių cilindrų uždegimo praleidimai",
+    "linked_faults": [
+      "F033",
+      "F032"
+    ],
+    "first_checks": [
+      "Patikrinti kada atsiranda trūkčiojimas",
+      "Patikrinti uždegimo sistemą",
+      "Patikrinti kuro tiekimą"
+    ],
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min."
+  },
+  "P0301": {
+    "meaning": "1 cilindro uždegimo praleidimas",
+    "linked_faults": [
+      "F033"
+    ],
+    "first_checks": [
+      "Patikrinti 1 cilindro žvakę ir ritę",
+      "Patikrinti, ar klaida persikelia po testinio sukeičiamo patikrinimo",
+      "Patikrinti purkštuką ir kompresiją"
+    ],
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min."
+  },
+  "P0171": {
+    "meaning": "Per liesas mišinys",
+    "linked_faults": [
+      "F032",
+      "F034",
+      "F036"
+    ],
+    "first_checks": [
+      "Patikrinti oro nuotėkį",
+      "Patikrinti kuro slėgį",
+      "Patikrinti MAF/MAP duomenis"
+    ],
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min."
+  },
+  "P0420": {
+    "meaning": "Katalizatoriaus efektyvumas žemiau ribos",
+    "linked_faults": [
+      "F031",
+      "F043"
+    ],
+    "first_checks": [
+      "Patikrinti ar nėra kitų variklio klaidų",
+      "Patikrinti lambda zondų duomenis",
+      "Patikrinti išmetimo sistemos sandarumą"
+    ],
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min."
+  },
+  "P0562": {
+    "meaning": "Per žema sistemos įtampa",
+    "linked_faults": [
+      "F005",
+      "F007",
+      "F014"
+    ],
+    "first_checks": [
+      "Patikrinti akumuliatoriaus įtampą",
+      "Patikrinti įkrovimą užvestam varikliui",
+      "Patikrinti gnybtus ir masę"
+    ],
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–45 min."
+  },
+  "P0335": {
+    "meaning": "Alkūninio veleno padėties daviklio grandinės sutrikimas",
+    "linked_faults": [
+      "F044",
+      "F016",
+      "F030"
+    ],
+    "first_checks": [
+      "Patikrinti ar starteris suka",
+      "Patikrinti daviklio jungtį",
+      "Patikrinti signalą diagnostika arba oscilografu"
+    ],
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–90 min."
+  },
+  "U0100": {
+    "meaning": "Prarastas ryšys su variklio valdymo bloku",
+    "linked_faults": [
+      "F092",
+      "F095",
+      "F097"
+    ],
+    "first_checks": [
+      "Patikrinti ECU maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti CAN ryšį"
+    ],
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–120 min."
+  },
+  "U0121": {
+    "meaning": "Prarastas ryšys su ABS bloku",
+    "linked_faults": [
+      "F093",
+      "F081",
+      "F095"
+    ],
+    "first_checks": [
+      "Patikrinti ABS saugiklius",
+      "Patikrinti ABS bloko maitinimą ir masę",
+      "Patikrinti CAN ryšį"
+    ],
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–120 min."
+  },
+  "B1000": {
+    "meaning": "Kėbulo elektronikos / valdymo bloko klaida",
+    "linked_faults": [
+      "F070",
+      "F091"
+    ],
+    "first_checks": [
+      "Patikrinti konkretaus gamintojo klaidos aprašymą",
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti ar klaida pastovi"
+    ],
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min."
+  }
+}

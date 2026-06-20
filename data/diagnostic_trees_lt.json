@@ -1,0 +1,57 @@
+{
+  "no_start": {
+    "title": "Automobilis neužsiveda",
+    "steps": [
+      {
+        "question": "Ar starteris suka?",
+        "yes": "engine_cranks",
+        "no": "starter_no_crank",
+        "unknown": "ask_photo_or_basic_checks"
+      },
+      {
+        "node": "starter_no_crank",
+        "action": "Patikrinti akumuliatoriaus būklę, gnybtus, ar girdimas spragtelėjimas."
+      },
+      {
+        "node": "engine_cranks",
+        "action": "Patikrinti klaidų kodus, kuro siurblio veikimą ir pagrindinius variklio daviklius."
+      }
+    ]
+  },
+  "battery_drain": {
+    "title": "Akumuliatorius išsikrauna stovint",
+    "steps": [
+      {
+        "question": "Ar akumuliatorius senesnis nei 4–5 metai?",
+        "yes": "battery_condition",
+        "no": "parasitic_draw"
+      },
+      {
+        "node": "battery_condition",
+        "action": "Pirmiausia patikrinti akumuliatoriaus būklę ir įkrovimą."
+      },
+      {
+        "node": "parasitic_draw",
+        "action": "Patikrinti energijos suvartojimą stovint. Pradinis laukimo laikas 2–4 min., tada stebėti, ar srovė krenta."
+      }
+    ]
+  },
+  "charging_fault": {
+    "title": "Įkrovimo sistemos sutrikimas",
+    "steps": [
+      {
+        "question": "Ar dega akumuliatoriaus simbolis užvedus?",
+        "yes": "charging_warning",
+        "no": "intermittent_charge"
+      },
+      {
+        "node": "charging_warning",
+        "action": "Patikrinti generatoriaus diržą, jungtis ir įkrovimo įtampą."
+      },
+      {
+        "node": "intermittent_charge",
+        "action": "Patikrinti ar gedimas pasireiškia periodiškai, po drėgmės ar apkrovos."
+      }
+    ]
+  }
+}

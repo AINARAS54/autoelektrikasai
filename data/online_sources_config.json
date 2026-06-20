@@ -1,0 +1,34 @@
+{
+  "enabled": true,
+  "sources": {
+    "nhtsa_vpic": {
+      "enabled": true,
+      "type": "public_api",
+      "purpose": "VIN dekodavimas",
+      "base_url": "https://vpic.nhtsa.dot.gov/api/",
+      "requires_api_key": false
+    },
+    "carapi_obd": {
+      "enabled": false,
+      "type": "api_with_token",
+      "purpose": "OBD-II kodų papildymas",
+      "base_url": "https://carapi.app/",
+      "requires_api_key": true,
+      "env_key": "CARAPI_TOKEN"
+    },
+    "external_obd_json": {
+      "enabled": true,
+      "type": "local_import",
+      "purpose": "Importuota leidžiama OBD bazė",
+      "file_path": "data/external_obd_codes.json",
+      "requires_api_key": false
+    }
+  },
+  "rules": [
+    "Vietinė bazė turi aukščiausią prioritetą.",
+    "Išoriniai šaltiniai naudojami tik papildymui.",
+    "Kodo reikšmė nėra galutinė diagnozė.",
+    "Nenaudoti scraping be leidimo.",
+    "Nerodyti kainų."
+  ]
+}

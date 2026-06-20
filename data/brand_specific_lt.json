@@ -1,0 +1,141 @@
+{
+  "BMW": {
+    "common_focus": [
+      "IBS / akumuliatoriaus registracija",
+      "FRM / apšvietimo valdymas",
+      "CAS / FEM / BDC užvedimo ir komforto sistemos"
+    ],
+    "priority_fault_ids": [
+      "F015",
+      "F008",
+      "F046",
+      "F047",
+      "F056",
+      "F091",
+      "F098"
+    ]
+  },
+  "Audi": {
+    "common_focus": [
+      "BCM / komforto sistema",
+      "Durų laidynai",
+      "Akumuliatoriaus energijos valdymas"
+    ],
+    "priority_fault_ids": [
+      "F056",
+      "F058",
+      "F070",
+      "F095",
+      "F098"
+    ]
+  },
+  "Volkswagen": {
+    "common_focus": [
+      "BCM",
+      "Durų moduliai",
+      "Generatoriaus ir akumuliatoriaus valdymas"
+    ],
+    "priority_fault_ids": [
+      "F056",
+      "F058",
+      "F071",
+      "F081",
+      "F095"
+    ]
+  },
+  "Mercedes-Benz": {
+    "common_focus": [
+      "SAM blokai",
+      "EZS / užvedimo leidimas",
+      "CAN ryšio sutrikimai"
+    ],
+    "priority_fault_ids": [
+      "F022",
+      "F024",
+      "F091",
+      "F095",
+      "F097"
+    ]
+  },
+  "Toyota": {
+    "common_focus": [
+      "12V akumuliatoriaus būklė",
+      "Hibridinės sistemos įspėjimai",
+      "ABS / saugumo sistemos davikliai"
+    ],
+    "priority_fault_ids": [
+      "F001",
+      "F003",
+      "F081",
+      "F090"
+    ]
+  },
+  "Volvo": {
+    "common_focus": [
+      "CEM ryšio ir maitinimo problemos",
+      "Klimato ir komforto sistemos",
+      "Akumuliatoriaus būklė"
+    ],
+    "priority_fault_ids": [
+      "F001",
+      "F070",
+      "F080",
+      "F091",
+      "F095"
+    ]
+  },
+  "Ford": {
+    "common_focus": [
+      "BCM",
+      "Durų / bagažinės jungtys",
+      "Generatoriaus įkrovimo valdymas"
+    ],
+    "priority_fault_ids": [
+      "F005",
+      "F056",
+      "F065",
+      "F095"
+    ]
+  },
+  "Opel": {
+    "common_focus": [
+      "CIM / užvedimo valdymas",
+      "BCM",
+      "Generatoriaus įkrovimo sutrikimai"
+    ],
+    "priority_fault_ids": [
+      "F005",
+      "F022",
+      "F070",
+      "F091"
+    ]
+  },
+  "Peugeot": {
+    "common_focus": [
+      "BSI sistema",
+      "Akumuliatoriaus įtampa",
+      "Ryšio klaidos po remonto"
+    ],
+    "priority_fault_ids": [
+      "F001",
+      "F070",
+      "F091",
+      "F098",
+      "F099"
+    ]
+  },
+  "Renault": {
+    "common_focus": [
+      "UCH / komforto sistema",
+      "Kortelės / imobilaizerio problemos",
+      "Ryšio sutrikimai"
+    ],
+    "priority_fault_ids": [
+      "F022",
+      "F024",
+      "F056",
+      "F091",
+      "F095"
+    ]
+  }
+}

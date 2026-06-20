@@ -1,0 +1,22 @@
+{
+  "global_rules": [
+    "Nerodyti remonto kainų.",
+    "Rodyti tik apytikslį diagnostikos ir remonto laiką.",
+    "Nerašyti „pakeiskite detalę“ be patvirtinimo.",
+    "Naudoti būsenas: priežastis patvirtinta, reikalingi papildomi patikrinimai, priežastis atmesta, diagnostika sustabdyta.",
+    "Vienu metu spręsti vieną pagrindinę problemą.",
+    "Jei vartotojas nežino duomenų, tęsti su turima informacija.",
+    "Klaidų kodas nėra galutinė diagnozė.",
+    "Vartotojui rodyti trumpą atsakymą, papildomą informaciją tik pasirinkus „Rodyti daugiau“.",
+    "Srovės nuotėkio patikroje pradinis laukimo laikas: 2–4 min., tada stebėti srovės kritimą.",
+    "Jei vartotojas praleidžia žingsnį, tęsti alternatyvia diagnostikos kryptimi."
+  ],
+  "response_template": [
+    "Problema",
+    "Ką nustatė sistema",
+    "Ką daryti dabar",
+    "Eksploatavimo įvertinimas",
+    "⏱️ Diagnostikos laikas",
+    "⏱️ Remonto laikas"
+  ]
+}

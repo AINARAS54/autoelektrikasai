@@ -1,0 +1,2702 @@
+[
+  {
+    "id": "F001",
+    "title": "Akumuliatorius išsikrauna per naktį",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Akumuliatorius išsikrauna per naktį",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F002",
+    "title": "Silpnai suka starterį",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Silpnai suka starterį",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F003",
+    "title": "Starteris nesuka",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Starteris nesuka",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F004",
+    "title": "Starteris tik spragteli",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Starteris tik spragteli",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F005",
+    "title": "Generatorius neįkrauna",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Generatorius neįkrauna",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F006",
+    "title": "Per didelė įkrovimo įtampa",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Per didelė įkrovimo įtampa",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F007",
+    "title": "Įkrovimo lemputė neišsijungia",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Įkrovimo lemputė neišsijungia",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "15–60 min.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F008",
+    "title": "Start-Stop neveikia",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Start-Stop neveikia",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F009",
+    "title": "Naujas akumuliatorius greitai išsikrauna",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Naujas akumuliatorius greitai išsikrauna",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F010",
+    "title": "Automobilis neužsiveda po ilgesnio stovėjimo",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Automobilis neužsiveda po ilgesnio stovėjimo",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F011",
+    "title": "Akumuliatorius išsikrauna šalčiuose",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Akumuliatorius išsikrauna šalčiuose",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F012",
+    "title": "Generatorius skleidžia garsą",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Generatorius skleidžia garsą",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F013",
+    "title": "Įkrovimas periodiškai dingsta",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Įkrovimas periodiškai dingsta",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F014",
+    "title": "Energijos valdymo sistemos klaida",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "Energijos valdymo sistemos klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F015",
+    "title": "IBS / akumuliatoriaus stebėjimo sistemos sutrikimas",
+    "system_key": "charging_battery",
+    "system": "🔋 Įkrovimo ir akumuliatoriaus sistema",
+    "user_problem": "IBS / akumuliatoriaus stebėjimo sistemos sutrikimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti gnybtus ir masės jungtis",
+      "Patikrinti įkrovimo sistemos veikimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus nusidėvėjimas",
+      "Blogas kontaktas arba masės jungtis",
+      "Įkrovimo sistemos sutrikimas",
+      "Papildoma įranga arba aktyvus elektronikos blokas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F016",
+    "title": "Variklis visai neužsiveda",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Variklis visai neužsiveda",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F017",
+    "title": "Užsiveda ir užgęsta",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užsiveda ir užgęsta",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F018",
+    "title": "Užsiveda tik iš kelių kartų",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užsiveda tik iš kelių kartų",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F019",
+    "title": "Neužsiveda šaltas variklis",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Neužsiveda šaltas variklis",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F020",
+    "title": "Neužsiveda karštas variklis",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Neužsiveda karštas variklis",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F021",
+    "title": "Neveikia starterio valdymas",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Neveikia starterio valdymas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "1–3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F022",
+    "title": "Imobilaizerio klaida",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Imobilaizerio klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F023",
+    "title": "Nėra kuro siurblio garso",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Nėra kuro siurblio garso",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F024",
+    "title": "Užvedimo mygtukas nereaguoja",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užvedimo mygtukas nereaguoja",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F025",
+    "title": "Užvedimo metu užgęsta prietaisų skydelis",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užvedimo metu užgęsta prietaisų skydelis",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F026",
+    "title": "Užvedimo metu mirksi apsaugos indikatorius",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užvedimo metu mirksi apsaugos indikatorius",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F027",
+    "title": "Užvedimas tik nuo pagalbinio akumuliatoriaus",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užvedimas tik nuo pagalbinio akumuliatoriaus",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F028",
+    "title": "Užvedimo relės gedimo požymiai",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užvedimo relės gedimo požymiai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F029",
+    "title": "Užvedimo grandinės sutrikimas",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Užvedimo grandinės sutrikimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F030",
+    "title": "Periodinis neužsivedimas",
+    "system_key": "starting",
+    "system": "🔑 Užvedimo sistema",
+    "user_problem": "Periodinis neužsivedimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti akumuliatoriaus būklę",
+      "Patikrinti, ar starteris suka arba spragteli",
+      "Patikrinti, ar prietaisų skydelis neužgęsta užvedimo metu",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Akumuliatoriaus problema",
+      "Starterio valdymo grandinės sutrikimas",
+      "Apsaugos / imobilaizerio sistema",
+      "Starterio mechaninis arba elektrinis sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F031",
+    "title": "Check Engine lemputė",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Check Engine lemputė",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "15–60 min.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F032",
+    "title": "Variklis dirba netolygiai",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Variklis dirba netolygiai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F033",
+    "title": "Uždegimo praleidimai",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Uždegimo praleidimai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F034",
+    "title": "Variklis trūkčioja",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Variklis trūkčioja",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F035",
+    "title": "Sumažėjusi trauka",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Sumažėjusi trauka",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F036",
+    "title": "Padidėjusios kuro sąnaudos",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Padidėjusios kuro sąnaudos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F037",
+    "title": "Juodi dūmai",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Juodi dūmai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F038",
+    "title": "Balti dūmai",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Balti dūmai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F039",
+    "title": "Variklis užgęsta važiuojant",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Variklis užgęsta važiuojant",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F040",
+    "title": "Apsukos svyruoja",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Apsukos svyruoja",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F041",
+    "title": "DPF problemos",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "DPF problemos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F042",
+    "title": "EGR problemos",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "EGR problemos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F043",
+    "title": "Lambda zondo klaida",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Lambda zondo klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F044",
+    "title": "Alkūninio veleno daviklio sutrikimas",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Alkūninio veleno daviklio sutrikimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F045",
+    "title": "Skirstomojo veleno daviklio sutrikimas",
+    "system_key": "engine_management",
+    "system": "🌡️ Variklio valdymo sistema",
+    "user_problem": "Skirstomojo veleno daviklio sutrikimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, kada atsiranda simptomas",
+      "Patikrinti, ar nėra traukos sumažėjimo arba netolygaus darbo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio signalo sutrikimas",
+      "Uždegimo arba kuro tiekimo sutrikimas",
+      "Oro / išmetimo sistemos sutrikimas",
+      "Valdymo sistemos klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F046",
+    "title": "Neveikia viena artimoji šviesa",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia viena artimoji šviesa",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F047",
+    "title": "Neveikia abi artimosios šviesos",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia abi artimosios šviesos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F048",
+    "title": "Neveikia tolimosios šviesos",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia tolimosios šviesos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F049",
+    "title": "Neveikia dienos šviesos",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia dienos šviesos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F050",
+    "title": "Mirksi LED žibintai",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Mirksi LED žibintai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F051",
+    "title": "Neveikia galiniai žibintai",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia galiniai žibintai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F052",
+    "title": "Neveikia stabdžių žibintai",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia stabdžių žibintai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F053",
+    "title": "Neveikia posūkiai",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Neveikia posūkiai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F054",
+    "title": "Dažnai perdega lemputės",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Dažnai perdega lemputės",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "15–60 min.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F055",
+    "title": "Dažnai perdega saugiklis",
+    "system_key": "lighting",
+    "system": "💡 Apšvietimo sistema",
+    "user_problem": "Dažnai perdega saugiklis",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti lemputę arba LED modulį",
+      "Patikrinti saugiklį",
+      "Patikrinti jungtį ir maitinimą",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Lemputės arba LED modulio sutrikimas",
+      "Saugiklio arba relės sutrikimas",
+      "Jungties, masės arba laidyno problema",
+      "Valdymo bloko komandos sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "15–60 min.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F056",
+    "title": "Neveikia centrinis užraktas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia centrinis užraktas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F057",
+    "title": "Atsidaro tik vienos durys",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Atsidaro tik vienos durys",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F058",
+    "title": "Neveikia elektriniai langai",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia elektriniai langai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F059",
+    "title": "Neveikia vienas langas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia vienas langas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F060",
+    "title": "Neveikia veidrodėlių reguliavimas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia veidrodėlių reguliavimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F061",
+    "title": "Neveikia veidrodėlių šildymas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia veidrodėlių šildymas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F062",
+    "title": "Neveikia sėdynių šildymas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia sėdynių šildymas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F063",
+    "title": "Neveikia salono apšvietimas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia salono apšvietimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F064",
+    "title": "Salono apšvietimas neišsijungia",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Salono apšvietimas neišsijungia",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F065",
+    "title": "Neveikia bagažinės atidarymas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia bagažinės atidarymas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F066",
+    "title": "Neveikia nuotolinis valdymas",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia nuotolinis valdymas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F067",
+    "title": "Greitai išsikrauna rakto baterija",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Greitai išsikrauna rakto baterija",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F068",
+    "title": "Komforto funkcijos veikia su pertrūkiais",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Komforto funkcijos veikia su pertrūkiais",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F069",
+    "title": "Neveikia stoglangis",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Neveikia stoglangis",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟢 Galima naudoti",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F070",
+    "title": "Komforto sistemos klaida",
+    "system_key": "comfort",
+    "system": "🚪 Komforto sistema",
+    "user_problem": "Komforto sistemos klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar veikia funkcija iš kito valdiklio",
+      "Patikrinti saugiklius",
+      "Patikrinti durų / bagažinės jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Saugiklio arba maitinimo problema",
+      "Durų / komforto bloko sutrikimas",
+      "Laidyno arba jungties problema",
+      "Valdiklio arba mygtuko sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "15–45 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F071",
+    "title": "Kondicionierius nešaldo",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Kondicionierius nešaldo",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F072",
+    "title": "Šaldo silpnai",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Šaldo silpnai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F073",
+    "title": "Ventiliatorius neveikia",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Ventiliatorius neveikia",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F074",
+    "title": "Veikia tik vienu greičiu",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Veikia tik vienu greičiu",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F075",
+    "title": "Pučia tik karštą orą",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Pučia tik karštą orą",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F076",
+    "title": "Pučia tik šaltą orą",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Pučia tik šaltą orą",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F077",
+    "title": "Neveikia oro krypties reguliavimas",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Neveikia oro krypties reguliavimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F078",
+    "title": "Rasojasi langai",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Rasojasi langai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F079",
+    "title": "Kompresorius neįsijungia",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Kompresorius neįsijungia",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F080",
+    "title": "Klimato kontrolės klaida",
+    "system_key": "climate",
+    "system": "🌬️ Klimato kontrolė",
+    "user_problem": "Klimato kontrolės klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti, ar įsijungia ventiliatorius",
+      "Patikrinti, ar įsijungia kompresorius",
+      "Patikrinti klaidų kodus klimato bloke",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Ventiliatoriaus arba reguliatoriaus sutrikimas",
+      "Kompresoriaus valdymo sutrikimas",
+      "Daviklio arba sklendės problema",
+      "Sistemos apsaugos režimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F081",
+    "title": "Šviečia ABS lemputė",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Šviečia ABS lemputė",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "15–60 min.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F082",
+    "title": "Šviečia ESP lemputė",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Šviečia ESP lemputė",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "15–60 min.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F083",
+    "title": "Neveikia greičio rodmuo",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Neveikia greičio rodmuo",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F084",
+    "title": "ABS veikia netinkamai",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "ABS veikia netinkamai",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F085",
+    "title": "Stabdžių sistemos įspėjimas",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Stabdžių sistemos įspėjimas",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F086",
+    "title": "Rankinio stabdžio elektronikos klaida",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Rankinio stabdžio elektronikos klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F087",
+    "title": "TPMS klaida",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "TPMS klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F088",
+    "title": "Oro pagalvės klaida",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Oro pagalvės klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F089",
+    "title": "Saugos diržų sistemos klaida",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Saugos diržų sistemos klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F090",
+    "title": "Kelių saugumo sistemų klaidos vienu metu",
+    "system_key": "safety_abs_esp_airbag",
+    "system": "🛑 ABS / ESP / saugumo sistemos",
+    "user_problem": "Kelių saugumo sistemų klaidos vienu metu",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Nuskaityti klaidų kodus",
+      "Patikrinti, ar klaida pastovi",
+      "Patikrinti susijusius daviklius ir jungtis",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Daviklio arba jungties problema",
+      "Maitinimo arba masės sutrikimas",
+      "Valdymo bloko ryšio sutrikimas",
+      "Po remonto likusi klaida"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–60 min.",
+    "repair_time": "30 min. – 3 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F091",
+    "title": "Nėra ryšio su diagnostika",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Nėra ryšio su diagnostika",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F092",
+    "title": "Nėra ryšio su ECU",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Nėra ryšio su ECU",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🔴 Nerekomenduojama eksploatuoti",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F093",
+    "title": "Nėra ryšio su ABS bloku",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Nėra ryšio su ABS bloku",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F094",
+    "title": "Periodiškai dingsta ryšys",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Periodiškai dingsta ryšys",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F095",
+    "title": "CAN ryšio klaida",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "CAN ryšio klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F096",
+    "title": "LIN ryšio klaida",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "LIN ryšio klaida",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Galima naudoti ribotai",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F097",
+    "title": "Keli moduliai neveikia vienu metu",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Keli moduliai neveikia vienu metu",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F098",
+    "title": "Po akumuliatoriaus keitimo atsirado klaidos",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Po akumuliatoriaus keitimo atsirado klaidos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F099",
+    "title": "Po remonto atsirado elektronikos problemos",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Po remonto atsirado elektronikos problemos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  },
+  {
+    "id": "F100",
+    "title": "Atsitiktinės elektronikos klaidos",
+    "system_key": "communication",
+    "system": "📡 Elektronikos ryšio sistemos",
+    "user_problem": "Atsitiktinės elektronikos klaidos",
+    "what_system_detects": "Sistema registruoja simptomą ir priskiria jį diagnostikos sričiai. Priežastis nelaikoma patvirtinta be papildomo patikrinimo.",
+    "first_checks": [
+      "Patikrinti maitinimą ir masę",
+      "Patikrinti saugiklius",
+      "Patikrinti, ar nėra kelių modulių ryšio sutrikimo",
+      "Patikrinti, ar problema pastovi ar periodinė",
+      "Patikrinti, ar gedimas atsirado po remonto"
+    ],
+    "common_causes": [
+      "Maitinimo arba masės sutrikimas",
+      "CAN / LIN linijos sutrikimas",
+      "Vienas modulis blokuoja ryšį",
+      "Po remonto arba akumuliatoriaus keitimo atsiradęs sutrikimas"
+    ],
+    "status_default": "🟡 Reikalingas papildomas patikrinimas",
+    "operation_assessment": "🟡 Reikalingas papildomas patikrinimas",
+    "diagnostic_time": "30–90 min.",
+    "repair_time": "1–4 val.",
+    "bot_rule": "Nerašyti „pakeiskite detalę“. Rašyti: „patvirtinus priežastį, gali būti reikalingas remontas arba detalės keitimas“.",
+    "next_action_template": "Atlikite pirmą patikrinimą ir parašykite rezultatą. Jei nežinote, pasirinkite „Nežinau“."
+  }
+]
