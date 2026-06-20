@@ -23,7 +23,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V4 app.py
+# V4.1 app.py
 # ==========================================================
 
 load_dotenv()
@@ -156,16 +156,85 @@ def is_ev_vehicle(text: str, brand=None, model=None):
     return brand == "BMW" and model and model.lower() in ["i3", "i4", "i5", "i7", "ix"]
 
 
+def has_voltage_context(text: str) -> bool:
+    """
+    Įtampa laikoma matavimu tik tada, kai tekste yra aiškus matavimo kontekstas.
+    Apsauga nuo klaidų:
+    BMW i3 -> ne 3.0 V
+    Audi A4 -> ne 4.0 V
+    Q5 -> ne 5.0 V
+    F30 -> ne 30.0 V
+    """
+    t = normalize(text)
+
+    patterns = [
+        r"\b\d{1,2}(?:[.,]\d{1,2})\s*v\b",
+        r"\b\d{1,2}(?:[.,]\d{1,2})\s*volt",
+        r"\bakum",
+        r"\bbattery\b",
+        r"\bbater",
+        r"\b12v\b",
+        r"\bdc\s*/?\s*dc\b",
+        r"\bdcdc\b",
+        r"\bkeitikl",
+        r"\bkrov",
+        r"\bkrauna",
+        r"\bįkrov",
+        r"\bikrov",
+        r"\bgenerator",
+    ]
+
+    return any(re.search(pattern, t) for pattern in patterns)
+
+
 def extract_voltage(text: str):
-    m = re.search(r"(\d{1,2}(?:[.,]\d{1,2})?)\s*(v|volt|voltų)?\b", text.lower())
+    """
+    Leidžiami pavyzdžiai:
+    - 12.7 V
+    - 12,7 V
+    - akumuliatorius 12.7
+    - akumas 11,5
+    - battery 12.5 V
+    - DC/DC 13.9 V
+    - generatorius 14.2 V
+
+    Neleidžiami kaip matavimai:
+    - BMW i3 2019
+    - BMW i4
+    - Audi A4
+    - Q5
+    - F30
+    - E90
+    """
+    if not has_voltage_context(text):
+        return None
+
+    t = normalize(text)
+
+    # 1) Aiškus formatas su V/volt
+    m = re.search(r"\b(\d{1,2}(?:[.,]\d{1,2})?)\s*(?:v|volt|voltų)\b", t)
+
+    # 2) Kontekstas prieš skaičių, bet be V
+    if not m:
+        m = re.search(
+            r"\b(?:akumuliatorius|akumas|battery|baterija|12v|dc\s*/?\s*dc|dcdc|keitiklis|krovimas|krauna|generatorius)"
+            r"\D{0,25}(\d{1,2}[.,]\d{1,2})\b",
+            t,
+        )
+
     if not m:
         return None
+
     try:
         value = float(m.group(1).replace(",", "."))
     except ValueError:
         return None
-    if value > 20:
+
+    # 12 V automobilių sistemos ir krovimo ribos.
+    # Nepriimame 3.0, 4.0, 5.0 ir pan., nes tai dažnai modeliai: i3, A4, Q5.
+    if value < 5.0 or value > 18.0:
         return None
+
     return value
 
 
@@ -289,6 +358,57 @@ Atitikimas:
 
 🛠 Remonto laikas:
 30 min. – 3 val."""
+
+
+
+def detect_brake_fluid_service(text: str) -> bool:
+    t = normalize(text)
+    terms = [
+        "stabdžių skys",
+        "stabdziu skys",
+        "stabdžiu skys",
+        "stabdzių skys",
+        "stabdžių serviso",
+        "stabdziu serviso",
+        "brake fluid",
+        "brake service",
+    ]
+    return any(term in t for term in terms)
+
+
+def format_brake_fluid_response(brand, model, year):
+    car_line = " ".join([x for x in [brand, model, year] if x]) or "Nenurodyta"
+    return f"""📌 <b>Nustatyta problema</b>
+
+🚗 Automobilis:
+{esc(car_line)}
+
+Problema:
+Stabdžių skysčio serviso pranešimas
+
+🎯 Galimos priežastys:
+1. Stabdžių skysčio aptarnavimo intervalo priminimas
+2. Žemas stabdžių skysčio lygis
+3. Stabdžių skysčio lygio daviklio sutrikimas
+4. Stabdžių sistemos nuotėkis
+
+Atitikimas:
+🟢 Aukštas atitikimas
+
+🔧 Ką tikrinti pirmiausia:
+1. Patikrinti stabdžių skysčio lygį
+2. Patikrinti, ar nėra skysčio nuotėkio
+3. Patikrinti serviso pranešimą automobilio meniu
+4. Jei skysčio lygis mažas – nebetęsti važiavimo nepatikrinus sistemos
+
+🚦 Ar galima važiuoti?
+🟡 Galima naudoti ribotai, jei stabdžiai veikia normaliai ir skysčio lygis nėra žemas.
+
+⏱ Diagnostikos laikas:
+10–30 min.
+
+🛠 Remonto laikas:
+30 min. – 1 val."""
 
 
 def score_fault(text, fault):
@@ -422,18 +542,25 @@ def diagnose_text(text):
     model = detect_model(text)
     year = detect_year(text)
     ev = is_ev_vehicle(text, brand, model)
+
+    # Specialus prioritetas: stabdžių skysčio / brake fluid pranešimai nėra įtampos matavimas.
+    if detect_brake_fluid_service(text):
+        return format_brake_fluid_response(brand, model, year)
+
     obd = detect_obd(text)
     if obd:
         return format_obd_response(obd, brand, model, year)
+
     measurement = format_measurement_response(text, brand, model, year, ev)
     if measurement:
         return measurement
+
     return format_fault_response(text, brand, model, year, ev)
 
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "service": "AutoElektrikas AI V4", "time": datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status": "ok", "service": "AutoElektrikas AI V4.1", "time": datetime.datetime.now(datetime.UTC).isoformat()})
 
 
 @app.route("/telegram-webhook", methods=["POST"])
