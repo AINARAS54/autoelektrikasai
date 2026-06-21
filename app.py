@@ -23,7 +23,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V4.1 app.py
+# V4.2 app.py
 # ==========================================================
 
 load_dotenv()
@@ -84,29 +84,37 @@ def send_message(chat_id, text, reply_markup=None):
     return telegram_api("sendMessage", payload)
 
 
-def main_menu():
+def start_menu():
     return {
         "inline_keyboard": [
             [{"text": "🔍 Pradėti diagnostiką", "callback_data": "new_diag"}],
-            [{"text": "🔧 Atlikti patikrą", "callback_data": "add_action"}],
-            [{"text": "⏭️ Tęsti diagnostiką", "callback_data": "continue_diag"}],
             [{"text": "📄 Diagnostikos santrauka", "callback_data": "summary"}],
             [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
         ]
     }
 
 
-START_TEXT = """🚗 <b>Sveiki atvykę į AutoElektrikas AI</b>
+def diagnostic_menu():
+    return {
+        "inline_keyboard": [
+            [{"text": "🔧 Įrašyti patikros rezultatą", "callback_data": "add_action"}],
+            [{"text": "📄 Diagnostikos santrauka", "callback_data": "summary"}],
+            [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
+        ]
+    }
 
-Surašykite automobilio duomenis ir gedimą.
 
-Pavyzdžiai:
-• BMW F30 po nakties neužsiveda
-• VW Golf dega ABS lemputė
-• Audi A4 neveikia centrinis užraktas
-• P0301
+def main_menu():
+    return start_menu()
 
-Taip pat galite įrašyti VIN numerį."""
+
+START_TEXT = """🚗 <b>AutoElektrikas AI</b>
+
+Profesionali automobilių elektros ir elektronikos diagnostika.
+
+📋 Įveskite automobilio duomenis ir apibūdinkite gedimą.
+
+🔎 Taip pat galite įvesti VIN numerį."""
 
 
 def normalize(text: str) -> str:
@@ -383,8 +391,11 @@ def format_brake_fluid_response(brand, model, year):
 🚗 Automobilis:
 {esc(car_line)}
 
-Problema:
-Stabdžių skysčio serviso pranešimas
+Nustatytas pranešimas:
+Stabdžių skysčio aptarnavimo priminimas
+
+Dažniausia priežastis:
+Pasibaigęs stabdžių skysčio keitimo intervalas automobilio serviso sistemoje.
 
 🎯 Galimos priežastys:
 1. Stabdžių skysčio aptarnavimo intervalo priminimas
@@ -399,7 +410,7 @@ Atitikimas:
 1. Patikrinti stabdžių skysčio lygį
 2. Patikrinti, ar nėra skysčio nuotėkio
 3. Patikrinti serviso pranešimą automobilio meniu
-4. Jei skysčio lygis mažas – nebetęsti važiavimo nepatikrinus sistemos
+4. Jei skysčio lygis normalus – tikėtina, kad reikalingas serviso intervalo atstatymas
 
 🚦 Ar galima važiuoti?
 🟡 Galima naudoti ribotai, jei stabdžiai veikia normaliai ir skysčio lygis nėra žemas.
@@ -560,7 +571,7 @@ def diagnose_text(text):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "service": "AutoElektrikas AI V4.1", "time": datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status": "ok", "service": "AutoElektrikas AI V4.2", "time": datetime.datetime.now(datetime.UTC).isoformat()})
 
 
 @app.route("/telegram-webhook", methods=["POST"])
@@ -574,19 +585,19 @@ def telegram_webhook():
 
         if data == "new_diag":
             clear_session(chat_id)
-            send_message(chat_id, "🔍 Diagnostika pradėta.\n\nSurašykite automobilio duomenis ir gedimą.", main_menu())
+            send_message(chat_id, "🔍 Diagnostika pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", diagnostic_menu())
         elif data == "add_action":
-            send_message(chat_id, "Parašykite, ką patikrinote ir rezultatą.\n\nPavyzdžiai:\n• Akumuliatorius 12.7 V\n• DC/DC krovimas 13.9 V\n• Starteris suka\n• P0301", main_menu())
+            send_message(chat_id, "Įrašykite patikros rezultatą.\n\nPavyzdžiai:\n• Akumuliatorius 12.7 V\n• DC/DC krovimas 13.9 V\n• Starteris suka\n• P0301", diagnostic_menu())
         elif data == "continue_diag":
             add_user_action(chat_id, "Vartotojas pasirinko tęsti diagnostiką.")
-            send_message(chat_id, "Tęsiame diagnostiką.\n\nKą patikrinote arba pastebėjote toliau?\n\nPavyzdžiai:\n• Akumuliatorius 12.7 V\n• DC/DC krovimas 13.9 V\n• Starteris suka\n• Dega ABS lemputė", main_menu())
+            send_message(chat_id, "Tęsiame diagnostiką.\n\nĮrašykite naują simptomą, klaidos kodą arba patikros rezultatą.", diagnostic_menu())
         elif data == "summary":
-            send_message(chat_id, get_session_summary(chat_id), main_menu())
+            send_message(chat_id, get_session_summary(chat_id), diagnostic_menu())
         elif data == "clear":
             clear_session(chat_id)
-            send_message(chat_id, "Diagnostikos byla išvalyta. Galite pradėti iš naujo.", main_menu())
+            send_message(chat_id, "Diagnostikos byla išvalyta. Galite pradėti iš naujo.", start_menu())
         else:
-            send_message(chat_id, "Pasirinkimas neatpažintas.", main_menu())
+            send_message(chat_id, "Pasirinkimas neatpažintas.", start_menu())
         return jsonify({"ok": True})
 
     message = update.get("message", {})
@@ -598,11 +609,11 @@ def telegram_webhook():
         return jsonify({"ok": True})
 
     if text.lower() in ["/start", "start"]:
-        send_message(chat_id, START_TEXT, main_menu())
+        send_message(chat_id, START_TEXT, start_menu())
         return jsonify({"ok": True})
 
     if not text:
-        send_message(chat_id, "Surašykite automobilio duomenis ir gedimą.", main_menu())
+        send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
         return jsonify({"ok": True})
 
     clean_text = text.replace(" ", "").strip()
@@ -633,8 +644,10 @@ Kuro tipas:
 {esc(vin_result.get('fuel_type') or 'Nenurodyta')}
 
 Toliau parašykite gedimą."""
-            send_message(chat_id, vin_msg, main_menu())
+            send_message(chat_id, vin_msg, diagnostic_menu())
             return jsonify({"ok": True})
+
+    send_message(chat_id, "📥 <b>Informacija gauta</b>\n\n🔍 Atliekama diagnostinė analizė...")
 
     response = diagnose_text(text)
     try:
@@ -642,7 +655,7 @@ Toliau parašykite gedimą."""
     except Exception:
         logger.exception("Session update failed")
 
-    send_message(chat_id, response, main_menu())
+    send_message(chat_id, response, diagnostic_menu())
     return jsonify({"ok": True})
 
 
