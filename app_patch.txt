@@ -1,0 +1,44 @@
+# ==========================================================
+# APP.PY PRIJUNGIMO BLOKAS
+# ==========================================================
+
+# 1) app.py viršuje pridėk:
+from vehicle_parser import parse_vehicle
+from diagnostic_context import load_session_context, build_context
+from openai_diagnostic import ask_openai_diagnostic
+
+
+# 2) ten, kur dabar turi:
+# response = diagnose_text(text)
+# send_message(chat_id, response, diagnostic_menu())
+#
+# pakeisk į:
+
+send_message(chat_id, "📥 <b>Informacija gauta</b>\n\n🔍 Atliekama diagnostinė analizė...")
+
+local_response = diagnose_text(text)
+
+vehicle = parse_vehicle(text, BRANDS)
+session_context = load_session_context(BASE_DIR, chat_id)
+
+context = build_context(
+    text=text,
+    vehicle=vehicle,
+    obd_code=detect_obd(text),
+    voltage=extract_voltage(text),
+    voltage_context=voltage_context(text) if extract_voltage(text) else None,
+    brake_fluid_service=detect_brake_fluid_service(text),
+    local_fault=find_fault_from_text(text),
+    local_response=local_response,
+    session_context=session_context,
+)
+
+ai_response = ask_openai_diagnostic(
+    user_text=text,
+    context=context,
+    local_response=local_response,
+)
+
+response = ai_response or local_response
+
+send_message(chat_id, response, diagnostic_menu())
