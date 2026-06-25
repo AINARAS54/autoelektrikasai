@@ -1,3 +1,4 @@
+from telegram_photo_handler import handle_photo_or_document
 import os
 import json
 import re
