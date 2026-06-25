@@ -1,0 +1,31 @@
+APP.PY FOTO MODULIO PRIJUNGIMAS
+
+1) app.py viršuje pridėti:
+
+from telegram_photo_handler import handle_photo_or_document
+
+
+2) telegram_webhook() viduje, po:
+message = update.get("message", {})
+chat = message.get("chat", {})
+chat_id = str(chat.get("id", ""))
+
+įdėti:
+
+if message.get("photo") or message.get("document"):
+    result = handle_photo_or_document(
+        bot_token=BOT_TOKEN,
+        message=message,
+        chat_id=chat_id,
+        base_dir=BASE_DIR,
+    )
+
+    if result.get("handled"):
+        send_message(chat_id, result.get("text", "Failas gautas."), clean_menu())
+        return jsonify({"ok": True})
+
+
+3) Render Environment:
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-4.1-mini
+OPENAI_VISION_MODEL=gpt-4.1-mini
