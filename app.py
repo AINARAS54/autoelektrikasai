@@ -1,4 +1,3 @@
-from telegram_photo_handler import handle_photo_or_document
 import os
 import json
 import re
@@ -37,9 +36,14 @@ try:
 except Exception:
     OpenAI = None
 
+try:
+    from telegram_photo_handler import handle_photo_or_document
+except Exception:
+    handle_photo_or_document = None
+
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V8 FINAL app.py
+# V9 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -105,6 +109,7 @@ def send_message(chat_id, text, reply_markup=None):
 def clean_menu():
     return {
         "inline_keyboard": [
+            [{"text": "🆕 Nauja byla", "callback_data": "new_case"}],
             [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
         ]
     }
@@ -661,15 +666,57 @@ Parašykite, kokį veiksmą norite atlikti arba kokią sistemą tikrinate.
 Atsakysiu į konkretų techninį klausimą nepradėdamas naujos diagnostikos."""
 
 
+
+def generate_case_title(vehicle: dict | None, fault_text: str | None = None) -> str:
+    vehicle = vehicle or {}
+    parts = [
+        vehicle.get("brand"),
+        vehicle.get("model"),
+        str(vehicle.get("year")) if vehicle.get("year") else None,
+    ]
+    car = " ".join([p for p in parts if p]).strip()
+
+    fault = (fault_text or "").strip()
+    if fault:
+        short_fault = fault.lower()
+        for remove in ["bmw", "audi", "vw", "volkswagen", "mercedes", "2019", "2018", "2020", "2021", "2022", "2023", "2024", "2025"]:
+            short_fault = short_fault.replace(remove, "")
+        short_fault = re.sub(r"\s+", " ", short_fault).strip(" .,-")
+        if len(short_fault) > 55:
+            short_fault = short_fault[:55].rstrip() + "..."
+    else:
+        short_fault = "nauja diagnostika"
+
+    if car:
+        return f"{car} – {short_fault or 'nauja diagnostika'}"
+    return short_fault or "Nauja diagnostikos byla"
+
+
+def vehicle_from_vision_result(vision_result: dict | None) -> dict:
+    if not vision_result:
+        return {}
+    vehicle = vision_result.get("vehicle") or {}
+    return {
+        "brand": vehicle.get("brand"),
+        "model": vehicle.get("model"),
+        "year": vehicle.get("year"),
+        "vin": vehicle.get("vin"),
+        "registration_number": vehicle.get("registration_number"),
+        "fuel_type": vehicle.get("fuel_type"),
+        "vehicle_type": vehicle.get("vehicle_type"),
+    }
+
+
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V8 FINAL",
+        "service": "AutoElektrikas AI V9 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
             "openai_diagnostic": ask_openai_diagnostic is not None,
+            "telegram_photo_handler": handle_photo_or_document is not None,
         },
         "openai_env": bool(os.getenv("OPENAI_API_KEY", "").strip()),
         "time": datetime.datetime.now(datetime.UTC).isoformat()
@@ -697,6 +744,41 @@ def telegram_webhook():
     message = update.get("message", {})
     chat = message.get("chat", {})
     chat_id = str(chat.get("id", ""))
+
+    if (message.get("photo") or message.get("document")) and handle_photo_or_document:
+        result = handle_photo_or_document(
+            bot_token=BOT_TOKEN,
+            message=message,
+            chat_id=chat_id,
+            base_dir=BASE_DIR,
+        )
+
+        if result.get("handled"):
+            vision_result = result.get("vision_result") or {}
+            vehicle = vehicle_from_vision_result(vision_result)
+            case_title = generate_case_title(vehicle, None)
+
+            try:
+                create_or_update_session(
+                    chat_id,
+                    case_title,
+                    {
+                        "status": "Automobilio duomenys nuskaityti iš nuotraukos",
+                        "brand": vehicle.get("brand"),
+                        "fault": None,
+                        "vehicle": vehicle,
+                        "case_title": case_title,
+                    },
+                )
+            except Exception:
+                logger.exception("Failed to update session from vehicle image")
+
+            send_message(
+                chat_id,
+                result.get("text", "Failas gautas."),
+                clean_menu()
+            )
+            return jsonify({"ok": True})
     text = (message.get("text") or "").strip()
 
     if not chat_id:
@@ -744,7 +826,6 @@ Toliau parašykite gedimą."""
     intent = detect_intent(text, chat_id)
 
     if intent == "question":
-        send_message(chat_id, "📥 <b>Klausimas gautas</b>\n\n🔍 Ruošiamas atsakymas...")
         answer = ask_openai_question(text, chat_id) or local_question_answer(text)
         send_message(chat_id, answer, clean_menu())
         return jsonify({"ok": True})
@@ -757,7 +838,7 @@ Toliau parašykite gedimą."""
         send_message(chat_id, "🚗 <b>Automobilio duomenys gauti</b>\n\nDabar apibūdinkite gedimą.", clean_menu())
         return jsonify({"ok": True})
 
-    send_message(chat_id, "📥 <b>Informacija gauta</b>\n\n🔍 Atliekama diagnostinė analizė...")
+    send_message(chat_id, "📥 <b>Informacija gauta</b>\n\n🔍 Analizuoju...")
 
     local_response = diagnose_text(text)
     response = local_response
