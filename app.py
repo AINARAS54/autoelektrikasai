@@ -21,9 +21,19 @@ try:
 except Exception:
     get_vehicle_from_vin = None
 
+try:
+    from vehicle_parser import parse_vehicle
+    from diagnostic_context import load_session_context, build_context
+    from openai_diagnostic import ask_openai_diagnostic
+except Exception:
+    parse_vehicle = None
+    load_session_context = None
+    build_context = None
+    ask_openai_diagnostic = None
+
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V4.2 app.py
+# V7 app.py - Modular OpenAI Integration
 # ==========================================================
 
 load_dotenv()
@@ -259,25 +269,25 @@ def voltage_context(text: str):
 
 def evaluate_battery_voltage(value: float):
     if value >= 12.6:
-        return ("🟢", "Akumuliatoriaus įtampa normali", "Pagal pateiktą matavimą 12 V akumuliatorius nėra pagrindinė įtariama priežastis.", "🟢 Aukštas atitikimas", "🟢 Galima naudoti, jei nėra kitų įspėjimų skydelyje.")
+        return ("🟢", "Akumuliatoriaus įtampa normali", "Pagal pateiktą matavimą 12 V akumuliatorius nėra pagrindinė įtariama priežastis.", "🟢 Aukštas atitikimas", "🟢 Galima eksploatuoti, jei nėra kitų įspėjimų skydelyje.")
     if 12.4 <= value < 12.6:
-        return ("🟡", "Akumuliatorius dalinai išsikrovęs", "Įtampa nėra kritinė, bet rekomenduojama patikrinti įkrovimą ir kontaktus.", "🟡 Vidutinis atitikimas", "🟡 Galima naudoti ribotai.")
+        return ("🟡", "Akumuliatorius dalinai išsikrovęs", "Įtampa nėra kritinė, bet rekomenduojama patikrinti įkrovimą ir kontaktus.", "🟡 Vidutinis atitikimas", "🟡 Galima eksploatuoti ribotai.")
     if 12.2 <= value < 12.4:
-        return ("🟠", "Akumuliatorius silpnas", "Įtampa žema. Gali būti sunkus užvedimas arba elektronikos klaidos.", "🟢 Aukštas atitikimas", "🟡 Galima naudoti ribotai, bet gali neužsivesti po stovėjimo.")
+        return ("🟠", "Akumuliatorius silpnas", "Įtampa žema. Gali būti sunkus užvedimas arba elektronikos klaidos.", "🟢 Aukštas atitikimas", "🟡 Galima eksploatuoti ribotai, bet gali neužsivesti po stovėjimo.")
     if 11.8 < value < 12.2:
-        return ("🔴", "Akumuliatorius labai išsikrovęs", "Įtampa per maža. Reikalingas įkrovimas ir papildomas patikrinimas.", "🟢 Aukštas atitikimas", "🔴 Nerekomenduojama naudoti, kol nepatikrinta 12 V sistema.")
-    return ("🔴", "Kritinė akumuliatoriaus būklė", "Įtampa kritiškai maža. Gali neveikti automobilio elektronika.", "🟢 Aukštas atitikimas", "🔴 Nerekomenduojama naudoti.")
+        return ("🔴", "Akumuliatorius labai išsikrovęs", "Įtampa per maža. Reikalingas įkrovimas ir papildomas patikrinimas.", "🟢 Aukštas atitikimas", "🔴 Nerekomenduojama eksploatuoti, kol nepatikrinta 12 V sistema.")
+    return ("🔴", "Kritinė akumuliatoriaus būklė", "Įtampa kritiškai maža. Gali neveikti automobilio elektronika.", "🟢 Aukštas atitikimas", "🔴 Nerekomenduojama eksploatuoti.")
 
 
 def evaluate_charging_voltage(value: float, ev: bool):
     name = "DC/DC keitiklio krovimas" if ev else "Įkrovimo sistemos įtampa"
     if 13.8 <= value <= 14.8:
-        return name, "🟢", "Krovimas leistinose ribose", "Pagal pateiktą matavimą krovimas yra normaliose ribose.", "🟢 Galima naudoti, jei nėra kitų gedimo požymių."
+        return name, "🟢", "Krovimas leistinose ribose", "Pagal pateiktą matavimą krovimas yra normaliose ribose.", "🟢 Galima eksploatuoti, jei nėra kitų gedimo požymių."
     if 13.2 <= value < 13.8:
-        return name, "🟠", "Krovimas per mažas", "Įtampa žemesnė nei įprasta. Reikalingas papildomas patikrinimas su apkrova.", "🟡 Galima naudoti ribotai."
+        return name, "🟠", "Krovimas per mažas", "Įtampa žemesnė nei įprasta. Reikalingas papildomas patikrinimas su apkrova.", "🟡 Galima eksploatuoti ribotai."
     if value < 13.2:
-        return name, "🔴", "Krovimas per mažas", "Įtampa per maža. 12 V akumuliatorius gali būti nepakankamai kraunamas.", "🔴 Nerekomenduojama naudoti, kol nepatikrinta 12 V sistema."
-    return name, "🔴", "Krovimas per didelis", "Per didelė įtampa gali pažeisti 12 V elektroniką.", "🔴 Nerekomenduojama naudoti."
+        return name, "🔴", "Krovimas per mažas", "Įtampa per maža. 12 V akumuliatorius gali būti nepakankamai kraunamas.", "🔴 Nerekomenduojama eksploatuoti, kol nepatikrinta 12 V sistema."
+    return name, "🔴", "Krovimas per didelis", "Per didelė įtampa gali pažeisti 12 V elektroniką.", "🔴 Nerekomenduojama eksploatuoti."
 
 
 def format_measurement_response(text, brand, model, year, ev):
@@ -319,14 +329,8 @@ Atitikimas:
 🔧 Ką tikrinti toliau:
 {checks_text}
 
-🚦 Ar galima važiuoti?
-{esc(drive)}
-
-⏱ Diagnostikos laikas:
-15–45 min.
-
-🛠 Remonto laikas:
-30 min. – 3 val."""
+🚦 Eksploatavimo įvertinimas:
+{esc(drive)}"""
 
     name, icon, title, detail, drive = evaluate_charging_voltage(value, ev)
     checks = [
@@ -358,14 +362,8 @@ Atitikimas:
 🔧 Ką tikrinti toliau:
 {checks_text}
 
-🚦 Ar galima važiuoti?
-{esc(drive)}
-
-⏱ Diagnostikos laikas:
-15–45 min.
-
-🛠 Remonto laikas:
-30 min. – 3 val."""
+🚦 Eksploatavimo įvertinimas:
+{esc(drive)}"""
 
 
 
@@ -412,14 +410,8 @@ Atitikimas:
 3. Patikrinti serviso pranešimą automobilio meniu
 4. Jei skysčio lygis normalus – tikėtina, kad reikalingas serviso intervalo atstatymas
 
-🚦 Ar galima važiuoti?
-🟡 Galima naudoti ribotai, jei stabdžiai veikia normaliai ir skysčio lygis nėra žemas.
-
-⏱ Diagnostikos laikas:
-10–30 min.
-
-🛠 Remonto laikas:
-30 min. – 1 val."""
+🚦 Eksploatavimo įvertinimas:
+🟡 Galima eksploatuoti ribotai, jei stabdžiai veikia normaliai ir skysčio lygis nėra žemas."""
 
 
 def score_fault(text, fault):
@@ -468,7 +460,7 @@ Atitikimas:
 🔧 Ką tikrinti pirmiausia:
 {checks_text}
 
-🚦 Ar galima važiuoti?
+🚦 Eksploatavimo įvertinimas:
 {esc(obd.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}
 
 ⏱ Diagnostikos laikas:
@@ -538,7 +530,7 @@ Atitikimas:
 🔧 Ką tikrinti pirmiausia:
 {checks_text}
 
-🚦 Ar galima važiuoti?
+🚦 Eksploatavimo įvertinimas:
 {esc(fault.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}
 
 ⏱ Diagnostikos laikas:
@@ -571,7 +563,17 @@ def diagnose_text(text):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "service": "AutoElektrikas AI V4.2", "time": datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({
+        "status": "ok",
+        "service": "AutoElektrikas AI V7",
+        "modules": {
+            "vehicle_parser": parse_vehicle is not None,
+            "diagnostic_context": build_context is not None,
+            "openai_diagnostic": ask_openai_diagnostic is not None,
+        },
+        "openai_env": bool(os.getenv("OPENAI_API_KEY", "").strip()),
+        "time": datetime.datetime.now(datetime.UTC).isoformat()
+    })
 
 
 @app.route("/telegram-webhook", methods=["POST"])
@@ -649,7 +651,39 @@ Toliau parašykite gedimą."""
 
     send_message(chat_id, "📥 <b>Informacija gauta</b>\n\n🔍 Atliekama diagnostinė analizė...")
 
-    response = diagnose_text(text)
+    local_response = diagnose_text(text)
+    response = local_response
+
+    try:
+        if parse_vehicle and load_session_context and build_context and ask_openai_diagnostic:
+            vehicle = parse_vehicle(text, BRANDS)
+            voltage_value = extract_voltage(text)
+
+            context = build_context(
+                text=text,
+                vehicle=vehicle,
+                obd_code=detect_obd(text),
+                voltage=voltage_value,
+                voltage_context=voltage_context(text) if voltage_value is not None else None,
+                brake_fluid_service=detect_brake_fluid_service(text),
+                local_fault=find_fault_from_text(text),
+                local_response=local_response,
+                session_context=load_session_context(BASE_DIR, chat_id),
+            )
+
+            ai_response = ask_openai_diagnostic(
+                user_text=text,
+                context=context,
+                local_response=local_response,
+            )
+
+            if ai_response:
+                response = ai_response
+
+    except Exception:
+        logger.exception("OpenAI module integration failed")
+        response = local_response
+
     try:
         create_or_update_session(chat_id, text, {"status": "🟡 Reikalingas papildomas patikrinimas", "brand": detect_brand(text), "fault": None})
     except Exception:
