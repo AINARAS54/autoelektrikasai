@@ -31,9 +31,14 @@ except Exception:
     build_context = None
     ask_openai_diagnostic = None
 
+try:
+    from openai import OpenAI
+except Exception:
+    OpenAI = None
+
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V7 app.py - Modular OpenAI Integration
+# V8 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -41,6 +46,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("autoelektrikas_ai")
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
 app = Flask(__name__)
@@ -94,24 +101,20 @@ def send_message(chat_id, text, reply_markup=None):
     return telegram_api("sendMessage", payload)
 
 
-def start_menu():
+def clean_menu():
     return {
         "inline_keyboard": [
-            [{"text": "🔍 Pradėti diagnostiką", "callback_data": "new_diag"}],
-            [{"text": "📄 Diagnostikos santrauka", "callback_data": "summary"}],
             [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
         ]
     }
+
+
+def start_menu():
+    return None
 
 
 def diagnostic_menu():
-    return {
-        "inline_keyboard": [
-            [{"text": "🔧 Įrašyti patikros rezultatą", "callback_data": "add_action"}],
-            [{"text": "📄 Diagnostikos santrauka", "callback_data": "summary"}],
-            [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
-        ]
-    }
+    return clean_menu()
 
 
 def main_menu():
@@ -326,7 +329,7 @@ Išvada:
 Atitikimas:
 {esc(match)}
 
-🔧 Ką tikrinti toliau:
+🔍 Rekomenduojama diagnostikos eiga:
 {checks_text}
 
 🚦 Eksploatavimo įvertinimas:
@@ -359,7 +362,7 @@ Išvada:
 Atitikimas:
 🟡 Vidutinis atitikimas
 
-🔧 Ką tikrinti toliau:
+🔍 Rekomenduojama diagnostikos eiga:
 {checks_text}
 
 🚦 Eksploatavimo įvertinimas:
@@ -404,7 +407,7 @@ Pasibaigęs stabdžių skysčio keitimo intervalas automobilio serviso sistemoje
 Atitikimas:
 🟢 Aukštas atitikimas
 
-🔧 Ką tikrinti pirmiausia:
+🔍 Rekomenduojama diagnostikos eiga:
 1. Patikrinti stabdžių skysčio lygį
 2. Patikrinti, ar nėra skysčio nuotėkio
 3. Patikrinti serviso pranešimą automobilio meniu
@@ -457,14 +460,11 @@ Klaidos kodas nėra galutinė diagnozė.
 Atitikimas:
 🟡 Vidutinis atitikimas
 
-🔧 Ką tikrinti pirmiausia:
+🔍 Rekomenduojama diagnostikos eiga:
 {checks_text}
 
 🚦 Eksploatavimo įvertinimas:
-{esc(obd.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}
-
-⏱ Diagnostikos laikas:
-{esc(obd.get('diagnostic_time', '30–90 min.'))}"""
+{esc(obd.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}"""
     return f"""⚡ <b>OBD kodas: {esc(code)}</b>
 
 Šio kodo dar nėra vietinėje bazėje.
@@ -527,17 +527,11 @@ Problema:
 Atitikimas:
 🟡 Vidutinis atitikimas
 
-🔧 Ką tikrinti pirmiausia:
+🔍 Rekomenduojama diagnostikos eiga:
 {checks_text}
 
 🚦 Eksploatavimo įvertinimas:
-{esc(fault.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}
-
-⏱ Diagnostikos laikas:
-{esc(fault.get('diagnostic_time', '15–60 min.'))}
-
-🛠 Remonto laikas:
-{esc(fault.get('repair_time', '30 min. – 3 val.'))}"""
+{esc(fault.get('operation_assessment', '🟡 Reikalingas papildomas patikrinimas'))}"""
 
 
 def diagnose_text(text):
@@ -561,11 +555,116 @@ def diagnose_text(text):
     return format_fault_response(text, brand, model, year, ev)
 
 
+def detect_intent(text: str, chat_id: str | None = None) -> str:
+    t = normalize(text)
+    question_words = [
+        "kaip", "kur", "kodėl", "kodel", "ką reiškia", "ka reiskia",
+        "kaip atlikti", "kaip padaryti", "kaip patikrinti", "kaip nuresetinti",
+        "kaip resetinti", "reset", "nuresetinti", "atstatyti",
+        "kur rasti", "kaip tai atlikti", "ką daryti", "ka daryti",
+    ]
+    if any(q in t for q in question_words) or "?" in text:
+        return "question"
+    if detect_obd(text):
+        return "obd"
+    if extract_voltage(text) is not None:
+        return "measurement"
+    brand = detect_brand(text)
+    model = detect_model(text)
+    year = detect_year(text)
+    symptom_terms = [
+        "neveikia", "neužsiveda", "neuzsiveda", "dega", "klaida", "pranešimas", "pranesimas",
+        "dingsta", "mirksi", "nesikrauna", "nekrauna", "suka", "nesuka", "užgęsta", "uzgesta",
+        "serviso", "service", "brake", "stabd", "abs", "airbag", "ready", "drive train",
+    ]
+    if (brand or model or year) and not any(s in t for s in symptom_terms):
+        return "vehicle_only"
+    return "diagnostic"
+
+
+def get_session_context_safe(chat_id: str) -> dict:
+    if load_session_context:
+        try:
+            return load_session_context(BASE_DIR, chat_id)
+        except Exception:
+            return {}
+    return {}
+
+
+def ask_openai_question(text: str, chat_id: str) -> str | None:
+    if not OPENAI_API_KEY or OpenAI is None:
+        return None
+    brand = detect_brand(text)
+    model = detect_model(text)
+    year = detect_year(text)
+    ev = is_ev_vehicle(text, brand, model)
+    context = {
+        "vehicle": {"brand": brand, "model": model, "year": year, "is_ev_or_hybrid": ev},
+        "session": get_session_context_safe(chat_id),
+        "user_question": text,
+    }
+    system_prompt = """
+Tu esi profesionalus lengvųjų automobilių autoelektrikas.
+Vartotojas uždavė klausimą, todėl nepradėk naujos diagnostikos.
+Atsakyk į konkretų klausimą trumpai ir praktiškai.
+Nerašyk kainų. Nerašyk remonto ar diagnostikos laiko.
+EV / hibridui nenaudok termino „generatorius“.
+Atsakyk lietuviškai.
+
+Formatas:
+📘 Atsakymas
+
+...
+"""
+    try:
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        response = client.responses.create(
+            model=OPENAI_MODEL,
+            input=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
+            ],
+            temperature=0.2,
+        )
+        answer = (response.output_text or "").strip()
+        return answer or None
+    except Exception:
+        logger.exception("OpenAI question answer failed")
+        return None
+
+
+def local_question_answer(text: str) -> str:
+    t = normalize(text)
+    if "brake fluid" in t or "stabd" in t or "idrive" in t:
+        return """📘 <b>Atsakymas</b>
+
+BMW i3 stabdžių skysčio aptarnavimo priminimo atstatymas dažniausiai atliekamas per serviso meniu.
+
+Bendra eiga:
+1. Įjunkite automobilį į READY arba diagnostikos režimą.
+2. Atidarykite iDrive meniu.
+3. Eikite į Service / Vehicle status / Service requirements.
+4. Pasirinkite Brake Fluid.
+5. Pasirinkite Reset arba Confirm reset.
+6. Patvirtinkite veiksmą.
+
+Jei meniu neleidžia atstatyti:
+1. Patikrinkite, ar tikrai atliktas stabdžių skysčio aptarnavimas.
+2. Patikrinkite, ar nėra aktyvių stabdžių sistemos klaidų.
+3. Atstatymą atlikite diagnostikos įranga.
+
+Pastaba: meniu pavadinimai gali skirtis pagal iDrive versiją."""
+    return """📘 <b>Atsakymas</b>
+
+Parašykite, kokį veiksmą norite atlikti arba kokią sistemą tikrinate.
+Atsakysiu į konkretų techninį klausimą nepradėdamas naujos diagnostikos."""
+
+
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V7",
+        "service": "AutoElektrikas AI V8 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
@@ -585,19 +684,11 @@ def telegram_webhook():
         chat_id = str(cq["message"]["chat"]["id"])
         data = cq.get("data", "")
 
-        if data == "new_diag":
-            clear_session(chat_id)
-            send_message(chat_id, "🔍 Diagnostika pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", diagnostic_menu())
-        elif data == "add_action":
-            send_message(chat_id, "Įrašykite patikros rezultatą.\n\nPavyzdžiai:\n• Akumuliatorius 12.7 V\n• DC/DC krovimas 13.9 V\n• Starteris suka\n• P0301", diagnostic_menu())
-        elif data == "continue_diag":
-            add_user_action(chat_id, "Vartotojas pasirinko tęsti diagnostiką.")
-            send_message(chat_id, "Tęsiame diagnostiką.\n\nĮrašykite naują simptomą, klaidos kodą arba patikros rezultatą.", diagnostic_menu())
-        elif data == "summary":
-            send_message(chat_id, get_session_summary(chat_id), diagnostic_menu())
-        elif data == "clear":
+        if data == "clear":
             clear_session(chat_id)
             send_message(chat_id, "Diagnostikos byla išvalyta. Galite pradėti iš naujo.", start_menu())
+        elif data in ["new_diag", "add_action", "continue_diag", "summary"]:
+            send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą arba patikros rezultatą.", start_menu())
         else:
             send_message(chat_id, "Pasirinkimas neatpažintas.", start_menu())
         return jsonify({"ok": True})
@@ -649,6 +740,22 @@ Toliau parašykite gedimą."""
             send_message(chat_id, vin_msg, diagnostic_menu())
             return jsonify({"ok": True})
 
+    intent = detect_intent(text, chat_id)
+
+    if intent == "question":
+        send_message(chat_id, "📥 <b>Klausimas gautas</b>\n\n🔍 Ruošiamas atsakymas...")
+        answer = ask_openai_question(text, chat_id) or local_question_answer(text)
+        send_message(chat_id, answer, clean_menu())
+        return jsonify({"ok": True})
+
+    if intent == "vehicle_only":
+        try:
+            create_or_update_session(chat_id, text, {"status": "Laukiamas gedimo aprašymas", "brand": detect_brand(text), "fault": None})
+        except Exception:
+            logger.exception("Session update failed")
+        send_message(chat_id, "🚗 <b>Automobilio duomenys gauti</b>\n\nDabar apibūdinkite gedimą.", clean_menu())
+        return jsonify({"ok": True})
+
     send_message(chat_id, "📥 <b>Informacija gauta</b>\n\n🔍 Atliekama diagnostinė analizė...")
 
     local_response = diagnose_text(text)
@@ -658,7 +765,6 @@ Toliau parašykite gedimą."""
         if parse_vehicle and load_session_context and build_context and ask_openai_diagnostic:
             vehicle = parse_vehicle(text, BRANDS)
             voltage_value = extract_voltage(text)
-
             context = build_context(
                 text=text,
                 vehicle=vehicle,
@@ -670,16 +776,13 @@ Toliau parašykite gedimą."""
                 local_response=local_response,
                 session_context=load_session_context(BASE_DIR, chat_id),
             )
-
             ai_response = ask_openai_diagnostic(
                 user_text=text,
                 context=context,
                 local_response=local_response,
             )
-
             if ai_response:
                 response = ai_response
-
     except Exception:
         logger.exception("OpenAI module integration failed")
         response = local_response
@@ -689,7 +792,7 @@ Toliau parašykite gedimą."""
     except Exception:
         logger.exception("Session update failed")
 
-    send_message(chat_id, response, diagnostic_menu())
+    send_message(chat_id, response, clean_menu())
     return jsonify({"ok": True})
 
 
