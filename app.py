@@ -54,7 +54,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V11 FINAL app.py
+# V12 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -143,7 +143,7 @@ Automobilių elektros ir elektronikos diagnostikos asistentas.
 
 📋 Įveskite automobilio duomenis ir apibūdinkite gedimą.
 
-📷 Įkelkite VIN numerį, techninio paso, prietaisų skydelio ar diagnostikos rezultatų nuotraukas – tai padės tiksliau nustatyti gedimą."""
+📎 Galite pateikti papildomą informaciją: kėbulo numerį (VIN), techninio paso duomenis, prietaisų skydelio pranešimus ar diagnostikos rezultatus – tai padės tiksliau nustatyti gedimą."""
 
 
 def normalize(text: str) -> str:
@@ -573,10 +573,8 @@ def diagnose_text(text):
 
 def detect_intent(text: str, chat_id: str | None = None) -> str:
     t = normalize(text)
-
     if is_price_query(text):
         return "price"
-
     question_words = [
         "kaip", "kur", "kodėl", "kodel", "ką reiškia", "ka reiskia",
         "kaip atlikti", "kaip padaryti", "kaip patikrinti", "kaip nuresetinti",
@@ -752,28 +750,20 @@ def read_active_session(chat_id: str) -> dict:
 
 
 def archive_current_case(chat_id: str) -> str | None:
-    """
-    📂 Nauja byla neištrina senos bylos.
-    Esama byla išsaugoma į cases_archive, tada aktyvi sesija išvaloma.
-    """
     src = active_session_path(chat_id)
     if not src.exists():
         return None
-
     try:
         data = json.loads(src.read_text(encoding="utf-8"))
     except Exception:
         data = {}
-
     now = datetime.datetime.now(datetime.UTC)
     case_id = data.get("case_id") or f"AE-{now.strftime('%Y%m%d-%H%M%S')}-{safe_chat_id(chat_id)}"
     data["case_id"] = case_id
     data["status"] = data.get("status") or "Sustabdyta"
     data["archived_at"] = now.isoformat()
-
     dst = archive_dir() / f"{case_id}.json"
     dst.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-
     try:
         src.unlink()
     except Exception:
@@ -781,7 +771,6 @@ def archive_current_case(chat_id: str) -> str | None:
             clear_session(chat_id)
         except Exception:
             pass
-
     return case_id
 
 
@@ -802,78 +791,125 @@ def is_case_command(text: str) -> str | None:
 
 def is_price_query(text: str) -> bool:
     t = normalize(text)
-    terms = [
+    return any(term in t for term in [
         "kiek kainuoja", "kokia kaina", "kiek atsieina", "kiek kainuos",
         "remonto kaina", "dalies kaina", "modulio kaina", "modulių kaina",
         "baterijos kaina", "programinės įrangos", "programines irangos",
-        "software update", "update kaina", "atnaujinti", "atnaujinimas",
-    ]
-    return any(term in t for term in terms)
+        "software update", "update kaina", "atnaujinti", "atnaujinimas"
+    ])
 
 
 def compact_vehicle_image_text(result: dict) -> str | None:
-    if not result or not result.get("ok"):
+    if not result or not result.get("ok") or result.get("document_type") != "registration_document":
         return None
-
-    if result.get("document_type") != "registration_document":
-        return None
-
     vehicle = result.get("vehicle") or {}
-    brand = vehicle.get("brand")
-    model = vehicle.get("model")
-    year = vehicle.get("year")
-    vin = vehicle.get("vin")
-    reg = vehicle.get("registration_number")
-
-    car = " ".join([str(x) for x in [brand, model, year] if x]).strip()
-
+    car = " ".join([str(x) for x in [vehicle.get("brand"), vehicle.get("model"), vehicle.get("year")] if x]).strip()
     lines = ["🚗 <b>Automobilio duomenys nuskaityti</b>"]
     if car:
         lines.append(f"\n🚘 {esc(car)}")
-    if vin:
-        lines.append(f"🔑 VIN: {esc(vin)}")
-    if reg:
-        lines.append(f"🔖 Nr.: {esc(reg)}")
+    if vehicle.get("vin"):
+        lines.append(f"🔑 VIN: {esc(vehicle.get('vin'))}")
+    if vehicle.get("registration_number"):
+        lines.append(f"🔖 Nr.: {esc(vehicle.get('registration_number'))}")
     lines.append("\n✅ Byla atnaujinta.")
     lines.append("✍️ Apibūdinkite gedimą.")
     return "\n".join(lines)
 
 
 def current_vehicle_from_text_or_session(text: str, chat_id: str) -> dict:
+    vehicle = {}
+    session = read_active_session(chat_id)
+    if isinstance(session.get("vehicle"), dict):
+        vehicle.update(session.get("vehicle"))
     brand = detect_brand(text)
     model = detect_model(text)
     year = detect_year(text)
-
-    vehicle = {}
-    session = read_active_session(chat_id)
-
-    if isinstance(session.get("vehicle"), dict):
-        vehicle.update(session.get("vehicle"))
-
     if brand:
         vehicle["brand"] = brand
     if model:
         vehicle["model"] = model
     if year:
         vehicle["year"] = year
-
-    if not vehicle and parse_vehicle:
-        try:
-            vehicle = parse_vehicle(text, BRANDS)
-        except Exception:
-            vehicle = {}
-
     return vehicle
+
+
+def normalize_vehicle_for_sources(vehicle: dict) -> dict:
+    result = dict(vehicle or {})
+    if "make" not in result and result.get("brand"):
+        result["make"] = result.get("brand")
+    if "model_year" not in result and result.get("year"):
+        result["model_year"] = result.get("year")
+    return result
+
+
+def is_bmw_i3_brake_fluid_reset(text: str, vehicle: dict | None = None) -> bool:
+    t = normalize(text)
+    vehicle = vehicle or {}
+    brand = normalize(str(vehicle.get("brand") or vehicle.get("make") or ""))
+    model = normalize(str(vehicle.get("model") or ""))
+    has_bmw = "bmw" in t or brand == "bmw"
+    has_i3 = re.search(r"\bi3\b", t) is not None or model == "i3"
+    has_brake_fluid = "stabdziu skys" in t or "stabdžių skys" in t or "brake fluid" in t or ("stabd" in t and "skys" in t)
+    has_reset = any(x in t for x in ["reset", "nureset", "nunul", "atstat", "panaikinti", "isjungti", "išjungti"])
+    return has_bmw and has_i3 and has_brake_fluid and has_reset
+
+
+def bmw_i3_brake_fluid_reset_answer() -> str:
+    return """📘 <b>BMW i3 stabdžių skysčio serviso intervalo atstatymas</b>
+
+Automobilis:
+BMW i3
+
+Žingsniai:
+1. Įjunkite degimą nepaspausdami stabdžio pedalo, kad automobilis būtų Accessory / diagnostikos režime.
+2. Palaukite, kol prietaisų skydelyje išnyks pradiniai pranešimai.
+3. Paspauskite ir laikykite kairėje prietaisų skydelio pusėje esantį odometro / kelionės atstumo mygtuką apie 10 sekundžių, kol atsivers techninės priežiūros meniu.
+4. Trumpais paspaudimais pereikite iki punkto Brake Fluid.
+5. Kai rodoma Reset possible, paspauskite ir palaikykite mygtuką apie 3 sekundes, kol pasirodys Reset?.
+6. Dar kartą paspauskite ir palaikykite mygtuką, kol prasidės atstatymas.
+7. Baigus procedūrą, prietaisų skydelyje turi būti rodoma nauja stabdžių skysčio aptarnavimo data arba intervalas.
+
+Pastabos:
+• Jei atstatymas nepavyksta arba pranešimas sugrįžta, patikrinkite stabdžių skysčio lygį, lygio daviklį ir DSC/ABS klaidas.
+• Jei meniu šios funkcijos nerodo, atlikite atstatymą diagnostikos įranga, pvz. ISTA, Autel, Launch ar Bosch.
+• Naudotina formuluotė: serviso intervalo atstatymas."""
+
+
+def is_source_query(text: str) -> bool:
+    t = normalize(text)
+    if detect_obd(text):
+        return True
+    return any(term in t for term in [
+        "kaip", "reset", "nuresetinti", "nunulinti", "atstatyti",
+        "serviso interval", "brake fluid", "stabdžių skys", "stabdziu skys",
+        "procedūra", "procedura", "adaptuoti", "kalibruoti"
+    ])
+
+
+def answer_from_online_sources(text: str, chat_id: str) -> str | None:
+    vehicle = normalize_vehicle_for_sources(current_vehicle_from_text_or_session(text, chat_id))
+    if is_bmw_i3_brake_fluid_reset(text, vehicle):
+        return bmw_i3_brake_fluid_reset_answer()
+    if not answer_from_sources:
+        return None
+    try:
+        result = answer_from_sources(text, vehicle)
+        if result and (result.get("ok") or result.get("answer")):
+            answer = result.get("answer")
+            if answer:
+                answer = answer.replace("nulaužim", "atstatym").replace("nulaužti", "atstatyti")
+                return answer
+    except Exception:
+        logger.exception("online_sources answer failed")
+    return None
 
 
 def format_price_response(text: str, chat_id: str) -> str:
     t = normalize(text)
     vehicle = current_vehicle_from_text_or_session(text, chat_id)
-
-    brand = vehicle.get("brand") or detect_brand(text)
+    brand = vehicle.get("brand") or vehicle.get("make") or detect_brand(text)
     model = vehicle.get("model") or detect_model(text)
-    year = vehicle.get("year") or detect_year(text)
-
+    year = vehicle.get("year") or vehicle.get("model_year") or detect_year(text)
     car = " ".join([str(x) for x in [brand, model, year] if x]).strip() or "Nenurodytas automobilis"
 
     if "bater" in t and "modul" in t:
@@ -921,42 +957,11 @@ Kainai patikslinti reikia žinoti:
 4. Automobilio VIN arba tiksli komplektacija."""
 
 
-def is_source_query(text: str) -> bool:
-    t = normalize(text)
-    terms = [
-        "kaip", "reset", "nuresetinti", "nunulinti", "atstatyti",
-        "serviso interval", "brake fluid", "stabdžių skys", "stabdziu skys",
-        "procedūra", "procedura", "adaptuoti", "kalibruoti", "p0", "p1", "u0", "b0", "c0"
-    ]
-    return any(term in t for term in terms) or bool(detect_obd(text))
-
-
-def answer_from_online_sources(text: str, chat_id: str) -> str | None:
-    if not answer_from_sources:
-        return None
-
-    vehicle = current_vehicle_from_text_or_session(text, chat_id)
-
-    try:
-        result = answer_from_sources(text, vehicle)
-        if result and (result.get("ok") or result.get("answer")):
-            answer = result.get("answer")
-            if answer:
-                # Techninės terminijos apsauga.
-                answer = answer.replace("nulaužim", "atstatym")
-                answer = answer.replace("nulaužti", "atstatyti")
-                return answer
-    except Exception:
-        logger.exception("online_sources answer failed")
-
-    return None
-
-
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V11 FINAL",
+        "service": "AutoElektrikas AI V12 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
@@ -984,11 +989,9 @@ def telegram_webhook():
                 send_message(chat_id, "📂 Ankstesnė byla išsaugota.\n\n🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
             else:
                 send_message(chat_id, "🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
-
         elif data == "clear":
             clear_session(chat_id)
             send_message(chat_id, "Byla išvalyta. Galite pradėti iš naujo.", start_menu())
-
         elif data in ["new_diag", "add_action", "continue_diag", "summary"]:
             send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą arba patikros rezultatą.", start_menu())
         else:
@@ -1055,57 +1058,44 @@ def telegram_webhook():
         else:
             send_message(chat_id, "🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
         return jsonify({"ok": True})
-
     if case_command == "clear":
         clear_session(chat_id)
         send_message(chat_id, "Byla išvalyta. Galite pradėti iš naujo.", start_menu())
         return jsonify({"ok": True})
-
     if case_command == "close":
         start_new_case(chat_id)
         send_message(chat_id, "📦 Byla išsaugota ir uždaryta.", start_menu())
         return jsonify({"ok": True})
 
     clean_text = text.replace(" ", "").strip()
-    if len(clean_text) == 17 and clean_text.isalnum():
-        vin_result = None
-        if get_vehicle_from_vin:
-            try:
-                vin_result = get_vehicle_from_vin(clean_text)
-            except Exception:
-                vin_result = None
-        if not vin_result and decode_vin:
-            vin_result = decode_vin(clean_text)
+    if len(clean_text) == 17 and clean_text.isalnum() and get_vehicle_from_vin:
+        vin_result = get_vehicle_from_vin(clean_text)
+        if vin_result.get("ok"):
+            vin_msg = f"""🚗 <b>VIN dekodavimas</b>
 
-        if vin_result and vin_result.get("ok"):
-            vehicle = {
-                "brand": vin_result.get("make"),
-                "model": vin_result.get("model"),
-                "year": vin_result.get("model_year"),
-                "vin": clean_text,
-                "fuel_type": vin_result.get("fuel_type"),
-                "vehicle_type": vin_result.get("vehicle_type"),
-            }
-            try:
-                create_or_update_session(
-                    chat_id,
-                    generate_case_title(vehicle, None),
-                    {
-                        "status": "Automobilio duomenys nuskaityti pagal VIN",
-                        "brand": vehicle.get("brand"),
-                        "fault": None,
-                        "vehicle": vehicle,
-                        "case_title": generate_case_title(vehicle, None),
-                    },
-                )
-            except Exception:
-                logger.exception("Session update failed after VIN")
+Šaltinis:
+{esc(vin_result.get('source'))}
 
-            if format_vin_result:
-                send_message(chat_id, format_vin_result(vin_result), clean_menu())
-            else:
-                vin_msg = f"🚗 <b>VIN duomenys</b>\n\nAutomobilis: {esc(vehicle.get('brand'))} {esc(vehicle.get('model'))} {esc(vehicle.get('year'))}\nVIN: {esc(clean_text)}\n\nDabar apibūdinkite gedimą."
-                send_message(chat_id, vin_msg, clean_menu())
+Markė:
+{esc(vin_result.get('make'))}
+
+Modelis:
+{esc(vin_result.get('model'))}
+
+Metai:
+{esc(vin_result.get('model_year'))}
+
+Kėbulas:
+{esc(vin_result.get('body_class') or 'Nenurodyta')}
+
+Variklis:
+{esc(vin_result.get('engine_model') or 'Nenurodyta')}
+
+Kuro tipas:
+{esc(vin_result.get('fuel_type') or 'Nenurodyta')}
+
+Toliau parašykite gedimą."""
+            send_message(chat_id, vin_msg, diagnostic_menu())
             return jsonify({"ok": True})
 
     intent = detect_intent(text, chat_id)
@@ -1118,7 +1108,6 @@ def telegram_webhook():
         send_message(chat_id, format_price_response(text, chat_id), clean_menu())
         return jsonify({"ok": True})
 
-    # Procedūros, OBD ir kitos patikimos išorinės / vietinės bazės tikrinamos prieš OpenAI bendrą atsakymą.
     if is_source_query(text):
         source_answer = answer_from_online_sources(text, chat_id)
         if source_answer:
