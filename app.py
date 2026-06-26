@@ -22,6 +22,17 @@ except Exception:
     get_vehicle_from_vin = None
 
 try:
+    from online_sources.source_manager import answer_from_sources
+except Exception:
+    answer_from_sources = None
+
+try:
+    from online_sources.nhtsa_vpic import decode_vin, format_vin_result
+except Exception:
+    decode_vin = None
+    format_vin_result = None
+
+try:
     from vehicle_parser import parse_vehicle
     from diagnostic_context import load_session_context, build_context
     from openai_diagnostic import ask_openai_diagnostic
@@ -43,7 +54,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V10 FINAL app.py
+# V11 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -128,11 +139,11 @@ def main_menu():
 
 START_TEXT = """🚗 <b>AutoElektrikas AI</b>
 
-Profesionali automobilių elektros ir elektronikos diagnostika.
+Automobilių elektros ir elektronikos diagnostikos asistentas.
 
 📋 Įveskite automobilio duomenis ir apibūdinkite gedimą.
 
-🔎 Taip pat galite įvesti VIN numerį."""
+📷 Įkelkite VIN numerį, techninio paso, prietaisų skydelio ar diagnostikos rezultatų nuotraukas – tai padės tiksliau nustatyti gedimą."""
 
 
 def normalize(text: str) -> str:
@@ -562,8 +573,10 @@ def diagnose_text(text):
 
 def detect_intent(text: str, chat_id: str | None = None) -> str:
     t = normalize(text)
+
     if is_price_query(text):
         return "price"
+
     question_words = [
         "kaip", "kur", "kodėl", "kodel", "ką reiškia", "ka reiskia",
         "kaip atlikti", "kaip padaryti", "kaip patikrinti", "kaip nuresetinti",
@@ -614,7 +627,7 @@ def ask_openai_question(text: str, chat_id: str) -> str | None:
 Tu esi profesionalus lengvųjų automobilių autoelektrikas.
 Vartotojas uždavė klausimą, todėl nepradėk naujos diagnostikos.
 Atsakyk į konkretų klausimą trumpai ir praktiškai.
-Nerašyk kainų. Nerašyk remonto ar diagnostikos laiko.
+Nerašyk kainų. Nerašyk remonto ar diagnostikos laiko. Serviso atstatymui nevartok žodžių „nulaužti“, „nulaužimas“, „nulaužimui“.
 EV / hibridui nenaudok termino „generatorius“.
 Atsakyk lietuviškai.
 
@@ -728,7 +741,21 @@ def active_session_path(chat_id: str) -> Path:
     return sessions_dir() / f"{safe_chat_id(chat_id)}.json"
 
 
+def read_active_session(chat_id: str) -> dict:
+    path = active_session_path(chat_id)
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
 def archive_current_case(chat_id: str) -> str | None:
+    """
+    📂 Nauja byla neištrina senos bylos.
+    Esama byla išsaugoma į cases_archive, tada aktyvi sesija išvaloma.
+    """
     src = active_session_path(chat_id)
     if not src.exists():
         return None
@@ -740,7 +767,6 @@ def archive_current_case(chat_id: str) -> str | None:
 
     now = datetime.datetime.now(datetime.UTC)
     case_id = data.get("case_id") or f"AE-{now.strftime('%Y%m%d-%H%M%S')}-{safe_chat_id(chat_id)}"
-
     data["case_id"] = case_id
     data["status"] = data.get("status") or "Sustabdyta"
     data["archived_at"] = now.isoformat()
@@ -765,31 +791,24 @@ def start_new_case(chat_id: str) -> str | None:
 
 def is_case_command(text: str) -> str | None:
     t = normalize(text)
-    new_words = [
-        "/newcase", "/new", "nauja byla", "pradėti naują bylą", "pradeti nauja byla",
-        "nauja diagnostika", "pradėti iš naujo", "pradeti is naujo"
-    ]
-    clear_words = ["/clear", "išvalyti bylą", "isvalyti byla", "trinti bylą", "trinti byla"]
-    close_words = ["/close", "uždaryti bylą", "uzdaryti byla", "baigti bylą", "baigti byla"]
-
-    if t in new_words:
+    if t in ["/newcase", "/new", "nauja byla", "pradėti naują bylą", "pradeti nauja byla", "nauja diagnostika", "pradėti iš naujo", "pradeti is naujo"]:
         return "new_case"
-    if t in clear_words:
+    if t in ["/clear", "išvalyti bylą", "isvalyti byla", "trinti bylą", "trinti byla"]:
         return "clear"
-    if t in close_words:
+    if t in ["/close", "uždaryti bylą", "uzdaryti byla", "baigti bylą", "baigti byla"]:
         return "close"
     return None
 
 
 def is_price_query(text: str) -> bool:
     t = normalize(text)
-    price_terms = [
+    terms = [
         "kiek kainuoja", "kokia kaina", "kiek atsieina", "kiek kainuos",
         "remonto kaina", "dalies kaina", "modulio kaina", "modulių kaina",
         "baterijos kaina", "programinės įrangos", "programines irangos",
-        "software update", "update kaina", "atnaujinti", "atnaujinimas"
+        "software update", "update kaina", "atnaujinti", "atnaujinimas",
     ]
-    return any(term in t for term in price_terms)
+    return any(term in t for term in terms)
 
 
 def compact_vehicle_image_text(result: dict) -> str | None:
@@ -800,7 +819,6 @@ def compact_vehicle_image_text(result: dict) -> str | None:
         return None
 
     vehicle = result.get("vehicle") or {}
-
     brand = vehicle.get("brand")
     model = vehicle.get("model")
     year = vehicle.get("year")
@@ -821,15 +839,40 @@ def compact_vehicle_image_text(result: dict) -> str | None:
     return "\n".join(lines)
 
 
-def format_price_response(text: str, chat_id: str) -> str:
-    t = normalize(text)
+def current_vehicle_from_text_or_session(text: str, chat_id: str) -> dict:
     brand = detect_brand(text)
     model = detect_model(text)
     year = detect_year(text)
 
-    session = get_session_context_safe(chat_id)
-    if not brand and session.get("brand"):
-        brand = session.get("brand")
+    vehicle = {}
+    session = read_active_session(chat_id)
+
+    if isinstance(session.get("vehicle"), dict):
+        vehicle.update(session.get("vehicle"))
+
+    if brand:
+        vehicle["brand"] = brand
+    if model:
+        vehicle["model"] = model
+    if year:
+        vehicle["year"] = year
+
+    if not vehicle and parse_vehicle:
+        try:
+            vehicle = parse_vehicle(text, BRANDS)
+        except Exception:
+            vehicle = {}
+
+    return vehicle
+
+
+def format_price_response(text: str, chat_id: str) -> str:
+    t = normalize(text)
+    vehicle = current_vehicle_from_text_or_session(text, chat_id)
+
+    brand = vehicle.get("brand") or detect_brand(text)
+    model = vehicle.get("model") or detect_model(text)
+    year = vehicle.get("year") or detect_year(text)
 
     car = " ".join([str(x) for x in [brand, model, year] if x]).strip() or "Nenurodytas automobilis"
 
@@ -875,21 +918,51 @@ Kainai patikslinti reikia žinoti:
 1. Kuri detalė ar sistema.
 2. Nauja, naudota ar restauruota dalis.
 3. Ar reikės programavimo / adaptacijos.
-4. Automobilio VIN arba tiksli komplektacija.
+4. Automobilio VIN arba tiksli komplektacija."""
 
-Parašykite detalės pavadinimą arba įkelkite dokumento / klaidos nuotrauką."""
+
+def is_source_query(text: str) -> bool:
+    t = normalize(text)
+    terms = [
+        "kaip", "reset", "nuresetinti", "nunulinti", "atstatyti",
+        "serviso interval", "brake fluid", "stabdžių skys", "stabdziu skys",
+        "procedūra", "procedura", "adaptuoti", "kalibruoti", "p0", "p1", "u0", "b0", "c0"
+    ]
+    return any(term in t for term in terms) or bool(detect_obd(text))
+
+
+def answer_from_online_sources(text: str, chat_id: str) -> str | None:
+    if not answer_from_sources:
+        return None
+
+    vehicle = current_vehicle_from_text_or_session(text, chat_id)
+
+    try:
+        result = answer_from_sources(text, vehicle)
+        if result and (result.get("ok") or result.get("answer")):
+            answer = result.get("answer")
+            if answer:
+                # Techninės terminijos apsauga.
+                answer = answer.replace("nulaužim", "atstatym")
+                answer = answer.replace("nulaužti", "atstatyti")
+                return answer
+    except Exception:
+        logger.exception("online_sources answer failed")
+
+    return None
 
 
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V10 FINAL",
+        "service": "AutoElektrikas AI V11 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
             "openai_diagnostic": ask_openai_diagnostic is not None,
             "telegram_photo_handler": handle_photo_or_document is not None,
+            "online_sources": answer_from_sources is not None,
         },
         "openai_env": bool(os.getenv("OPENAI_API_KEY", "").strip()),
         "time": datetime.datetime.now(datetime.UTC).isoformat()
@@ -994,34 +1067,45 @@ def telegram_webhook():
         return jsonify({"ok": True})
 
     clean_text = text.replace(" ", "").strip()
-    if len(clean_text) == 17 and clean_text.isalnum() and get_vehicle_from_vin:
-        vin_result = get_vehicle_from_vin(clean_text)
-        if vin_result.get("ok"):
-            vin_msg = f"""🚗 <b>VIN dekodavimas</b>
+    if len(clean_text) == 17 and clean_text.isalnum():
+        vin_result = None
+        if get_vehicle_from_vin:
+            try:
+                vin_result = get_vehicle_from_vin(clean_text)
+            except Exception:
+                vin_result = None
+        if not vin_result and decode_vin:
+            vin_result = decode_vin(clean_text)
 
-Šaltinis:
-{esc(vin_result.get('source'))}
+        if vin_result and vin_result.get("ok"):
+            vehicle = {
+                "brand": vin_result.get("make"),
+                "model": vin_result.get("model"),
+                "year": vin_result.get("model_year"),
+                "vin": clean_text,
+                "fuel_type": vin_result.get("fuel_type"),
+                "vehicle_type": vin_result.get("vehicle_type"),
+            }
+            try:
+                create_or_update_session(
+                    chat_id,
+                    generate_case_title(vehicle, None),
+                    {
+                        "status": "Automobilio duomenys nuskaityti pagal VIN",
+                        "brand": vehicle.get("brand"),
+                        "fault": None,
+                        "vehicle": vehicle,
+                        "case_title": generate_case_title(vehicle, None),
+                    },
+                )
+            except Exception:
+                logger.exception("Session update failed after VIN")
 
-Markė:
-{esc(vin_result.get('make'))}
-
-Modelis:
-{esc(vin_result.get('model'))}
-
-Metai:
-{esc(vin_result.get('model_year'))}
-
-Kėbulas:
-{esc(vin_result.get('body_class') or 'Nenurodyta')}
-
-Variklis:
-{esc(vin_result.get('engine_model') or 'Nenurodyta')}
-
-Kuro tipas:
-{esc(vin_result.get('fuel_type') or 'Nenurodyta')}
-
-Toliau parašykite gedimą."""
-            send_message(chat_id, vin_msg, diagnostic_menu())
+            if format_vin_result:
+                send_message(chat_id, format_vin_result(vin_result), clean_menu())
+            else:
+                vin_msg = f"🚗 <b>VIN duomenys</b>\n\nAutomobilis: {esc(vehicle.get('brand'))} {esc(vehicle.get('model'))} {esc(vehicle.get('year'))}\nVIN: {esc(clean_text)}\n\nDabar apibūdinkite gedimą."
+                send_message(chat_id, vin_msg, clean_menu())
             return jsonify({"ok": True})
 
     intent = detect_intent(text, chat_id)
@@ -1033,6 +1117,13 @@ Toliau parašykite gedimą."""
             logger.exception("Session update failed")
         send_message(chat_id, format_price_response(text, chat_id), clean_menu())
         return jsonify({"ok": True})
+
+    # Procedūros, OBD ir kitos patikimos išorinės / vietinės bazės tikrinamos prieš OpenAI bendrą atsakymą.
+    if is_source_query(text):
+        source_answer = answer_from_online_sources(text, chat_id)
+        if source_answer:
+            send_message(chat_id, source_answer, clean_menu())
+            return jsonify({"ok": True})
 
     if intent == "question":
         answer = ask_openai_question(text, chat_id) or local_question_answer(text)
