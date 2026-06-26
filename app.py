@@ -53,6 +53,12 @@ except Exception:
     handle_photo_or_document = None
 
 try:
+    from response_formatter import clean_telegram_text, format_bms_adaptation_answer
+except Exception:
+    clean_telegram_text = None
+    format_bms_adaptation_answer = None
+
+try:
     from context_engine import (
         update_context as ce_update_context,
         load_context as ce_load_context,
@@ -73,7 +79,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V14 FINAL app.py
+# V14.1 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -125,6 +131,12 @@ def telegram_api(method: str, payload: dict):
 
 
 def send_message(chat_id, text, reply_markup=None):
+    if clean_telegram_text:
+        try:
+            text = clean_telegram_text(text)
+        except Exception:
+            pass
+
     payload = {
         "chat_id": chat_id,
         "text": text,
@@ -1244,12 +1256,38 @@ Prieš remontą būtina patikrinti:
 Pastaba:
 Tik pagal sumažėjusią ridą negalima nuspręsti, ar reikia keisti visą bateriją. Pirmiausia reikalinga BMS/SOH diagnostika."""
 
+def is_bms_adaptation_question(text: str) -> bool:
+    t = normalize(text)
+    has_bms = "bms" in t
+    has_adapt = any(x in t for x in ["adapt", "atlikti", "kaip", "registr", "pririšti", "priristi", "reset"])
+    return has_bms and has_adapt
+
+
+def answer_bms_adaptation_question(text: str, chat_id: str) -> str | None:
+    if not is_bms_adaptation_question(text):
+        return None
+
+    vehicle = None
+    try:
+        if ce_load_context and ce_get_vehicle_label:
+            ctx = ce_load_context(BASE_DIR, chat_id)
+            vehicle = ce_get_vehicle_label(ctx)
+            if vehicle == "Nenurodytas automobilis":
+                vehicle = None
+    except Exception:
+        vehicle = None
+
+    if format_bms_adaptation_answer:
+        return format_bms_adaptation_answer(vehicle)
+
+    return None
+
 
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V14 FINAL",
+        "service": "AutoElektrikas AI V14.1 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
@@ -1257,6 +1295,7 @@ def health():
             "telegram_photo_handler": handle_photo_or_document is not None,
             "online_sources": answer_from_sources is not None,
             "context_engine": ce_update_context is not None,
+            "response_formatter": clean_telegram_text is not None,
         },
         "openai_env": bool(os.getenv("OPENAI_API_KEY", "").strip()),
         "time": datetime.datetime.now(datetime.UTC).isoformat()
@@ -1424,6 +1463,11 @@ Toliau parašykite gedimą."""
     v14_hv = format_v14_hv_battery_consultation(text, chat_id)
     if v14_hv and intent != "price":
         send_message(chat_id, v14_hv, clean_menu())
+        return jsonify({"ok": True})
+
+    bms_answer = answer_bms_adaptation_question(text, chat_id)
+    if bms_answer:
+        send_message(chat_id, bms_answer, clean_menu())
         return jsonify({"ok": True})
 
     if is_source_query(text):
