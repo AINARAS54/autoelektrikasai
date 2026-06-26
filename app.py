@@ -52,9 +52,28 @@ try:
 except Exception:
     handle_photo_or_document = None
 
+try:
+    from context_engine import (
+        update_context as ce_update_context,
+        load_context as ce_load_context,
+        clear_context as ce_clear_context,
+        get_vehicle_label as ce_get_vehicle_label,
+        get_hv_range_summary as ce_get_hv_range_summary,
+        is_contextual_hv_price as ce_is_contextual_hv_price,
+        is_hv_battery_consultation as ce_is_hv_battery_consultation,
+    )
+except Exception:
+    ce_update_context = None
+    ce_load_context = None
+    ce_clear_context = None
+    ce_get_vehicle_label = None
+    ce_get_hv_range_summary = None
+    ce_is_contextual_hv_price = None
+    ce_is_hv_battery_consultation = None
+
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V13 FINAL app.py
+# V14 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -1115,17 +1134,129 @@ Pastaba:
 Tik pagal sumažėjusią ridą negalima nuspręsti, ar reikia keisti visą bateriją. Pirmiausia reikalinga BMS/SOH diagnostika."""
 
 
+def ce_safe_load(chat_id: str) -> dict:
+    if ce_load_context:
+        try:
+            return ce_load_context(BASE_DIR, chat_id)
+        except Exception:
+            return {}
+    return {}
+
+
+def ce_safe_update(chat_id: str, text: str, extra: dict | None = None) -> dict:
+    if ce_update_context:
+        try:
+            return ce_update_context(BASE_DIR, chat_id, text, extra)
+        except Exception:
+            logger.exception("Context engine update failed")
+    return {}
+
+
+def format_v14_hv_battery_consultation(text: str, chat_id: str) -> str | None:
+    if ce_is_hv_battery_consultation and not ce_is_hv_battery_consultation(text):
+        return None
+
+    ctx = ce_safe_update(chat_id, text, {"topic": "HV_BATTERY"})
+    if not ctx:
+        return None
+
+    car = ce_get_vehicle_label(ctx) if ce_get_vehicle_label else "Elektromobilis"
+    if car == "Nenurodytas automobilis":
+        car = "Elektromobilis"
+
+    range_summary = ce_get_hv_range_summary(ctx) if ce_get_hv_range_summary else ""
+
+    range_block = f"\n\n{range_summary}" if range_summary else ""
+
+    conclusion = ""
+    measurements = ctx.get("measurements") if isinstance(ctx.get("measurements"), dict) else {}
+    loss = measurements.get("range_loss_percent")
+    if loss is not None:
+        if loss >= 30:
+            conclusion = f"\n\nVertinimas:\n🔴 Apie {loss} % sumažėjimas yra didelis. Reikia atlikti BMS/SOH ir modulių balansavimo patikrą."
+        elif loss >= 20:
+            conclusion = f"\n\nVertinimas:\n🟡 Apie {loss} % sumažėjimas yra pastebimas. Reikalinga baterijos būklės patikra."
+        else:
+            conclusion = f"\n\nVertinimas:\n🟢 Apie {loss} % sumažėjimas gali būti artimas natūraliai degradacijai, bet SOH patikra vis tiek naudinga."
+
+    return f"""🔋 <b>Aukštos įtampos baterijos analizė</b>
+
+Automobilis:
+{esc(car)}{esc(range_block)}{esc(conclusion)}
+
+Galimos priežastys:
+1. Natūrali baterijos elementų degradacija.
+2. Netiksli BMS talpos adaptacija.
+3. Vieno ar kelių modulių disbalansas.
+4. Padidėjusi elementų vidinė varža.
+5. Temperatūros daviklių arba BMS klaidos.
+
+Ar galima „atstatyti“ bateriją?
+Visiškai atkurti pradinės fizinės talpos negalima, jei elementai susidėvėję. Tačiau kai kuriais atvejais galima pagerinti veikimą:
+• atlikti BMS adaptaciją;
+• subalansuoti modulius;
+• pakeisti silpnus modulius;
+• atnaujinti BMS programinę įrangą, jei gamintojas tai numato.
+
+Rekomenduojama patikra:
+1. Nuskaityti BMS klaidas.
+2. Patikrinti SOH.
+3. Patikrinti modulių įtampas ir balansą.
+4. Patikrinti elementų temperatūrų skirtumus.
+5. Įvertinti baterijos vidinę varžą."""
+
+
+def format_v14_hv_battery_price(text: str, chat_id: str) -> str | None:
+    ctx = ce_safe_update(chat_id, text, {"last_intent": "PRICE"})
+    if not ctx:
+        ctx = ce_safe_load(chat_id)
+
+    if ce_is_contextual_hv_price and not ce_is_contextual_hv_price(text, ctx):
+        return None
+
+    car = ce_get_vehicle_label(ctx) if ce_get_vehicle_label else "Elektromobilis"
+    if car == "Nenurodytas automobilis":
+        car = "Elektromobilis"
+
+    range_summary = ce_get_hv_range_summary(ctx) if ce_get_hv_range_summary else ""
+    range_block = f"\n\nKontekstas:\n{range_summary}" if range_summary else ""
+
+    return f"""💰 <b>HV baterijos remonto kaina</b>
+
+Automobilis:
+{esc(car)}{esc(range_block)}
+
+Orientacinės kainos:
+• BMS diagnostika / SOH patikra: apie 100–300 €
+• Modulių įtampos ir balanso patikra: apie 100–300 €
+• Vieno modulio keitimas: apie 500–1500 €+
+• Naudotas baterijos paketas: apie 3000–8000 €+
+• Baterijos paketo restauravimas: kaina priklauso nuo modulių būklės.
+
+Prieš remontą būtina patikrinti:
+1. SOH.
+2. Modulių įtampas.
+3. Modulių balansą.
+4. BMS klaidas.
+5. Temperatūros daviklius.
+6. Izoliacijos klaidas.
+
+Pastaba:
+Tik pagal sumažėjusią ridą negalima nuspręsti, ar reikia keisti visą bateriją. Pirmiausia reikalinga BMS/SOH diagnostika."""
+
+
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V13 FINAL",
+        "service": "AutoElektrikas AI V14 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
             "openai_diagnostic": ask_openai_diagnostic is not None,
             "telegram_photo_handler": handle_photo_or_document is not None,
             "online_sources": answer_from_sources is not None,
+            "context_engine": ce_update_context is not None,
         },
         "openai_env": bool(os.getenv("OPENAI_API_KEY", "").strip()),
         "time": datetime.datetime.now(datetime.UTC).isoformat()
@@ -1149,6 +1280,8 @@ def telegram_webhook():
                 send_message(chat_id, "🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
         elif data == "clear":
             clear_session(chat_id)
+            if ce_clear_context:
+                ce_clear_context(BASE_DIR, chat_id)
             send_message(chat_id, "Byla išvalyta. Galite pradėti iš naujo.", start_menu())
         elif data in ["new_diag", "add_action", "continue_diag", "summary"]:
             send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą arba patikros rezultatą.", start_menu())
@@ -1230,6 +1363,8 @@ def telegram_webhook():
     except Exception:
         logger.exception("Case context update failed")
 
+    ce_safe_update(chat_id, text)
+
     clean_text = text.replace(" ", "").strip()
     if len(clean_text) == 17 and clean_text.isalnum() and get_vehicle_from_vin:
         vin_result = get_vehicle_from_vin(clean_text)
@@ -1274,11 +1409,21 @@ Toliau parašykite gedimą."""
             return jsonify({"ok": True})
 
     if intent == "price":
+        v14_price = format_v14_hv_battery_price(text, chat_id)
+        if v14_price:
+            send_message(chat_id, v14_price, clean_menu())
+            return jsonify({"ok": True})
+
         try:
             update_case_context(chat_id, text, {"last_intent": "price"})
         except Exception:
             logger.exception("Session update failed")
         send_message(chat_id, format_price_response(text, chat_id), clean_menu())
+        return jsonify({"ok": True})
+
+    v14_hv = format_v14_hv_battery_consultation(text, chat_id)
+    if v14_hv and intent != "price":
+        send_message(chat_id, v14_hv, clean_menu())
         return jsonify({"ok": True})
 
     if is_source_query(text):
