@@ -54,7 +54,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V12 FINAL app.py
+# V13 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -905,6 +905,10 @@ def answer_from_online_sources(text: str, chat_id: str) -> str | None:
 
 
 def format_price_response(text: str, chat_id: str) -> str:
+    hv_price = format_hv_battery_price(text, chat_id)
+    if hv_price:
+        return hv_price
+
     t = normalize(text)
     vehicle = current_vehicle_from_text_or_session(text, chat_id)
     brand = vehicle.get("brand") or vehicle.get("make") or detect_brand(text)
@@ -957,11 +961,165 @@ Kainai patikslinti reikia žinoti:
 4. Automobilio VIN arba tiksli komplektacija."""
 
 
+def extract_range_context(text: str) -> dict:
+    t = normalize(text)
+    nums = [int(x) for x in re.findall(r"\b(\d{2,4})\s*km\b", t)]
+    ctx = {}
+    if len(nums) >= 2:
+        ctx["range_new_km"] = nums[0]
+        ctx["range_current_km"] = nums[1]
+        if nums[0] > 0:
+            ctx["range_loss_percent"] = round((1 - nums[1] / nums[0]) * 100)
+    if any(x in t for x in ["bater", "akumuliator", "hv", "aukštos įtampos", "aukstos itampos"]):
+        ctx["topic"] = "HV baterija"
+    if any(x in t for x in ["nuvažiuoja", "nuvaziuoja", "rida", "km", "talpa", "soh"]):
+        ctx["subtopic"] = "sumažėjusi nuvažiuojama rida / baterijos talpa"
+    return ctx
+
+
+def update_case_context(chat_id: str, text: str, extra: dict | None = None):
+    try:
+        session = read_active_session(chat_id)
+    except Exception:
+        session = {}
+
+    case_context = session.get("case_context") if isinstance(session.get("case_context"), dict) else {}
+    vehicle = session.get("vehicle") if isinstance(session.get("vehicle"), dict) else {}
+
+    brand = detect_brand(text)
+    model = detect_model(text)
+    year = detect_year(text)
+
+    if brand:
+        vehicle["brand"] = brand
+    if model:
+        vehicle["model"] = model
+    if year:
+        vehicle["year"] = year
+
+    case_context.update(extract_range_context(text))
+
+    if extra:
+        case_context.update(extra)
+
+    create_or_update_session(
+        chat_id,
+        text,
+        {
+            "status": "Aktyvi byla",
+            "brand": vehicle.get("brand") or detect_brand(text),
+            "fault": None,
+            "vehicle": vehicle,
+            "case_context": case_context,
+            "case_title": generate_case_title(vehicle, text),
+        },
+    )
+
+
+def get_case_context(chat_id: str) -> dict:
+    try:
+        session = read_active_session(chat_id)
+        ctx = session.get("case_context")
+        return ctx if isinstance(ctx, dict) else {}
+    except Exception:
+        return {}
+
+
+def format_hv_battery_consultation(text: str, chat_id: str) -> str | None:
+    t = normalize(text)
+    if not any(x in t for x in ["bater", "talpa", "soh", "nuvažiuoja", "nuvaziuoja", "rida"]):
+        return None
+
+    ctx = get_case_context(chat_id)
+    ctx.update(extract_range_context(text))
+
+    vehicle = current_vehicle_from_text_or_session(text, chat_id)
+    car = " ".join([str(x) for x in [vehicle.get("brand"), vehicle.get("model"), vehicle.get("year")] if x]).strip()
+    car = car or "Elektromobilis"
+
+    range_line = ""
+    if ctx.get("range_new_km") and ctx.get("range_current_km"):
+        range_line = f"\nNuvažiuojamas atstumas sumažėjo nuo {ctx.get('range_new_km')} km iki {ctx.get('range_current_km')} km."
+        if ctx.get("range_loss_percent") is not None:
+            range_line += f"\nApytikslis sumažėjimas: {ctx.get('range_loss_percent')} %."
+
+    return f"""🔋 <b>Aukštos įtampos baterijos būklės įvertinimas</b>
+
+Automobilis:
+{esc(car)}{esc(range_line)}
+
+Galimos priežastys:
+1. Natūrali baterijos elementų degradacija.
+2. Netiksli BMS talpos adaptacija.
+3. Vieno ar kelių modulių disbalansas.
+4. Padidėjusi elementų vidinė varža.
+5. Temperatūros daviklių arba BMS klaidos.
+
+Ar galima „atstatyti“ bateriją?
+Visiškai atkurti pradinės fizinės talpos negalima, jei elementai susidėvėję. Tačiau kai kuriais atvejais galima pagerinti veikimą:
+• atlikti BMS adaptaciją;
+• subalansuoti modulius;
+• pakeisti silpnus modulius;
+• atnaujinti BMS programinę įrangą, jei gamintojas tai numato.
+
+Rekomenduojama patikra:
+1. Nuskaityti BMS klaidas.
+2. Patikrinti SOH.
+3. Patikrinti modulių įtampas ir balansą.
+4. Patikrinti elementų temperatūrų skirtumus.
+5. Įvertinti baterijos vidinę varžą.
+
+Pastaba:
+Jei rida sumažėjo staiga, pirmiausia tikrinami moduliai ir BMS klaidos. Jei mažėjo palaipsniui per kelis metus – labiau tikėtina natūrali degradacija."""
+
+
+def format_hv_battery_price(text: str, chat_id: str) -> str | None:
+    t = normalize(text)
+    if not ("kain" in t or "remont" in t):
+        return None
+    if not any(x in t for x in ["bater", "modul", "soh", "akumuliator"]):
+        return None
+
+    ctx = get_case_context(chat_id)
+    vehicle = current_vehicle_from_text_or_session(text, chat_id)
+    car = " ".join([str(x) for x in [vehicle.get("brand"), vehicle.get("model"), vehicle.get("year")] if x]).strip()
+    car = car or "Elektromobilis"
+
+    range_line = ""
+    if ctx.get("range_new_km") and ctx.get("range_current_km"):
+        range_line = f"\nKontekstas: rida sumažėjo nuo {ctx.get('range_new_km')} km iki {ctx.get('range_current_km')} km."
+        if ctx.get("range_loss_percent") is not None:
+            range_line += f" Apytikslis sumažėjimas: {ctx.get('range_loss_percent')} %."
+
+    return f"""💰 <b>HV baterijos remonto kaina</b>
+
+Automobilis:
+{esc(car)}{esc(range_line)}
+
+Orientacinės kainos:
+• BMS diagnostika / SOH patikra: apie 100–300 €
+• Modulių įtampos ir balanso patikra: apie 100–300 €
+• Vieno modulio keitimas: apie 500–1500 €+
+• Naudotas baterijos paketas: apie 3000–8000 €+
+• Baterijos paketo restauravimas: kaina priklauso nuo modulių būklės.
+
+Prieš remontą būtina patikrinti:
+1. SOH.
+2. Modulių įtampas.
+3. Modulių balansą.
+4. BMS klaidas.
+5. Temperatūros daviklius.
+6. Izoliacijos klaidas.
+
+Pastaba:
+Tik pagal sumažėjusią ridą negalima nuspręsti, ar reikia keisti visą bateriją. Pirmiausia reikalinga BMS/SOH diagnostika."""
+
+
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V12 FINAL",
+        "service": "AutoElektrikas AI V13 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
@@ -1067,6 +1225,11 @@ def telegram_webhook():
         send_message(chat_id, "📦 Byla išsaugota ir uždaryta.", start_menu())
         return jsonify({"ok": True})
 
+    try:
+        update_case_context(chat_id, text)
+    except Exception:
+        logger.exception("Case context update failed")
+
     clean_text = text.replace(" ", "").strip()
     if len(clean_text) == 17 and clean_text.isalnum() and get_vehicle_from_vin:
         vin_result = get_vehicle_from_vin(clean_text)
@@ -1100,9 +1263,19 @@ Toliau parašykite gedimą."""
 
     intent = detect_intent(text, chat_id)
 
+    if intent != "price":
+        hv_answer = format_hv_battery_consultation(text, chat_id)
+        if hv_answer:
+            try:
+                update_case_context(chat_id, text, {"topic": "HV baterija"})
+            except Exception:
+                pass
+            send_message(chat_id, hv_answer, clean_menu())
+            return jsonify({"ok": True})
+
     if intent == "price":
         try:
-            create_or_update_session(chat_id, text, {"status": "Kainos užklausa", "brand": detect_brand(text), "fault": None})
+            update_case_context(chat_id, text, {"last_intent": "price"})
         except Exception:
             logger.exception("Session update failed")
         send_message(chat_id, format_price_response(text, chat_id), clean_menu())
