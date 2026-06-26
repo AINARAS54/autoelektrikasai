@@ -43,7 +43,7 @@ except Exception:
 
 # ==========================================================
 # AutoElektrikas AI - Telegram Webhook
-# V9 FINAL app.py
+# V10 FINAL app.py
 # ==========================================================
 
 load_dotenv()
@@ -109,8 +109,7 @@ def send_message(chat_id, text, reply_markup=None):
 def clean_menu():
     return {
         "inline_keyboard": [
-            [{"text": "🆕 Nauja byla", "callback_data": "new_case"}],
-            [{"text": "🧹 Išvalyti bylą", "callback_data": "clear"}],
+            [{"text": "📂 Nauja byla", "callback_data": "new_case"}],
         ]
     }
 
@@ -563,6 +562,8 @@ def diagnose_text(text):
 
 def detect_intent(text: str, chat_id: str | None = None) -> str:
     t = normalize(text)
+    if is_price_query(text):
+        return "price"
     question_words = [
         "kaip", "kur", "kodėl", "kodel", "ką reiškia", "ka reiskia",
         "kaip atlikti", "kaip padaryti", "kaip patikrinti", "kaip nuresetinti",
@@ -707,11 +708,183 @@ def vehicle_from_vision_result(vision_result: dict | None) -> dict:
     }
 
 
+def sessions_dir() -> Path:
+    path = BASE_DIR / "sessions"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def archive_dir() -> Path:
+    path = BASE_DIR / "cases_archive"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def safe_chat_id(chat_id: str) -> str:
+    return "".join(ch for ch in str(chat_id) if ch.isalnum() or ch in ("_", "-"))
+
+
+def active_session_path(chat_id: str) -> Path:
+    return sessions_dir() / f"{safe_chat_id(chat_id)}.json"
+
+
+def archive_current_case(chat_id: str) -> str | None:
+    src = active_session_path(chat_id)
+    if not src.exists():
+        return None
+
+    try:
+        data = json.loads(src.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+
+    now = datetime.datetime.now(datetime.UTC)
+    case_id = data.get("case_id") or f"AE-{now.strftime('%Y%m%d-%H%M%S')}-{safe_chat_id(chat_id)}"
+
+    data["case_id"] = case_id
+    data["status"] = data.get("status") or "Sustabdyta"
+    data["archived_at"] = now.isoformat()
+
+    dst = archive_dir() / f"{case_id}.json"
+    dst.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    try:
+        src.unlink()
+    except Exception:
+        try:
+            clear_session(chat_id)
+        except Exception:
+            pass
+
+    return case_id
+
+
+def start_new_case(chat_id: str) -> str | None:
+    return archive_current_case(chat_id)
+
+
+def is_case_command(text: str) -> str | None:
+    t = normalize(text)
+    new_words = [
+        "/newcase", "/new", "nauja byla", "pradėti naują bylą", "pradeti nauja byla",
+        "nauja diagnostika", "pradėti iš naujo", "pradeti is naujo"
+    ]
+    clear_words = ["/clear", "išvalyti bylą", "isvalyti byla", "trinti bylą", "trinti byla"]
+    close_words = ["/close", "uždaryti bylą", "uzdaryti byla", "baigti bylą", "baigti byla"]
+
+    if t in new_words:
+        return "new_case"
+    if t in clear_words:
+        return "clear"
+    if t in close_words:
+        return "close"
+    return None
+
+
+def is_price_query(text: str) -> bool:
+    t = normalize(text)
+    price_terms = [
+        "kiek kainuoja", "kokia kaina", "kiek atsieina", "kiek kainuos",
+        "remonto kaina", "dalies kaina", "modulio kaina", "modulių kaina",
+        "baterijos kaina", "programinės įrangos", "programines irangos",
+        "software update", "update kaina", "atnaujinti", "atnaujinimas"
+    ]
+    return any(term in t for term in price_terms)
+
+
+def compact_vehicle_image_text(result: dict) -> str | None:
+    if not result or not result.get("ok"):
+        return None
+
+    if result.get("document_type") != "registration_document":
+        return None
+
+    vehicle = result.get("vehicle") or {}
+
+    brand = vehicle.get("brand")
+    model = vehicle.get("model")
+    year = vehicle.get("year")
+    vin = vehicle.get("vin")
+    reg = vehicle.get("registration_number")
+
+    car = " ".join([str(x) for x in [brand, model, year] if x]).strip()
+
+    lines = ["🚗 <b>Automobilio duomenys nuskaityti</b>"]
+    if car:
+        lines.append(f"\n🚘 {esc(car)}")
+    if vin:
+        lines.append(f"🔑 VIN: {esc(vin)}")
+    if reg:
+        lines.append(f"🔖 Nr.: {esc(reg)}")
+    lines.append("\n✅ Byla atnaujinta.")
+    lines.append("✍️ Apibūdinkite gedimą.")
+    return "\n".join(lines)
+
+
+def format_price_response(text: str, chat_id: str) -> str:
+    t = normalize(text)
+    brand = detect_brand(text)
+    model = detect_model(text)
+    year = detect_year(text)
+
+    session = get_session_context_safe(chat_id)
+    if not brand and session.get("brand"):
+        brand = session.get("brand")
+
+    car = " ".join([str(x) for x in [brand, model, year] if x]).strip() or "Nenurodytas automobilis"
+
+    if "bater" in t and "modul" in t:
+        return f"""💰 <b>Apytikslė dalių kaina</b>
+
+Automobilis:
+{esc(car)}
+
+Baterijos moduliai:
+• Naudotas modulis: apie 300–800 €
+• Restauruotas modulis: apie 600–1200 €
+• Naujas modulis: apie 1500–3000 €+
+
+Tiksli kaina priklauso nuo baterijos versijos, modulio numerio, būklės ir tiekėjo.
+
+Pastaba:
+Aukštos įtampos baterijos darbams reikalinga EV saugos kvalifikacija."""
+
+    if any(x in t for x in ["program", "software", "atnauj"]):
+        return f"""💰 <b>Programinės įrangos atnaujinimas</b>
+
+Automobilis:
+{esc(car)}
+
+Orientacinė kaina:
+• Nepriklausomas servisas: apie 100–300 €
+• Oficialus atstovas: apie 200–500 €+
+
+Kaina priklauso nuo to, ar atnaujinamas vienas valdymo blokas, ar visas automobilio modulių paketas.
+
+Prieš atnaujinimą rekomenduojama:
+1. Patikrinti 12 V akumuliatoriaus būklę.
+2. Užtikrinti stabilų maitinimą programavimo metu.
+3. Nuskaityti esamus klaidų kodus."""
+
+    return f"""💰 <b>Apytikslė kaina</b>
+
+Automobilis:
+{esc(car)}
+
+Kainai patikslinti reikia žinoti:
+1. Kuri detalė ar sistema.
+2. Nauja, naudota ar restauruota dalis.
+3. Ar reikės programavimo / adaptacijos.
+4. Automobilio VIN arba tiksli komplektacija.
+
+Parašykite detalės pavadinimą arba įkelkite dokumento / klaidos nuotrauką."""
+
+
 @app.route("/", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V9 FINAL",
+        "service": "AutoElektrikas AI V10 FINAL",
         "modules": {
             "vehicle_parser": parse_vehicle is not None,
             "diagnostic_context": build_context is not None,
@@ -732,9 +905,17 @@ def telegram_webhook():
         chat_id = str(cq["message"]["chat"]["id"])
         data = cq.get("data", "")
 
-        if data == "clear":
+        if data == "new_case":
+            archived_id = start_new_case(chat_id)
+            if archived_id:
+                send_message(chat_id, "📂 Ankstesnė byla išsaugota.\n\n🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
+            else:
+                send_message(chat_id, "🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
+
+        elif data == "clear":
             clear_session(chat_id)
-            send_message(chat_id, "Diagnostikos byla išvalyta. Galite pradėti iš naujo.", start_menu())
+            send_message(chat_id, "Byla išvalyta. Galite pradėti iš naujo.", start_menu())
+
         elif data in ["new_diag", "add_action", "continue_diag", "summary"]:
             send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą arba patikros rezultatą.", start_menu())
         else:
@@ -773,9 +954,10 @@ def telegram_webhook():
             except Exception:
                 logger.exception("Failed to update session from vehicle image")
 
+            compact_text = compact_vehicle_image_text(vision_result)
             send_message(
                 chat_id,
-                result.get("text", "Failas gautas."),
+                compact_text or result.get("text", "Failas gautas."),
                 clean_menu()
             )
             return jsonify({"ok": True})
@@ -790,6 +972,25 @@ def telegram_webhook():
 
     if not text:
         send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
+        return jsonify({"ok": True})
+
+    case_command = is_case_command(text)
+    if case_command == "new_case":
+        archived_id = start_new_case(chat_id)
+        if archived_id:
+            send_message(chat_id, "📂 Ankstesnė byla išsaugota.\n\n🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
+        else:
+            send_message(chat_id, "🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą.", start_menu())
+        return jsonify({"ok": True})
+
+    if case_command == "clear":
+        clear_session(chat_id)
+        send_message(chat_id, "Byla išvalyta. Galite pradėti iš naujo.", start_menu())
+        return jsonify({"ok": True})
+
+    if case_command == "close":
+        start_new_case(chat_id)
+        send_message(chat_id, "📦 Byla išsaugota ir uždaryta.", start_menu())
         return jsonify({"ok": True})
 
     clean_text = text.replace(" ", "").strip()
@@ -824,6 +1025,14 @@ Toliau parašykite gedimą."""
             return jsonify({"ok": True})
 
     intent = detect_intent(text, chat_id)
+
+    if intent == "price":
+        try:
+            create_or_update_session(chat_id, text, {"status": "Kainos užklausa", "brand": detect_brand(text), "fault": None})
+        except Exception:
+            logger.exception("Session update failed")
+        send_message(chat_id, format_price_response(text, chat_id), clean_menu())
+        return jsonify({"ok": True})
 
     if intent == "question":
         answer = ask_openai_question(text, chat_id) or local_question_answer(text)
