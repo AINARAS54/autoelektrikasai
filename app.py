@@ -498,7 +498,11 @@ def is_procedure_query(text: str) -> bool:
 
 def is_hv_battery_text(text: str) -> bool:
     t = normalize(text)
-    return any(x in t for x in ["bater", "talpa", "soh", "nuvažiuoja", "nuvaziuoja", "rida", "atstatyti bater"])
+    return any(x in t for x in [
+        "bater", "akumuliator", "aukštos įtampos", "aukstos itampos",
+        "talpa", "soh", "nuvažiuoja", "nuvaziuoja", "nuvažiuodavo",
+        "nuvaziuodavo", "rida", "atstatyti bater"
+    ])
 
 
 def detect_intent(text: str, ctx: dict | None = None) -> str:
@@ -513,10 +517,11 @@ def detect_intent(text: str, ctx: dict | None = None) -> str:
         return "PRICE"
     if detect_obd(text):
         return "OBD"
-    if is_procedure_query(text):
-        return "PROCEDURE"
+    # EV / HV baterijos klausimai turi prioritetą prieš bendras procedūras.
     if is_hv_battery_text(text):
         return "EV_BATTERY"
+    if is_procedure_query(text):
+        return "PROCEDURE"
     if "?" in text or any(x in t for x in ["kodėl", "kodel", "kur", "ką reiškia", "ka reiskia"]):
         return "QUESTION"
     return "DIAGNOSTIC"
@@ -838,7 +843,7 @@ def handle_photo(chat_id: str, message: dict):
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V15 integrated",
+        "service": "AutoElektrikas AI V15.1 integrated",
         "modules": {
             "photo_handler": handle_photo_or_document is not None,
             "vin_decoder": decode_vin is not None,
@@ -917,6 +922,13 @@ def telegram_webhook():
                 send_message(chat_id, f"🚗 <b>VIN duomenys</b>\n\nAutomobilis:\n{esc(vehicle_label_local(vehicle))}\nVIN: {esc(clean_text)}\n\nDabar apibūdinkite gedimą.", clean_menu())
             return jsonify({"ok": True})
 
+    # Griežtas EV baterijos maršrutizavimas:
+    # jei tekste yra baterija / rida / SOH arba kontekste jau HV_BATTERY,
+    # atsakome per HV baterijos modulį, ne per bendrą OpenAI.
+    if intent == "EV_BATTERY" or ctx.get("topic") == "HV_BATTERY":
+        send_message(chat_id, hv_battery_analysis(ctx), clean_menu())
+        return jsonify({"ok": True})
+
     if intent == "PRICE":
         send_message(chat_id, price_answer(text, ctx), clean_menu())
         return jsonify({"ok": True})
@@ -929,10 +941,6 @@ def telegram_webhook():
 
     if intent == "OBD":
         send_message(chat_id, local_obd_answer(detect_obd(text)), clean_menu())
-        return jsonify({"ok": True})
-
-    if intent == "EV_BATTERY" or ctx.get("topic") == "HV_BATTERY":
-        send_message(chat_id, hv_battery_analysis(ctx), clean_menu())
         return jsonify({"ok": True})
 
     # Vehicle-only message
