@@ -369,7 +369,10 @@ def detect_topic(text: str) -> dict:
     t = normalize(text)
     data = {}
 
-    if any(x in t for x in ["bater", "akumuliator", "hv", "aukštos įtampos", "aukstos itampos", "soh", "nuvažiuoja", "nuvaziuoja", "talpa"]):
+    if is_12v_battery_text(text):
+        data["topic"] = "12V_BATTERY"
+        data["subtopic"] = "12 V akumuliatorius"
+    elif any(x in t for x in ["bater", "akumuliator", "hv", "aukštos įtampos", "aukstos itampos", "soh", "nuvažiuoja", "nuvaziuoja", "talpa"]):
         data["topic"] = "HV_BATTERY"
 
     if any(x in t for x in ["stabdžių skys", "stabdziu skys", "brake fluid"]):
@@ -517,8 +520,11 @@ def detect_intent(text: str, ctx: dict | None = None) -> str:
         return "PRICE"
     if detect_obd(text):
         return "OBD"
-    # EV / HV baterijos klausimai turi prioritetą prieš bendras procedūras.
-    if is_hv_battery_text(text):
+    # Aiškus 12 V / starto akumuliatoriaus klausimas turi prioritetą prieš seną HV baterijos kontekstą.
+    if is_12v_battery_procedure(text):
+        return "PROCEDURE_12V_BATTERY"
+    # EV / HV baterijos klausimai turi prioritetą prieš bendras procedūras, bet tik jei naujas klausimas nekalba apie 12 V bateriją.
+    if is_hv_battery_text(text) and not is_12v_battery_text(text):
         return "EV_BATTERY"
     if is_procedure_query(text):
         return "PROCEDURE"
@@ -526,6 +532,98 @@ def detect_intent(text: str, ctx: dict | None = None) -> str:
         return "QUESTION"
     return "DIAGNOSTIC"
 
+
+
+def is_12v_battery_text(text: str) -> bool:
+    t = normalize(text)
+    return any(x in t for x in [
+        "start bater", "starto bater", "start akumuliator", "starto akumuliator",
+        "12v", "12 v", "12-v", "pagalbinis akumuliator", "pagalbine bater",
+        "mažas akumuliator", "mazas akumuliator", "aux battery", "auxiliary battery"
+    ])
+
+
+def is_12v_battery_procedure(text: str) -> bool:
+    t = normalize(text)
+    return is_12v_battery_text(text) and any(x in t for x in [
+        "kaip", "pakeisti", "keisti", "adapt", "registr", "priristi",
+        "pririšti", "atlikti", "reset"
+    ])
+
+
+def mark_context_12v_battery(ctx: dict) -> dict:
+    ctx = ctx or {}
+    ctx["topic"] = "12V_BATTERY"
+    ctx["subtopic"] = "12 V akumuliatorius"
+    return ctx
+
+
+def answer_12v_battery_replacement(ctx: dict) -> str:
+    vehicle = ctx.get("vehicle") if isinstance(ctx.get("vehicle"), dict) else {}
+    car = vehicle_label_local(vehicle, fallback="Automobilis")
+
+    bmw_i3_note = ""
+    if vehicle.get("brand") == "BMW" and str(vehicle.get("model", "")).lower() == "i3":
+        bmw_i3_note = "\nBMW i3 atveju 12 V akumuliatorius yra pagalbinis akumuliatorius, bet jo būklė labai svarbi visai automobilio elektronikai."
+
+    return f"""📘 <b>12 V akumuliatoriaus keitimas</b>
+
+🚗 Automobilis:
+{esc(car)}{esc(bmw_i3_note)}
+
+Kada tai aktualu:
+• sunkiai įsijungia automobilio sistemos;
+• atsiranda daug nesusijusių klaidų;
+• krenta 12 V įtampa;
+• po ilgesnio stovėjimo automobilis neatsibunda arba neveikia READY režimas.
+
+Reikalinga:
+• tinkamos talpos ir tipo 12 V akumuliatorius;
+• 10 mm / 13 mm raktai;
+• diagnostikos įranga akumuliatoriaus registracijai, jei automobilis to reikalauja.
+
+Keitimo eiga:
+1. Išjunkite automobilį ir palaukite kelias minutes.
+2. Atjunkite įkrovimo laidą, jei jis prijungtas.
+3. Pasiekite 12 V akumuliatorių pagal konkretaus modelio vietą.
+4. Pirmiausia atjunkite neigiamą (-) gnybtą.
+5. Tada atjunkite teigiamą (+) gnybtą.
+6. Išimkite seną akumuliatorių.
+7. Įdėkite naują tokios pačios arba gamintojo leidžiamos talpos ir tipo akumuliatorių.
+8. Pirmiausia prijunkite teigiamą (+), po to neigiamą (-) gnybtą.
+9. Patikrinkite, ar automobilis įsijungia be klaidų.
+10. Jei reikia, atlikite akumuliatoriaus registraciją / BMS adaptaciją diagnostikos įranga.
+
+Svarbu:
+• EV automobiliuose 12 V akumuliatoriaus klaidos gali sukelti daug netikrų HV, ABS, DSC ar ryšio klaidų.
+• Po keitimo rekomenduojama nuskaityti klaidas ir patikrinti DC/DC keitiklio 12 V krovimą.
+
+Tikėtina įtampa:
+• automobilis išjungtas: apie 12.4–12.8 V;
+• READY režime: dažniausiai apie 13.5–14.8 V."""
+
+
+def price_12v_battery_answer(ctx: dict) -> str:
+    vehicle = ctx.get("vehicle") if isinstance(ctx.get("vehicle"), dict) else {}
+    car = vehicle_label_local(vehicle, fallback="Automobilis")
+
+    return f"""💰 <b>12 V akumuliatoriaus keitimo kaina</b>
+
+Automobilis:
+{esc(car)}
+
+Orientacinės kainos:
+• 12 V AGM akumuliatorius: apie 80–250 €
+• Keitimo darbas: apie 50–150 €
+• Akumuliatoriaus registracija / BMS adaptacija: apie 50–150 €
+• Diagnostika po keitimo: apie 50–120 €
+
+Bendra suma dažniausiai:
+• nepriklausomame servise: apie 150–400 €
+• oficialiame servise: apie 250–600 €+
+
+Pastaba:
+EV automobiliuose po 12 V akumuliatoriaus keitimo rekomenduojama patikrinti DC/DC krovimą ir ištrinti senas klaidas."""
 
 # -----------------------------
 # Answers
@@ -536,23 +634,32 @@ def bmw_i3_brake_fluid_reset_answer(ctx: dict | None = None) -> str:
     if "BMW" not in car or "i3" not in car:
         car = "BMW i3"
 
-    return f"""📘 <b>BMW i3 stabdžių skysčio serviso intervalo atstatymas</b>
+    return f"""📘 <b>Stabdžių skysčio serviso intervalo atstatymas</b>
 
-Automobilis:
+🚗 Automobilis:
 {esc(car)}
 
-Žingsniai:
+Kada naudoti:
+Kai stabdžių skystis pakeistas, bet prietaisų skydelyje vis dar rodomas stabdžių skysčio serviso pranešimas.
+
+🔧 Žingsniai:
 1. Įjunkite degimą nepaspausdami stabdžio pedalo, kad automobilis būtų Accessory / diagnostikos režime.
 2. Palaukite, kol prietaisų skydelyje išnyks pradiniai pranešimai.
-3. Paspauskite ir laikykite kairėje prietaisų skydelio pusėje esantį odometro / kelionės atstumo mygtuką apie 10 sekundžių, kol atsivers techninės priežiūros meniu.
-4. Trumpais paspaudimais pereikite iki punkto Brake Fluid.
-5. Kai rodoma Reset possible, paspauskite ir palaikykite mygtuką apie 3 sekundes, kol pasirodys Reset?.
-6. Dar kartą paspauskite ir palaikykite mygtuką, kol prasidės atstatymas.
-7. Baigus procedūrą, prietaisų skydelyje turi būti rodoma nauja stabdžių skysčio aptarnavimo data arba intervalas.
+3. Jeigu ekrane rodomas atidarytų durų arba saugos diržo pranešimas, palaukite, kol jis išnyks.
+4. Paspauskite ir laikykite kairėje prietaisų skydelio pusėje esantį odometro / kelionės atstumo mygtuką apie 10 sekundžių, kol atsivers techninės priežiūros meniu.
+5. Trumpais paspaudimais pereikite iki punkto Brake Fluid (stabdžių skystis).
+6. Kai rodoma Reset possible, paspauskite ir palaikykite mygtuką apie 3 sekundes, kol pasirodys Reset?.
+7. Dar kartą paspauskite ir palaikykite mygtuką, kol prasidės atstatymas.
 
-Pastabos:
-• Jei atstatymas nepavyksta arba pranešimas sugrįžta, patikrinkite stabdžių skysčio lygį, lygio daviklį ir DSC/ABS klaidas.
-• Jei meniu šios funkcijos nerodo, atlikite atstatymą diagnostikos įranga, pvz. ISTA, Autel, Launch ar Bosch."""
+✅ Tikėtinas rezultatas:
+Jeigu atstatymas atliktas sėkmingai, ekrane bus rodoma nauja stabdžių skysčio keitimo data arba likęs aptarnavimo intervalas.
+
+❗ Jei nepavyksta:
+• patikrinkite, ar degimas įjungtas;
+• pabandykite procedūrą atlikti iš naujo;
+• patikrinkite stabdžių skysčio lygį;
+• nuskaitykite DSC/ABS klaidas;
+• jei reikia, atlikite atstatymą ISTA, Autel, Launch ar Bosch diagnostikos įranga."""
 
 
 def bms_adaptation_answer(ctx: dict) -> str:
@@ -684,8 +791,12 @@ Tik pagal sumažėjusią ridą negalima nuspręsti, ar reikia keisti visą bater
 def price_answer(text: str, ctx: dict) -> str:
     t = normalize(text)
     topic = ctx.get("topic")
-    direct_battery = any(x in t for x in ["bater", "modul", "soh", "akumuliator"])
-    if topic == "HV_BATTERY" or ctx.get("subtopic") == "RANGE_DECREASE" or direct_battery:
+
+    if is_12v_battery_text(text) or topic == "12V_BATTERY":
+        return price_12v_battery_answer(ctx)
+
+    direct_hv_battery = any(x in t for x in ["aukštos įtampos", "aukstos itampos", "hv", "soh", "modul"]) or ("bater" in t and topic == "HV_BATTERY")
+    if topic == "HV_BATTERY" or ctx.get("subtopic") == "RANGE_DECREASE" or direct_hv_battery:
         return hv_battery_price(ctx)
 
     car = vehicle_label_local(ctx.get("vehicle") or {}, fallback="Nenurodytas automobilis")
@@ -843,7 +954,7 @@ def handle_photo(chat_id: str, message: dict):
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V15.1 integrated",
+        "service": "AutoElektrikas AI V15.2 integrated",
         "modules": {
             "photo_handler": handle_photo_or_document is not None,
             "vin_decoder": decode_vin is not None,
@@ -922,10 +1033,16 @@ def telegram_webhook():
                 send_message(chat_id, f"🚗 <b>VIN duomenys</b>\n\nAutomobilis:\n{esc(vehicle_label_local(vehicle))}\nVIN: {esc(clean_text)}\n\nDabar apibūdinkite gedimą.", clean_menu())
             return jsonify({"ok": True})
 
+    if intent == "PROCEDURE_12V_BATTERY":
+        ctx = mark_context_12v_battery(ctx)
+        save_context(chat_id, ctx)
+        send_message(chat_id, answer_12v_battery_replacement(ctx), clean_menu())
+        return jsonify({"ok": True})
+
     # Griežtas EV baterijos maršrutizavimas:
     # jei tekste yra baterija / rida / SOH arba kontekste jau HV_BATTERY,
-    # atsakome per HV baterijos modulį, ne per bendrą OpenAI.
-    if intent == "EV_BATTERY" or ctx.get("topic") == "HV_BATTERY":
+    # atsakome per HV baterijos modulį, bet tik jei naujas klausimas nekalba apie 12 V / starto bateriją.
+    if (intent == "EV_BATTERY" or ctx.get("topic") == "HV_BATTERY") and not is_12v_battery_text(text):
         send_message(chat_id, hv_battery_analysis(ctx), clean_menu())
         return jsonify({"ok": True})
 
