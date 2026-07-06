@@ -126,6 +126,9 @@ def load_json(name: str, default):
 FAULTS = load_json("top_100_faults_lt.json", [])
 ALIASES = load_json("symptom_aliases_lt.json", {})
 OBD = load_json("obd_codes_starter_lt.json", {})
+OBD_FULL = load_json("obd_codes_full_lt.json", {})
+if isinstance(OBD_FULL, dict):
+    OBD.update(OBD_FULL)
 BRANDS = load_json("brand_specific_lt.json", {})
 FAULT_BY_ID = {f.get("id"): f for f in FAULTS if isinstance(f, dict) and f.get("id")}
 
