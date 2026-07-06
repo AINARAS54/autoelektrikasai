@@ -1,8 +1,36 @@
 {
-  "title": "BMW BMS adaptacija",
+  "title": "BMW BMS / akumuliatoriaus talpos adaptacija",
+  "vehicle": "BMW",
+  "keywords": [
+    "bms adaptacija",
+    "talpos adaptacija",
+    "battery adaptation",
+    "akumuliatoriaus adaptacija",
+    "akumuliatoriaus registracija",
+    "battery registration"
+  ],
+  "when_to_use": "Kai pakeistas 12 V akumuliatorius arba jo tipas / talpa, ir valdymo sistema turi būti informuota apie naują akumuliatorių.",
+  "tools": [
+    "ISTA arba kita BMW palaikanti diagnostikos įranga",
+    "Stabilus 12 V maitinimas procedūros metu"
+  ],
+  "warnings": [
+    "Nepainioti 12 V akumuliatoriaus registracijos su aukštos įtampos baterijos SOH / modulio diagnostika.",
+    "Jei kalbama apie aukštos įtampos baterijos talpos sumažėjimą, pirmiausia reikalinga BMS/SOH diagnostika."
+  ],
   "steps": [
-    "Prijungti ISTA.",
-    "Atidaryti BMS.",
-    "Vykdyti adaptaciją."
+    "Sumontuokite tinkamos talpos ir tipo akumuliatorių.",
+    "Patikrinkite gnybtus, masės jungtis ir 12 V įtampą.",
+    "Prijunkite diagnostikos įrangą.",
+    "Pasirinkite akumuliatoriaus registravimo / BMS adaptacijos funkciją.",
+    "Įveskite naujo akumuliatoriaus tipą ir talpą, jei to prašo įranga.",
+    "Patvirtinkite procedūrą.",
+    "Baigę nuskaitykite klaidas ir patikrinkite krovimo įtampą."
+  ],
+  "expected_result": "Valdymo sistema užregistruoja naują akumuliatorių ir pritaiko įkrovimo strategiją.",
+  "if_failed": [
+    "Patikrinkite, ar akumuliatoriaus tipas ir talpa įvesti teisingai.",
+    "Patikrinkite 12 V maitinimą procedūros metu.",
+    "Nuskaitykite IBS / BMS / CAS / DME susijusias klaidas."
   ]
 }

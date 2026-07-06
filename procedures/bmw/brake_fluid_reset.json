@@ -1,9 +1,47 @@
 {
   "title": "BMW stabdžių skysčio serviso intervalo atstatymas",
+  "vehicle": "BMW",
+  "keywords": [
+    "brake fluid",
+    "stabdžių skystis",
+    "stabdziu skystis",
+    "stabdžių skysčio pranešimas",
+    "stabdziu skyscio pranesimas",
+    "serviso intervalas",
+    "reset",
+    "nuresetinti",
+    "nunulinti",
+    "atstatyti"
+  ],
+  "when_to_use": "Kai stabdžių skystis pakeistas, bet prietaisų skydelyje vis dar rodomas stabdžių skysčio serviso pranešimas.",
+  "tools": [
+    "Prietaisų skydelio odometro / kelionės atstumo mygtukas",
+    "Diagnostikos įranga, jei meniu neleidžia atlikti atstatymo"
+  ],
+  "warnings": [
+    "Atstatymą atlikite tik tada, kai stabdžių skystis tikrai pakeistas.",
+    "Priklausomai nuo modelio ir programinės įrangos versijos, meniu tekstai gali skirtis.",
+    "Jei yra DSC/ABS klaidų arba žemas stabdžių skysčio lygis, pranešimas gali sugrįžti."
+  ],
   "steps": [
-    "Įjungti degimą.",
-    "Atidaryti servisų meniu.",
-    "Pasirinkti Brake Fluid.",
-    "Patvirtinti Reset."
+    "Įjunkite degimą nepaspausdami stabdžio pedalo, kad automobilis būtų Accessory / diagnostikos režime.",
+    "Palaukite, kol prietaisų skydelyje išnyks pradiniai pranešimai.",
+    "Jeigu ekrane rodomas atidarytų durų arba saugos diržo pranešimas, palaukite, kol jis išnyks.",
+    "Paspauskite ir laikykite kairėje prietaisų skydelio pusėje esantį odometro / kelionės atstumo mygtuką apie 10 sekundžių, kol atsivers techninės priežiūros meniu.",
+    "Trumpais paspaudimais pereikite iki punkto Brake Fluid (stabdžių skystis).",
+    "Kai rodoma Reset possible, paspauskite ir palaikykite mygtuką apie 3 sekundes, kol pasirodys Reset?.",
+    "Dar kartą paspauskite ir palaikykite mygtuką, kol prasidės atstatymas."
+  ],
+  "expected_result": "Jeigu atstatymas atliktas sėkmingai, ekrane bus rodoma nauja stabdžių skysčio keitimo data arba likęs aptarnavimo intervalas.",
+  "if_failed": [
+    "Patikrinkite, ar degimas įjungtas.",
+    "Pabandykite procedūrą atlikti iš naujo.",
+    "Patikrinkite stabdžių skysčio lygį.",
+    "Nuskaitykite DSC/ABS klaidas.",
+    "Jei reikia, atlikite atstatymą ISTA, Autel, Launch ar Bosch diagnostikos įranga."
+  ],
+  "notes": [
+    "Nenaudokite bendro AI atsakymo, jei ši procedūra randama bibliotekoje.",
+    "Tiksli meniu išvaizda gali skirtis pagal BMW modelį ir programinės įrangos versiją."
   ]
 }
