@@ -1,0 +1,112 @@
+{
+  "id": "generic_P0301",
+  "title": "P0301 – 1 cilindro uždegimo praleidimo diagnostika",
+  "code": "P0301",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "OBD diagnostika",
+    "Žvakių raktas",
+    "Ritės sukeitimas",
+    "Kompresijos matuoklis"
+  ],
+  "start": "q_rough_idle",
+  "nodes": {
+    "q_rough_idle": {
+      "type": "question",
+      "text": "Ar variklis dirba nelygiai, vibruoja arba mirksi Check Engine lemputė?",
+      "yes": "a_swap_coil",
+      "no": "q_freeze_frame"
+    },
+    "q_freeze_frame": {
+      "type": "question",
+      "text": "Ar freeze-frame duomenyse P0301 atsirado apkrovos, greitėjimo arba šalto variklio metu?",
+      "yes": "a_swap_coil",
+      "no": "r_intermittent"
+    },
+    "a_swap_coil": {
+      "type": "action",
+      "steps": [
+        "Sukeiskite 1 cilindro uždegimo ritę su 2 cilindro rite.",
+        "Ištrinkite klaidas.",
+        "Paleiskite variklį arba atlikite trumpą bandomą važiavimą.",
+        "Dar kartą nuskaitykite klaidas."
+      ],
+      "question": "Ar klaida persikėlė iš P0301 į P0302?",
+      "yes": "r_bad_coil",
+      "no": "a_check_plug"
+    },
+    "a_check_plug": {
+      "type": "action",
+      "steps": [
+        "Išsukite 1 cilindro žvakę.",
+        "Patikrinkite elektrodus, tarpą, alyvos arba kuro pėdsakus.",
+        "Jei įmanoma, sukeiskite žvakę su kitu cilindru."
+      ],
+      "question": "Ar žvakė pažeista arba klaida persikelia su žvake?",
+      "yes": "r_bad_plug",
+      "no": "a_check_injector"
+    },
+    "a_check_injector": {
+      "type": "action",
+      "steps": [
+        "Patikrinkite 1 cilindro purkštuko jungtį ir laidyną.",
+        "Patikrinkite purkštuko valdymo impulsą.",
+        "Jei įmanoma, sukeiskite purkštuką su kitu cilindru arba atlikite balansavimo testą."
+      ],
+      "question": "Ar klaida seka purkštuką arba matomas purkštuko darbo sutrikimas?",
+      "yes": "r_bad_injector",
+      "no": "a_compression"
+    },
+    "a_compression": {
+      "type": "action",
+      "steps": [
+        "Atlikite 1 cilindro kompresijos testą.",
+        "Palyginkite su kitais cilindrais.",
+        "Jei skirtumas didelis, atlikite leak-down testą."
+      ],
+      "question": "Ar 1 cilindro kompresija žemesnė nei kitų cilindrų?",
+      "yes": "r_low_compression",
+      "no": "r_advanced"
+    },
+    "r_bad_coil": {
+      "type": "result",
+      "text": "Labiausiai tikėtina priežastis – 1 cilindro uždegimo ritė.",
+      "probability": 85,
+      "recommended_fix": "Pakeisti uždegimo ritę ir patikrinti žvakės būklę.",
+      "notes": [
+        "Ilgai važiuoti su aktyviu misfire nerekomenduojama, nes gali būti pažeistas katalizatorius."
+      ]
+    },
+    "r_bad_plug": {
+      "type": "result",
+      "text": "Labiausiai tikėtina priežastis – 1 cilindro uždegimo žvakė.",
+      "probability": 80,
+      "recommended_fix": "Pakeisti žvakę arba visą žvakių komplektą pagal gamintojo intervalą."
+    },
+    "r_bad_injector": {
+      "type": "result",
+      "text": "Tikėtina priežastis – 1 cilindro purkštuko arba jo valdymo grandinės gedimas.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti purkštuką, laidyną ir valdymo impulsą."
+    },
+    "r_low_compression": {
+      "type": "result",
+      "text": "Tikėtina mechaninė problema 1 cilindre.",
+      "probability": 75,
+      "recommended_fix": "Atlikti leak-down testą. Tikrinti vožtuvus, žiedus, galvutės sandarumą."
+    },
+    "r_advanced": {
+      "type": "result",
+      "text": "Ritė, žvakė, purkštukas ir kompresija nepatvirtino gedimo. Reikia išplėstinės diagnostikos.",
+      "probability": 50,
+      "recommended_fix": "Tikrinti oro nuotėkį, ECU valdymą, mases, laidyną ir programinės įrangos biuletenius."
+    },
+    "r_intermittent": {
+      "type": "result",
+      "text": "Klaida gali būti periodinė arba atsirandanti tik specifinėmis sąlygomis.",
+      "probability": 55,
+      "recommended_fix": "Stebėti live data, freeze-frame ir pakartoti testą tokiomis pačiomis sąlygomis."
+    }
+  }
+}

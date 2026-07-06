@@ -1,0 +1,33 @@
+V20 APP.PY PAKEITIMAI
+
+1) app.py viršuje prie importų pridėkite:
+
+from decision_tree_engine import start_tree, handle_decision_callback
+from decision_tree_router import should_offer_decision_tree
+
+
+2) callback_query bloke, prieš new_case patikrinimą, įdėkite:
+
+        if data.startswith("dt:"):
+            answer, markup = handle_decision_callback(BASE_DIR, chat_id, data)
+            send_message(chat_id, answer, markup)
+            return jsonify({"ok": True})
+
+
+3) OBD bloką pakeiskite:
+
+    if intent == "OBD":
+        if should_offer_decision_tree(BASE_DIR, text, ctx):
+            answer, markup = start_tree(BASE_DIR, chat_id, text, ctx)
+            send_message(chat_id, answer, markup)
+        else:
+            send_message(chat_id, answer_obd(BASE_DIR, text, ctx), clean_menu())
+        return jsonify({"ok": True})
+
+
+4) Prieš AI fallback įdėkite:
+
+    if should_offer_decision_tree(BASE_DIR, text, ctx):
+        answer, markup = start_tree(BASE_DIR, chat_id, text, ctx)
+        send_message(chat_id, answer, markup)
+        return jsonify({"ok": True})

@@ -1,0 +1,84 @@
+{
+  "id": "generic_C0035",
+  "title": "C0035 – kairio priekinio rato greičio daviklio diagnostika",
+  "code": "C0035",
+  "priority": "🟠 Vidutinis",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "OBD/ABS diagnostika",
+    "Multimetras",
+    "Osciloskopas pagal galimybes",
+    "Keltuvas"
+  ],
+  "start": "q_abs_light",
+  "nodes": {
+    "q_abs_light": {
+      "type": "question",
+      "text": "Ar dega ABS / DSC / traukos kontrolės lemputė?",
+      "yes": "a_live_speed",
+      "no": "r_intermittent"
+    },
+    "a_live_speed": {
+      "type": "action",
+      "steps": [
+        "Diagnostikos įranga stebėkite visų ratų greičius važiuojant lėtai.",
+        "Palyginkite kairio priekinio rato greitį su kitais ratais."
+      ],
+      "question": "Ar kairio priekinio rato greitis rodomas 0 arba šokinėja?",
+      "yes": "a_visual",
+      "no": "r_module_or_intermit"
+    },
+    "a_visual": {
+      "type": "action",
+      "steps": [
+        "Patikrinkite kairio priekinio rato ABS daviklio jungtį.",
+        "Patikrinkite laidą iki kėbulo jungties.",
+        "Ieškokite nutrūkimų, oksidacijos, trinties žymių."
+      ],
+      "question": "Ar matomas laido arba jungties pažeidimas?",
+      "yes": "r_wiring",
+      "no": "a_sensor_ring"
+    },
+    "a_sensor_ring": {
+      "type": "action",
+      "steps": [
+        "Patikrinkite daviklio tvirtinimą ir tarpą.",
+        "Patikrinkite magnetinį žiedą / guolį.",
+        "Jei yra galimybė, patikrinkite daviklio signalą."
+      ],
+      "question": "Ar guolio magnetinis žiedas arba daviklis pažeistas?",
+      "yes": "r_sensor_or_ring",
+      "no": "r_advanced_abs"
+    },
+    "r_wiring": {
+      "type": "result",
+      "text": "Tikėtinas gedimas – ABS daviklio laidynas arba jungtis.",
+      "probability": 80,
+      "recommended_fix": "Sutaisyti laidyną arba jungtį, ištrinti klaidas ir pakartoti bandomą važiavimą."
+    },
+    "r_sensor_or_ring": {
+      "type": "result",
+      "text": "Tikėtinas gedimas – rato greičio daviklis arba guolio magnetinis žiedas.",
+      "probability": 85,
+      "recommended_fix": "Pakeisti daviklį arba guolį, priklausomai nuo patikros rezultato."
+    },
+    "r_advanced_abs": {
+      "type": "result",
+      "text": "Daviklis ir laidynas nepatvirtino gedimo. Reikia papildomai tikrinti ABS modulį ir signalą osciloskopu.",
+      "probability": 55,
+      "recommended_fix": "Patikrinti ABS modulio įėjimą, maitinimą, mases ir CAN ryšį."
+    },
+    "r_module_or_intermit": {
+      "type": "result",
+      "text": "Jei live data normali, klaida gali būti periodinė arba susijusi su ABS modulio duomenimis.",
+      "probability": 50,
+      "recommended_fix": "Patikrinti freeze-frame, jungtis ir pakartoti testą po bandomo važiavimo."
+    },
+    "r_intermittent": {
+      "type": "result",
+      "text": "Jei lemputė nedega, klaida galėjo būti periodinė.",
+      "probability": 45,
+      "recommended_fix": "Ištrinti klaidą, atlikti bandomą važiavimą ir stebėti, ar grįžta."
+    }
+  }
+}

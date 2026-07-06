@@ -1,0 +1,67 @@
+{
+  "id": "generic_battery_drain",
+  "title": "Akumuliatoriaus išsikrovimo / parazitinės srovės diagnostika",
+  "code": "battery_drain",
+  "priority": "🟠 Vidutinis",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "Multimetras",
+    "Srovės replės pagal galimybes",
+    "Saugiklių schema"
+  ],
+  "start": "q_12v_state",
+  "nodes": {
+    "q_12v_state": {
+      "type": "question",
+      "text": "Ar 12 V akumuliatorius yra patikrintas apkrovos testu ir laikomas geru?",
+      "yes": "a_sleep_current",
+      "no": "r_test_battery"
+    },
+    "a_sleep_current": {
+      "type": "action",
+      "steps": [
+        "Užrakinkite automobilį.",
+        "Palaukite, kol valdymo blokai užmigs.",
+        "Pamatuokite ramybės srovę."
+      ],
+      "question": "Ar ramybės srovė aiškiai per didelė?",
+      "yes": "a_fuse_pull",
+      "no": "r_charging_or_usage"
+    },
+    "a_fuse_pull": {
+      "type": "action",
+      "steps": [
+        "Išimkite saugiklius po vieną arba grupėmis.",
+        "Stebėkite, kada ramybės srovė nukrenta.",
+        "Pagal saugiklį nustatykite grandinę."
+      ],
+      "question": "Ar pavyko rasti grandinę, kuri vartoja per daug srovės?",
+      "yes": "r_found_circuit",
+      "no": "r_advanced_drain"
+    },
+    "r_test_battery": {
+      "type": "result",
+      "text": "Pirmiausia reikia patikrinti patį 12 V akumuliatorių.",
+      "probability": 70,
+      "recommended_fix": "Atlikti apkrovos testą, patikrinti krovimą ir akumuliatoriaus amžių."
+    },
+    "r_charging_or_usage": {
+      "type": "result",
+      "text": "Jei ramybės srovė normali, tikėtina problema – akumuliatoriaus būklė, krovimas arba naudojimo režimas.",
+      "probability": 65,
+      "recommended_fix": "Patikrinti generatorių / DC-DC, trumpus važiavimus ir papildomą įrangą."
+    },
+    "r_found_circuit": {
+      "type": "result",
+      "text": "Rasta grandinė, kuri neišsijungia arba vartoja per daug srovės.",
+      "probability": 85,
+      "recommended_fix": "Tikrinti tos grandinės modulį, relę, laidyną arba papildomą įrangą."
+    },
+    "r_advanced_drain": {
+      "type": "result",
+      "text": "Reikia išplėstinės parazitinės srovės diagnostikos.",
+      "probability": 55,
+      "recommended_fix": "Tikrinti CAN pažadinimą, komforto modulius, telematiką ir aftermarket įrangą."
+    }
+  }
+}
