@@ -1,69 +1,87 @@
-from response_formatter import esc
-from vehicle_engine import vehicle_label
+import json
+from pathlib import Path
+from vehicle_engine import brand_slug, vehicle_label
 
+def esc(v): return str(v or "").replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+def norm(t): return (t or "").lower()
 
-def normalize(text: str) -> str:
-    return (text or "").lower().strip()
+def load_proc(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
 
+def score_proc(proc: dict, text: str) -> int:
+    t = norm(text)
+    score = 0
+    for k in proc.get("keywords", []):
+        if norm(k) in t:
+            score += 5
+    title = norm(proc.get("title", ""))
+    for word in t.split():
+        if len(word) > 3 and word in title:
+            score += 1
+    return score
 
-def bmw_i3_brake_fluid_reset() -> str:
-    return """📘 <b>BMW i3 stabdžių skysčio serviso intervalo atstatymas</b>
+def find_local_procedure(base_dir: Path, text: str, ctx: dict):
+    brand = brand_slug(ctx.get("vehicle") or {}) or "bmw"
+    proc_dir = Path(base_dir) / "procedures" / brand
+    if not proc_dir.exists():
+        return None
+    best, best_score = None, 0
+    for path in proc_dir.glob("*.json"):
+        proc = load_proc(path)
+        if not isinstance(proc, dict):
+            continue
+        s = score_proc(proc, text)
+        if s > best_score:
+            best_score, best = s, proc
+    return best if best_score >= 3 else None
 
-Automobilis:
-BMW i3
+def format_procedure(proc: dict, ctx: dict) -> str:
+    car = vehicle_label(ctx.get("vehicle") or {}, fallback=proc.get("vehicle", "Automobilis"))
+    title = proc.get("title", "Procedūra")
+    when = proc.get("when_to_use") or proc.get("when") or ""
+    tools = proc.get("tools") or []
+    steps = proc.get("steps") or []
+    expected = proc.get("expected_result") or proc.get("result") or ""
+    failed = proc.get("if_failed") or proc.get("notes") or []
+    tools_txt = "\n".join([f"• {esc(x)}" for x in tools]) if tools else ""
+    steps_txt = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(steps)]) if steps else "1. Procedūros žingsniai nenurodyti."
+    failed_txt = "\n".join([f"• {esc(x)}" for x in failed]) if failed else ""
+    parts = [f"📘 <b>{esc(title)}</b>", "", "🚗 Automobilis:", esc(car)]
+    if when: parts += ["", "Kada naudoti:", esc(when)]
+    if tools_txt: parts += ["", "Reikalinga:", tools_txt]
+    parts += ["", "🔧 Žingsniai:", steps_txt]
+    if expected: parts += ["", "✅ Tikėtinas rezultatas:", esc(expected)]
+    if failed_txt: parts += ["", "❗ Jei nepavyksta:", failed_txt]
+    return "\n".join(parts)
 
-Žingsniai:
-1. Įjunkite degimą nepaspausdami stabdžio pedalo, kad automobilis būtų Accessory / diagnostikos režime.
-2. Palaukite, kol prietaisų skydelyje išnyks pradiniai pranešimai.
-3. Paspauskite ir laikykite kairėje prietaisų skydelio pusėje esantį odometro / kelionės atstumo mygtuką apie 10 sekundžių, kol atsivers techninės priežiūros meniu.
-4. Trumpais paspaudimais pereikite iki punkto Brake Fluid.
-5. Kai rodoma Reset possible, paspauskite ir palaikykite mygtuką apie 3 sekundes, kol pasirodys Reset?.
-6. Dar kartą paspauskite ir palaikykite mygtuką, kol prasidės atstatymas.
-7. Baigus procedūrą, prietaisų skydelyje turi būti rodoma nauja stabdžių skysčio aptarnavimo data arba intervalas.
-
-Pastabos:
-• Jei atstatymas nepavyksta arba pranešimas sugrįžta, patikrinkite stabdžių skysčio lygį, lygio daviklį ir DSC/ABS klaidas.
-• Jei meniu šios funkcijos nerodo, atlikite atstatymą diagnostikos įranga, pvz. ISTA, Autel, Launch ar Bosch."""
-
-
-def bms_adaptation(ctx: dict) -> str:
+def answer_12v(ctx: dict) -> str:
     car = vehicle_label(ctx.get("vehicle") or {}, fallback="Automobilis")
-    return f"""📘 <b>BMS talpos adaptacija</b>
+    return f"""📘 <b>12 V akumuliatoriaus keitimas</b>
 
-Automobilis:
+🚗 Automobilis:
 {esc(car)}
 
-BMS talpos adaptacija reikalinga tada, kai keičiamas 12 V akumuliatorius arba jo tipas / talpa. Sistema turi žinoti naujo akumuliatoriaus parametrus, kad tinkamai valdytų įkrovimą.
+Keitimo eiga:
+1. Išjunkite automobilį ir palaukite kelias minutes.
+2. Atjunkite įkrovimo laidą, jei jis prijungtas.
+3. Pasiekite 12 V akumuliatorių pagal konkretaus modelio vietą.
+4. Pirmiausia atjunkite neigiamą (-) gnybtą.
+5. Tada atjunkite teigiamą (+) gnybtą.
+6. Įdėkite naują tinkamos talpos ir tipo akumuliatorių.
+7. Prijunkite teigiamą (+), po to neigiamą (-) gnybtą.
+8. Jei reikia, atlikite akumuliatoriaus registraciją / BMS adaptaciją.
 
-Atlikimo tvarka:
-1. Įdėkite tinkamos talpos ir tipo akumuliatorių.
-2. Patikrinkite, ar gnybtai ir masės jungtys prijungtos teisingai.
-3. Prijunkite diagnostikos įrangą.
-4. Pasirinkite akumuliatoriaus registravimo / BMS adaptacijos funkciją.
-5. Įveskite naujo akumuliatoriaus parametrus, jei to prašo įranga.
-6. Užbaikite procedūrą ir patikrinkite, ar nėra aktyvių klaidų.
+Svarbu:
+EV automobiliuose po 12 V akumuliatoriaus keitimo rekomenduojama patikrinti DC/DC krovimą ir ištrinti senas klaidas."""
 
-Pastaba:
-BMW automobiliuose ši procedūra dažniausiai atliekama naudojant ISTA arba kitą suderinamą diagnostikos įrangą.
-
-Jei kalbate apie aukštos įtampos bateriją, o ne 12 V akumuliatorių, procedūra yra kitokia ir reikia BMS/SOH diagnostikos."""
-
-
-def answer_procedure(text: str, ctx: dict) -> str | None:
-    t = normalize(text)
-    vehicle = ctx.get("vehicle") or {}
-    brand = normalize(str(vehicle.get("brand") or ""))
-    model = normalize(str(vehicle.get("model") or ""))
-
-    has_bmw = "bmw" in t or brand == "bmw"
-    has_i3 = "i3" in t or model == "i3"
-    has_brake = "stabdziu skys" in t or "stabdžių skys" in t or "brake fluid" in t or ("stabd" in t and "skys" in t)
-    has_reset = any(x in t for x in ["reset", "nureset", "nunul", "atstat", "panaikinti", "isjungti", "išjungti"])
-
-    if has_bmw and has_i3 and has_brake and has_reset:
-        return bmw_i3_brake_fluid_reset()
-
-    if "bms" in t and any(x in t for x in ["adapt", "kaip", "atlikti", "registr", "reset"]):
-        return bms_adaptation(ctx)
-
+def answer_procedure(base_dir: Path, text: str, ctx: dict) -> str | None:
+    t = norm(text)
+    if any(x in t for x in ["start bater", "starto bater", "12v", "12 v", "starto akumuliator"]):
+        return answer_12v(ctx)
+    proc = find_local_procedure(base_dir, text, ctx)
+    if proc:
+        return format_procedure(proc, ctx)
     return None
