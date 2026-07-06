@@ -484,8 +484,10 @@ def is_price_query(text: str) -> bool:
     t = normalize(text)
     return any(term in t for term in [
         "kiek kainuoja", "kokia kaina", "kiek atsieina", "kiek kainuos",
+        "kiek gali kainuoti", "kiek galėtų kainuoti", "kiek galetu kainuoti",
+        "kiek kainuotu", "kiek kainuotų", "kainos", "kaina", "kainuoti",
         "remonto kaina", "dalies kaina", "modulio kaina", "modulių kaina",
-        "baterijos kaina", "programinės įrangos", "programines irangos",
+        "baterijos kaina", "baterija kain", "programinės įrangos", "programines irangos",
         "software update", "update kaina", "atnaujinti", "atnaujinimas", "remontas",
     ])
 
@@ -771,10 +773,14 @@ Automobilis:
 
 Orientacinės kainos:
 • BMS diagnostika / SOH patikra: apie 100–300 €
+• SOH matavimas: apie 50–150 €
 • Modulių įtampos ir balanso patikra: apie 100–300 €
-• Vieno modulio keitimas: apie 500–1500 €+
+• BMS programinės įrangos atnaujinimas: apie 150–400 €
+• Vieno baterijos modulio keitimas: apie 500–1500 €+
+• Kelių modulių remontas: apie 1500–4000 €+
+• Aukštos įtampos baterijos restauravimas: apie 2000–6000 €+
 • Naudotas baterijos paketas: apie 3000–8000 €+
-• Baterijos paketo restauravimas: kaina priklauso nuo modulių būklės.
+• Naujas baterijos paketas: apie 12000–20000 €+
 
 Prieš remontą būtina patikrinti:
 1. SOH.
@@ -954,7 +960,7 @@ def handle_photo(chat_id: str, message: dict):
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V15.2 integrated",
+        "service": "AutoElektrikas AI V15.3 integrated",
         "modules": {
             "photo_handler": handle_photo_or_document is not None,
             "vin_decoder": decode_vin is not None,
@@ -1033,6 +1039,12 @@ def telegram_webhook():
                 send_message(chat_id, f"🚗 <b>VIN duomenys</b>\n\nAutomobilis:\n{esc(vehicle_label_local(vehicle))}\nVIN: {esc(clean_text)}\n\nDabar apibūdinkite gedimą.", clean_menu())
             return jsonify({"ok": True})
 
+    # Kainos turi aukštesnį prioritetą už EV analizę.
+    # Jei vartotojas klausia kainos, naudojame aktyvios bylos kontekstą ir nepaleidžiame diagnostikos iš naujo.
+    if intent == "PRICE" or is_price_query(text):
+        send_message(chat_id, price_answer(text, ctx), clean_menu())
+        return jsonify({"ok": True})
+
     if intent == "PROCEDURE_12V_BATTERY":
         ctx = mark_context_12v_battery(ctx)
         save_context(chat_id, ctx)
@@ -1044,10 +1056,6 @@ def telegram_webhook():
     # atsakome per HV baterijos modulį, bet tik jei naujas klausimas nekalba apie 12 V / starto bateriją.
     if (intent == "EV_BATTERY" or ctx.get("topic") == "HV_BATTERY") and not is_12v_battery_text(text):
         send_message(chat_id, hv_battery_analysis(ctx), clean_menu())
-        return jsonify({"ok": True})
-
-    if intent == "PRICE":
-        send_message(chat_id, price_answer(text, ctx), clean_menu())
         return jsonify({"ok": True})
 
     if intent == "PROCEDURE":
