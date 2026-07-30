@@ -1,0 +1,76 @@
+{
+  "id": "symptom_no_crank",
+  "title": "Starteris nesuka",
+  "code": "no_crank",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "Multimetras",
+    "OBD diagnostika",
+    "Starterio relės patikra",
+    "Akumuliatoriaus testeris"
+  ],
+  "start": "q_click",
+  "nodes": {
+    "q_click": {
+      "type": "question",
+      "text": "Pasukus raktelį / spaudžiant Start girdisi spragtelėjimas?",
+      "yes": "q_voltage",
+      "no": "q_dash"
+    },
+    "q_voltage": {
+      "type": "question",
+      "text": "Ar akumuliatoriaus įtampa paleidimo metu nenukrenta žemiau apie 10 V?",
+      "yes": "q_starter_signal",
+      "no": "r_battery"
+    },
+    "q_dash": {
+      "type": "question",
+      "text": "Ar prietaisų skydelis įsijungia normaliai?",
+      "yes": "q_inhibitor",
+      "no": "r_power_supply"
+    },
+    "q_inhibitor": {
+      "type": "question",
+      "text": "Ar automobilis atpažįsta P/N padėtį arba nuspaustą sankabą?",
+      "yes": "q_starter_signal",
+      "no": "r_inhibitor"
+    },
+    "q_starter_signal": {
+      "type": "question",
+      "text": "Ar starterio valdymo laidas gauna +12 V bandant užvesti?",
+      "yes": "r_starter",
+      "no": "r_relay_control"
+    },
+    "r_battery": {
+      "type": "result",
+      "text": "Tikėtina silpno akumuliatoriaus arba blogų jungčių problema.",
+      "probability": 85,
+      "recommended_fix": "Patikrinti akumuliatorių apkrovos testu, gnybtus, masės laidą ir maitinimo kabelius."
+    },
+    "r_power_supply": {
+      "type": "result",
+      "text": "Tikėtina pagrindinio maitinimo, masės arba 12 V akumuliatoriaus problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti pagrindinius saugiklius, mases, akumuliatorių ir kėbulo maitinimą."
+    },
+    "r_inhibitor": {
+      "type": "result",
+      "text": "Tikėtina P/N jungiklio, sankabos jungiklio arba leidimo užvesti grandinės problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti pavarų selektoriaus / sankabos jungiklio signalą diagnostikoje."
+    },
+    "r_starter": {
+      "type": "result",
+      "text": "Jei valdymo signalas ateina, bet starteris nesuka, tikėtinas starterio arba jo maitinimo gedimas.",
+      "probability": 85,
+      "recommended_fix": "Patikrinti starterio maitinimą, masę ir, jei reikia, starterį."
+    },
+    "r_relay_control": {
+      "type": "result",
+      "text": "Starterio valdymo signalas neateina. Tikėtina relės, valdymo bloko arba leidimo užvesti problema.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti starterio relę, imobilizatoriaus leidimą, P/N signalą ir valdymo grandinę."
+    }
+  }
+}

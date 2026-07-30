@@ -1,0 +1,57 @@
+{
+  "id": "symptom_alternator_not_charging",
+  "title": "Akumuliatorius nekraunamas / įkrovimo sistemos diagnostika",
+  "code": "not_charging",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "Multimetras",
+    "OBD diagnostika",
+    "Srovės replės"
+  ],
+  "start": "q_voltage_running",
+  "nodes": {
+    "q_voltage_running": {
+      "type": "question",
+      "text": "Varikliui dirbant arba READY režime įtampa yra apie 13.5–14.8 V?",
+      "yes": "r_charging_ok",
+      "no": "q_belt"
+    },
+    "q_belt": {
+      "type": "question",
+      "text": "Jei automobilis su generatoriumi, ar diržas sveikas ir suka generatorių?",
+      "yes": "q_excitation",
+      "no": "r_belt"
+    },
+    "q_excitation": {
+      "type": "question",
+      "text": "Ar generatorius / DC-DC gauna valdymo arba žadinimo signalą?",
+      "yes": "r_alternator_dcdc",
+      "no": "r_control"
+    },
+    "r_charging_ok": {
+      "type": "result",
+      "text": "Įkrovimas šiuo metu atrodo normalus.",
+      "probability": 65,
+      "recommended_fix": "Patikrinti akumuliatoriaus būklę, ramybės srovę ir periodinius įtampos kritimus."
+    },
+    "r_belt": {
+      "type": "result",
+      "text": "Tikėtina mechaninė diržo / įtempėjo problema.",
+      "probability": 85,
+      "recommended_fix": "Patikrinti diržą, įtempėją, skriemulius."
+    },
+    "r_alternator_dcdc": {
+      "type": "result",
+      "text": "Tikėtinas generatoriaus arba DC/DC keitiklio gedimas.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti maitinimus, mases, apkrovą ir keisti / remontuoti agregatą pagal rezultatą."
+    },
+    "r_control": {
+      "type": "result",
+      "text": "Tikėtina valdymo grandinės, saugiklio, relės arba valdymo bloko problema.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti generatoriaus LIN/COM laidą, saugiklius, ECU klaidas ir laidyną."
+    }
+  }
+}

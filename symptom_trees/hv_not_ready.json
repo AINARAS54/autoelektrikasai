@@ -1,0 +1,69 @@
+{
+  "id": "symptom_hv_not_ready",
+  "title": "EV / hibridas neįjungia READY režimo",
+  "code": "hv_not_ready",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "EV diagnostika",
+    "Izoliacijos matavimas pagal procedūrą",
+    "12 V patikra"
+  ],
+  "start": "q_12v",
+  "nodes": {
+    "q_12v": {
+      "type": "question",
+      "text": "Ar 12 V akumuliatoriaus įtampa gera ir stabiliai laikosi?",
+      "yes": "q_hv_codes",
+      "no": "r_12v"
+    },
+    "q_hv_codes": {
+      "type": "question",
+      "text": "Ar yra HV baterijos / inverterio / izoliacijos klaidų?",
+      "yes": "q_isolation",
+      "no": "q_interlock"
+    },
+    "q_isolation": {
+      "type": "question",
+      "text": "Ar klaidos rodo izoliacijos varžos problemą?",
+      "yes": "r_isolation",
+      "no": "r_hv_system"
+    },
+    "q_interlock": {
+      "type": "question",
+      "text": "Ar gali būti HV interlock / saugos grandinės nutrūkimas?",
+      "yes": "r_interlock",
+      "no": "r_ev_advanced"
+    },
+    "r_12v": {
+      "type": "result",
+      "text": "EV automobiliuose silpnas 12 V akumuliatorius dažnai neleidžia įjungti READY.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti / pakeisti 12 V akumuliatorių, patikrinti DC/DC krovimą."
+    },
+    "r_isolation": {
+      "type": "result",
+      "text": "Tikėtina aukštos įtampos izoliacijos problema.",
+      "probability": 85,
+      "recommended_fix": "Laikytis EV saugos procedūrų. Tikrinti izoliacijos varžą, HV komponentus ir laidus."
+    },
+    "r_hv_system": {
+      "type": "result",
+      "text": "Tikėtina HV baterijos, inverterio arba kontaktorių valdymo problema.",
+      "probability": 75,
+      "recommended_fix": "Nuskaityti BMS/inverterio duomenis, kontaktorių būseną, izoliaciją ir klaidas."
+    },
+    "r_interlock": {
+      "type": "result",
+      "text": "Tikėtina HV interlock grandinės problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti HV jungtis, saugos kilpą, servisines jungtis ir užraktus."
+    },
+    "r_ev_advanced": {
+      "type": "result",
+      "text": "Reikia išplėstinės EV diagnostikos.",
+      "probability": 55,
+      "recommended_fix": "Tikrinti visų EV modulių klaidas, 12 V, CAN ryšį, BMS leidimus ir kontaktorius."
+    }
+  }
+}

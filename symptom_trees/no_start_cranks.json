@@ -1,0 +1,88 @@
+{
+  "id": "symptom_no_start_cranks",
+  "title": "Starteris suka, bet variklis neužsiveda",
+  "code": "no_start_cranks",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "OBD diagnostika",
+    "Multimetras",
+    "Kuro slėgio patikra",
+    "Kibirkšties testeris"
+  ],
+  "start": "q_attempt",
+  "nodes": {
+    "q_attempt": {
+      "type": "question",
+      "text": "Ar variklis bando užsivesti bent trumpam?",
+      "yes": "q_stalls",
+      "no": "q_rpm"
+    },
+    "q_stalls": {
+      "type": "question",
+      "text": "Ar variklis užsiveda ir iš karto užgęsta?",
+      "yes": "r_immobilizer_or_fuel",
+      "no": "q_fuel_pump"
+    },
+    "q_rpm": {
+      "type": "question",
+      "text": "Ar diagnostikoje sukant starteriu matomas variklio RPM signalas?",
+      "yes": "q_fuel_pump",
+      "no": "r_crank_sensor"
+    },
+    "q_fuel_pump": {
+      "type": "question",
+      "text": "Ar įjungus degimą girdisi kuro siurblys arba matomas kuro slėgis?",
+      "yes": "q_spark",
+      "no": "r_fuel_supply"
+    },
+    "q_spark": {
+      "type": "question",
+      "text": "Ar yra kibirkštis?",
+      "yes": "q_injector",
+      "no": "r_ignition_or_crank"
+    },
+    "q_injector": {
+      "type": "question",
+      "text": "Ar purkštukai gauna valdymo impulsą?",
+      "yes": "r_mechanical_timing",
+      "no": "r_ecu_immobilizer"
+    },
+    "r_crank_sensor": {
+      "type": "result",
+      "text": "Labiausiai tikėtina priežastis – alkūninio veleno daviklio arba jo grandinės gedimas.",
+      "probability": 85,
+      "recommended_fix": "Patikrinti CKP daviklį, laidyną, jungtį ir signalą diagnostikoje / osciloskopu."
+    },
+    "r_fuel_supply": {
+      "type": "result",
+      "text": "Tikėtina kuro tiekimo problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti kuro siurblį, relę, saugiklį, slėgį ir maitinimą prie siurblio."
+    },
+    "r_ignition_or_crank": {
+      "type": "result",
+      "text": "Tikėtina uždegimo sistemos arba sinchronizacijos signalo problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti rites, maitinimą, mases, CKP/CMP signalus ir klaidas."
+    },
+    "r_ecu_immobilizer": {
+      "type": "result",
+      "text": "Tikėtina ECU, imobilizatoriaus arba purkštukų valdymo problema.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti imobilizatoriaus būseną, ECU maitinimą, mases ir purkštukų valdymą."
+    },
+    "r_mechanical_timing": {
+      "type": "result",
+      "text": "Jei yra kuras, kibirkštis ir purkštukų impulsas, tikėtina mechaninė arba fazių problema.",
+      "probability": 65,
+      "recommended_fix": "Patikrinti kompresiją, paskirstymo fazes, oro įsiurbimą ir išmetimo užsikimšimą."
+    },
+    "r_immobilizer_or_fuel": {
+      "type": "result",
+      "text": "Jei užsiveda ir užgęsta, dažnos priežastys – imobilizatorius, kuro slėgis arba oro matavimo klaida.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti imobilizatoriaus leidimą, kuro slėgį, MAF/MAP duomenis ir klaidas."
+    }
+  }
+}

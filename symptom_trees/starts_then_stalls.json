@@ -1,0 +1,69 @@
+{
+  "id": "symptom_starts_then_stalls",
+  "title": "Variklis užsiveda ir užgęsta",
+  "code": "starts_then_stalls",
+  "priority": "🟠 Vidutinis",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "OBD diagnostika",
+    "Kuro slėgio patikra",
+    "Live data"
+  ],
+  "start": "q_immobilizer",
+  "nodes": {
+    "q_immobilizer": {
+      "type": "question",
+      "text": "Ar prietaisų skydelyje dega imobilizatoriaus / rakto simbolis?",
+      "yes": "r_immobilizer",
+      "no": "q_fuel_pressure"
+    },
+    "q_fuel_pressure": {
+      "type": "question",
+      "text": "Ar kuro slėgis išlieka po užsivedimo?",
+      "yes": "q_air",
+      "no": "r_fuel_pressure"
+    },
+    "q_air": {
+      "type": "question",
+      "text": "Ar MAF/MAP ir droselio duomenys atrodo logiški?",
+      "yes": "q_egr",
+      "no": "r_air_metering"
+    },
+    "q_egr": {
+      "type": "question",
+      "text": "Ar EGR arba droselis gali būti užstrigęs atviroje padėtyje?",
+      "yes": "r_egr_throttle",
+      "no": "r_advanced"
+    },
+    "r_immobilizer": {
+      "type": "result",
+      "text": "Tikėtina imobilizatoriaus arba rakto atpažinimo problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti raktą, imobilizatoriaus klaidas ir leidimą užvesti."
+    },
+    "r_fuel_pressure": {
+      "type": "result",
+      "text": "Tikėtina kuro slėgio kritimo problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti kuro siurblį, reguliatorių, filtrą ir relę."
+    },
+    "r_air_metering": {
+      "type": "result",
+      "text": "Tikėtina oro matavimo arba droselio problema.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti MAF/MAP, droselio adaptaciją, oro nuotėkius."
+    },
+    "r_egr_throttle": {
+      "type": "result",
+      "text": "Tikėtinas EGR arba droselio užstrigimas.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti EGR/droselio padėtį, valymą, adaptaciją ir klaidas."
+    },
+    "r_advanced": {
+      "type": "result",
+      "text": "Reikia išplėstinės diagnostikos pagal klaidas ir live data.",
+      "probability": 50,
+      "recommended_fix": "Tikrinti kuro korekcijas, sinchronizaciją, kompresiją ir ECU leidimus."
+    }
+  }
+}

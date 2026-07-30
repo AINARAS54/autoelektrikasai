@@ -1,0 +1,69 @@
+{
+  "id": "symptom_abs_warning",
+  "title": "ABS / ESP lemputės diagnostika",
+  "code": "abs_warning",
+  "priority": "🟠 Vidutinis",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "ABS diagnostika",
+    "Live data",
+    "Multimetras"
+  ],
+  "start": "q_codes",
+  "nodes": {
+    "q_codes": {
+      "type": "question",
+      "text": "Ar ABS bloke yra konkretus rato greičio daviklio kodas?",
+      "yes": "q_live_speed",
+      "no": "q_voltage"
+    },
+    "q_live_speed": {
+      "type": "question",
+      "text": "Ar važiuojant vieno rato greitis skiriasi arba rodo 0?",
+      "yes": "r_wheel_sensor",
+      "no": "r_intermittent"
+    },
+    "q_voltage": {
+      "type": "question",
+      "text": "Ar ABS bloke yra maitinimo / įtampos klaidų?",
+      "yes": "r_voltage",
+      "no": "q_steering_angle"
+    },
+    "q_steering_angle": {
+      "type": "question",
+      "text": "Ar yra vairo kampo daviklio / kalibracijos klaida?",
+      "yes": "r_sas",
+      "no": "r_abs_advanced"
+    },
+    "r_wheel_sensor": {
+      "type": "result",
+      "text": "Tikėtinas rato greičio daviklio, laidyno arba guolio magnetinio žiedo gedimas.",
+      "probability": 85,
+      "recommended_fix": "Patikrinti daviklį, laidą, jungtį ir guolio magnetinį žiedą."
+    },
+    "r_voltage": {
+      "type": "result",
+      "text": "Tikėtina 12 V maitinimo arba masės problema ABS sistemoje.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti akumuliatorių, maitinimo saugiklius, mases ir ABS modulio maitinimą."
+    },
+    "r_sas": {
+      "type": "result",
+      "text": "Tikėtina vairo kampo daviklio kalibracijos arba signalo problema.",
+      "probability": 70,
+      "recommended_fix": "Atlikti SAS kalibravimą ir patikrinti live data."
+    },
+    "r_abs_advanced": {
+      "type": "result",
+      "text": "Reikia išplėstinės ABS/ESP diagnostikos.",
+      "probability": 55,
+      "recommended_fix": "Nuskaityti visus modulius, patikrinti CAN ryšį, hidraulinį bloką ir sensorius."
+    },
+    "r_intermittent": {
+      "type": "result",
+      "text": "Klaida gali būti periodinė.",
+      "probability": 50,
+      "recommended_fix": "Patikrinti freeze-frame, daviklių signalus ir laidų judinimo testą."
+    }
+  }
+}
