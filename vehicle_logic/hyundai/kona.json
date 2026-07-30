@@ -1,0 +1,37 @@
+{
+  "vehicle_name": "Hyundai Kona Electric",
+  "platform": "EV",
+  "modules": [
+    "BMS",
+    "VCU",
+    "LDC",
+    "OBC",
+    "MCU"
+  ],
+  "charging_system": "LDC krauna 12 V sistemą, OBC valdo AC įkrovimą.",
+  "ready_sequence": [
+    "12 V sistema pažadina VCU",
+    "BMS patikrina HV bateriją",
+    "HVIL turi būti uždaryta",
+    "Kontaktoriai turi būti leidžiami",
+    "VCU aktyvuoja READY"
+  ],
+  "common_checks": [
+    "12 V akumuliatorius",
+    "BMS / VCU / LDC / OBC klaidos",
+    "HVIL",
+    "Kontaktorių būsena",
+    "Izoliacijos klaidos"
+  ],
+  "symptom_redirects": [
+    {
+      "keywords": [
+        "starteris",
+        "neužsiveda",
+        "neįsijungia",
+        "ready"
+      ],
+      "tree": "hyundai_kona_ready.json"
+    }
+  ]
+}

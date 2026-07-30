@@ -1,0 +1,36 @@
+{
+  "vehicle_name": "Toyota Prius",
+  "platform": "HYBRID",
+  "modules": [
+    "Hybrid Control ECU",
+    "Battery ECU",
+    "MG ECU",
+    "Skid Control ECU"
+  ],
+  "charging_system": "12 V sistemą krauna DC/DC keitiklis integruotas inverteryje.",
+  "ready_sequence": [
+    "12 V sistema pažadina valdiklius",
+    "Hybrid Control ECU patikrina leidimus",
+    "HV baterijos ECU patikrina bateriją",
+    "Kontaktoriai turi būti leidžiami",
+    "Sistema pereina į READY"
+  ],
+  "common_checks": [
+    "12 V akumuliatorius",
+    "Hybrid Control ECU klaidos",
+    "HV baterijos klaidos",
+    "Inverterio klaidos",
+    "Brake / shift interlock signalai"
+  ],
+  "symptom_redirects": [
+    {
+      "keywords": [
+        "starteris",
+        "neužsiveda",
+        "neįsijungia",
+        "ready"
+      ],
+      "tree": "toyota_prius_ready.json"
+    }
+  ]
+}

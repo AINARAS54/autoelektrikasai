@@ -1,0 +1,69 @@
+{
+  "id": "bmw_i3_charging",
+  "title": "BMW i3 nekrauna – modelio lygio diagnostika",
+  "code": "bmw_i3_charging",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "ISTA ar suderinama diagnostika",
+    "EV saugos procedūra",
+    "Įkrovimo stotelės / kabelio patikra"
+  ],
+  "start": "q_other_charger",
+  "nodes": {
+    "q_other_charger": {
+      "type": "question",
+      "text": "Ar automobilis nekrauna ir su kitu kabeliu / kitoje stotelėje?",
+      "yes": "q_kle_codes",
+      "no": "r_external"
+    },
+    "q_kle_codes": {
+      "type": "question",
+      "text": "Ar KLE / EME / SME yra aktyvių įkrovimo klaidų?",
+      "yes": "q_lock",
+      "no": "q_12v"
+    },
+    "q_lock": {
+      "type": "question",
+      "text": "Ar įkrovimo lizdas ir užrakto mechanizmas veikia teisingai?",
+      "yes": "r_kle_eme",
+      "no": "r_lock"
+    },
+    "q_12v": {
+      "type": "question",
+      "text": "Ar 12 V akumuliatoriaus įtampa gera?",
+      "yes": "r_advanced",
+      "no": "r_12v"
+    },
+    "r_external": {
+      "type": "result",
+      "text": "Tikėtina kabelio, stotelės arba išorinio maitinimo problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti kitą kabelį, stotelę ir maitinimo grandinę."
+    },
+    "r_lock": {
+      "type": "result",
+      "text": "Tikėtina įkrovimo lizdo užrakto arba jo daviklio problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti užrakto mechanizmą, daviklį, laidyną ir klaidas."
+    },
+    "r_kle_eme": {
+      "type": "result",
+      "text": "Tikėtina KLE, EME arba su jų valdymu susijusi problema.",
+      "probability": 75,
+      "recommended_fix": "Tikrinti KLE/EME maitinimus, aušinimą, ryšį ir klaidų sąlygas."
+    },
+    "r_12v": {
+      "type": "result",
+      "text": "Silpna 12 V sistema gali neleisti pradėti HV įkrovimo.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti 12 V akumuliatorių ir DC/DC veikimą."
+    },
+    "r_advanced": {
+      "type": "result",
+      "text": "Reikia išplėstinės BMW i3 įkrovimo diagnostikos.",
+      "probability": 55,
+      "recommended_fix": "Analizuoti KLE/EME/SME live data, CP/PP signalus ir įkrovimo leidimus."
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "vehicle_name": "Volkswagen ID.3",
+  "platform": "EV",
+  "modules": [
+    "J840",
+    "JX1",
+    "J623",
+    "Gateway",
+    "Brake Electronics"
+  ],
+  "charging_system": "DC/DC ir įkrovimo elektronika valdoma EV galios elektronikos sistemoje.",
+  "ready_sequence": [
+    "12 V sistema pažadina gateway",
+    "HV baterijos valdymas patikrina saugos sąlygas",
+    "HVIL ir izoliacija turi būti tvarkingi",
+    "Pavaros elektronika gauna leidimą"
+  ],
+  "common_checks": [
+    "12 V akumuliatorius",
+    "Gateway klaidos",
+    "HV baterijos valdymo klaidos",
+    "Izoliacijos klaidos",
+    "Pavaros elektronikos klaidos"
+  ],
+  "symptom_redirects": [
+    {
+      "keywords": [
+        "starteris",
+        "neužsiveda",
+        "neįsijungia",
+        "ready"
+      ],
+      "tree": "vw_id3_ready.json"
+    }
+  ]
+}

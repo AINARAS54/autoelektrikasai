@@ -1,0 +1,47 @@
+{
+  "vehicle_name": "Tesla Model 3",
+  "platform": "EV",
+  "modules": [
+    "VCFRONT",
+    "VCLEFT",
+    "VCRIGHT",
+    "BMS",
+    "PCS",
+    "Drive Inverter"
+  ],
+  "charging_system": "PCS valdo AC įkrovimą ir žemos įtampos sistemos maitinimą.",
+  "ready_sequence": [
+    "Žemos įtampos sistema pažadina valdiklius",
+    "BMS patikrina HV bateriją",
+    "HVIL turi būti uždaryta",
+    "Kontaktoriai turi būti leidžiami",
+    "Pavaros sistema gauna leidimą"
+  ],
+  "common_checks": [
+    "Žemos įtampos akumuliatoriaus būklė",
+    "BMS ir PCS klaidos",
+    "HVIL",
+    "Kontaktoriai",
+    "Pavaros inverterio klaidos"
+  ],
+  "symptom_redirects": [
+    {
+      "keywords": [
+        "starteris",
+        "neužsiveda",
+        "neįsijungia",
+        "ready",
+        "drive neįsijungia"
+      ],
+      "tree": "tesla_model3_ready.json"
+    },
+    {
+      "keywords": [
+        "nekrauna",
+        "neįkrauna",
+        "charging"
+      ],
+      "tree": "tesla_model3_charging.json"
+    }
+  ]
+}

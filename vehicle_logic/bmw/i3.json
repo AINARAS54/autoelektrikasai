@@ -1,0 +1,81 @@
+{
+  "vehicle_name": "BMW i3",
+  "platform": "EV",
+  "modules": [
+    "SME",
+    "EME",
+    "KLE",
+    "EDME",
+    "BDC",
+    "DSC"
+  ],
+  "charging_system": "DC/DC keitiklis krauna 12 V sistemą; KLE valdo AC įkrovimą.",
+  "ready_sequence": [
+    "12 V sistema pažadina valdymo blokus",
+    "BDC patikrina leidimus",
+    "SME patikrina HV bateriją ir izoliaciją",
+    "HVIL turi būti uždaryta",
+    "Kontaktoriai turi būti leidžiami",
+    "EME aktyvuoja pavaros sistemą",
+    "Automobilis pereina į READY"
+  ],
+  "common_checks": [
+    "12 V akumuliatoriaus įtampa ir būklė",
+    "SME / EME / KLE klaidos",
+    "HVIL grandinė",
+    "HV kontaktorių būsena",
+    "Izoliacijos varža",
+    "DC/DC veikimas"
+  ],
+  "safety_notes": [
+    "Aukštos įtampos darbus atlikti tik pagal EV saugos procedūras.",
+    "Neatjungti HV jungčių be saugaus sistemos išjungimo."
+  ],
+  "symptom_redirects": [
+    {
+      "keywords": [
+        "starteris",
+        "neužsiveda",
+        "nesikuria",
+        "neįsijungia",
+        "ready"
+      ],
+      "tree": "bmw_i3_ready.json"
+    },
+    {
+      "keywords": [
+        "nekrauna",
+        "neįkrauna",
+        "įkrovimas neveikia",
+        "charging"
+      ],
+      "tree": "bmw_i3_charging.json"
+    }
+  ],
+  "not_present_components": [
+    {
+      "keywords": [
+        "starteris",
+        "starterio"
+      ],
+      "message": "BMW i3 neturi įprasto starterio. Tikrinama READY režimo, 12 V, HV ir valdymo modulių logika."
+    },
+    {
+      "keywords": [
+        "generatorius",
+        "generatoriaus"
+      ],
+      "message": "BMW i3 neturi generatoriaus. 12 V sistemą krauna DC/DC keitiklis."
+    },
+    {
+      "keywords": [
+        "žvakė",
+        "žvakės",
+        "ritė",
+        "kibirkštis",
+        "purkštukas"
+      ],
+      "message": "BMW i3 neturi uždegimo žvakių, ričių, kibirkšties sistemos ar degalų purkštukų."
+    }
+  ]
+}

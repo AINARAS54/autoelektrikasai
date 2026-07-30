@@ -1,0 +1,69 @@
+{
+  "id": "tesla_model3_charging",
+  "title": "Tesla Model 3 nekrauna – modelio lygio diagnostika",
+  "code": "tesla_model3_charging",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "Tesla diagnostikos prieiga",
+    "Įkrovimo kabelio / stotelės testas",
+    "Žemos įtampos patikra"
+  ],
+  "start": "q_other_source",
+  "nodes": {
+    "q_other_source": {
+      "type": "question",
+      "text": "Ar nekrauna ir su kitu kabeliu / kitoje stotelėje?",
+      "yes": "q_alerts",
+      "no": "r_external"
+    },
+    "q_alerts": {
+      "type": "question",
+      "text": "Ar yra BMS / PCS / charge port įspėjimų?",
+      "yes": "q_port",
+      "no": "q_low_voltage"
+    },
+    "q_port": {
+      "type": "question",
+      "text": "Ar įkrovimo lizdas, fiksatorius ir temperatūros signalai atrodo normalūs?",
+      "yes": "r_pcs_bms",
+      "no": "r_port"
+    },
+    "q_low_voltage": {
+      "type": "question",
+      "text": "Ar žemos įtampos sistema stabili?",
+      "yes": "r_advanced",
+      "no": "r_low_voltage"
+    },
+    "r_external": {
+      "type": "result",
+      "text": "Tikėtina išorinio šaltinio arba kabelio problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti kitą patikimą įkrovimo šaltinį."
+    },
+    "r_port": {
+      "type": "result",
+      "text": "Tikėtina įkrovimo lizdo, fiksatoriaus arba temperatūros jutiklio problema.",
+      "probability": 75,
+      "recommended_fix": "Tikrinti charge port assembly ir jo laidyną."
+    },
+    "r_pcs_bms": {
+      "type": "result",
+      "text": "Tikėtina PCS, BMS arba HV leidimų problema.",
+      "probability": 75,
+      "recommended_fix": "Analizuoti PCS/BMS klaidas ir įkrovimo leidimus."
+    },
+    "r_low_voltage": {
+      "type": "result",
+      "text": "Žemos įtampos sistemos sutrikimas gali blokuoti įkrovimą.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti žemos įtampos akumuliatorių ir konverterio darbą."
+    },
+    "r_advanced": {
+      "type": "result",
+      "text": "Reikia išplėstinės Tesla įkrovimo diagnostikos.",
+      "probability": 55,
+      "recommended_fix": "Analizuoti PCS/BMS/charge port live data ir įspėjimus."
+    }
+  }
+}

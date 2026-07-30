@@ -1,0 +1,36 @@
+{
+  "vehicle_name": "Nissan Leaf",
+  "platform": "EV",
+  "modules": [
+    "VCM",
+    "LBC",
+    "PDM",
+    "Inverter",
+    "Brake Control"
+  ],
+  "charging_system": "PDM valdo AC įkrovimą ir DC/DC funkciją.",
+  "ready_sequence": [
+    "12 V sistema pažadina VCM",
+    "LBC patikrina HV bateriją",
+    "HVIL ir kontaktoriai turi būti leidžiami",
+    "VCM aktyvuoja READY"
+  ],
+  "common_checks": [
+    "12 V akumuliatorius",
+    "VCM / LBC / PDM klaidos",
+    "HVIL",
+    "Izoliacijos klaidos",
+    "Kontaktorių būsena"
+  ],
+  "symptom_redirects": [
+    {
+      "keywords": [
+        "starteris",
+        "neužsiveda",
+        "neįsijungia",
+        "ready"
+      ],
+      "tree": "nissan_leaf_ready.json"
+    }
+  ]
+}

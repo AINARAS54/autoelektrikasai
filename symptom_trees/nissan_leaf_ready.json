@@ -1,0 +1,69 @@
+{
+  "id": "nissan_leaf_ready",
+  "title": "Nissan Leaf neįjungia READY režimo",
+  "code": "nissan_leaf_ready",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "Modeliui tinkama diagnostika",
+    "12 V įtampos patikra",
+    "EV saugos procedūros"
+  ],
+  "start": "q_12v",
+  "nodes": {
+    "q_12v": {
+      "type": "question",
+      "text": "Ar 12 V akumuliatoriaus įtampa ir būklė yra gera?",
+      "yes": "q_codes",
+      "no": "r_12v"
+    },
+    "q_codes": {
+      "type": "question",
+      "text": "Ar yra aktyvių klaidų moduliuose: VCM, LBC, PDM, Inverter?",
+      "yes": "q_hvil",
+      "no": "q_interlocks"
+    },
+    "q_hvil": {
+      "type": "question",
+      "text": "Ar klaidos susijusios su HVIL, izoliacija arba HV kontaktoriais?",
+      "yes": "r_hv_safety",
+      "no": "r_module_fault"
+    },
+    "q_interlocks": {
+      "type": "question",
+      "text": "Ar stabdžio pedalo, pavarų padėties ir saugos leidimų signalai atpažįstami teisingai?",
+      "yes": "r_advanced",
+      "no": "r_interlock"
+    },
+    "r_12v": {
+      "type": "result",
+      "text": "Labiausiai tikėtina žemos įtampos sistemos problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti 12 V akumuliatorių, gnybtus, mases ir DC/DC veikimą."
+    },
+    "r_hv_safety": {
+      "type": "result",
+      "text": "Tikėtina aukštos įtampos saugos, HVIL, izoliacijos arba kontaktorių problema.",
+      "probability": 85,
+      "recommended_fix": "Toliau diagnozuoti tik pagal gamintojo EV saugos procedūrą."
+    },
+    "r_module_fault": {
+      "type": "result",
+      "text": "Tikėtinas konkretaus EV valdymo modulio arba jo maitinimo / ryšio gedimas.",
+      "probability": 75,
+      "recommended_fix": "Prioritetu tikrinti: VCM, LBC, PDM, HVIL, kontaktorius."
+    },
+    "r_interlock": {
+      "type": "result",
+      "text": "READY leidimą blokuoja stabdžio, pavarų padėties arba kita saugos sąlyga.",
+      "probability": 70,
+      "recommended_fix": "Patikrinti live data ir leidimų būsenas."
+    },
+    "r_advanced": {
+      "type": "result",
+      "text": "Pagrindiniai leidimai atrodo geri, todėl reikia išplėstinės modelio diagnostikos.",
+      "probability": 55,
+      "recommended_fix": "Nuskaityti ir analizuoti: VCM, LBC, PDM, HVIL, kontaktorius."
+    }
+  }
+}
