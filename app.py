@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 from response_formatter import clean_telegram_text
 from vehicle_engine import detect_vehicle, vehicle_label
+from vin_decoder_engine import decode_vin, merge_decoded_vehicle, vin_message
 from intent_engine import detect_intent
 from context_engine import update_context, clear_context, archive_context, archived_diagnostics_summary, load_context, has_active_diagnostic
 from obd_engine import answer_obd
@@ -22,7 +23,7 @@ from decision_tree_engine import handle_decision_callback
 from decision_session import clear_decision_session
 from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
-from component_info_engine import answer_component, component_keyboard, unavailable_component_answer
+from component_info_engine import answer_component, component_keyboard
 from fuse_document_engine import resolve_fuse_documents, fuse_document_caption
 from technical_library_engine import register_file, register_resolved_items, library_summary
 
@@ -126,7 +127,7 @@ def clean_menu():
 def component_keyboard_or_menu(ctx: dict):
     vehicle = ctx.get("vehicle") if isinstance(ctx.get("vehicle"), dict) else {}
     if str(vehicle.get("brand", "")).lower() == "bmw" and str(vehicle.get("model", "")).lower().replace(" ", "") == "i3":
-        return component_keyboard(BASE_DIR, ctx)
+        return component_keyboard()
     return clean_menu()
 
 def fallback_ai_answer(text: str, ctx: dict) -> str:
@@ -168,7 +169,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V32","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V33","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():
@@ -196,7 +197,7 @@ def telegram_webhook():
                 send_message(chat_id, library_summary(BASE_DIR, ctx), component_keyboard_or_menu(ctx))
                 return jsonify({"ok":True})
             answer, markup = answer_component(BASE_DIR, "", ctx, forced_topic=topic)
-            send_message(chat_id, answer or unavailable_component_answer(ctx, topic), markup or component_keyboard_or_menu(ctx))
+            send_message(chat_id, answer or "Šiam automobiliui informacija dar neparuošta.", markup or clean_menu())
             return jsonify({"ok":True})
         if data in {"new_case", "new_diagnostic"}:
             handle_new_diagnostic(chat_id)
@@ -264,23 +265,15 @@ def telegram_webhook():
 
     vehicle = detect_vehicle(text)
     if intent == "VIN" and vehicle.get("vin"):
-        # VIN is merged into the already active context. Do not reset the fault.
-        ctx = update_context(BASE_DIR, chat_id, "VIN susietas", {"vehicle": vehicle})
-        if active_before_message:
-            send_message(
-                chat_id,
-                f"🚗 <b>VIN sėkmingai susietas su aktyvia diagnostikos sesija</b>\n\n"
-                f"Automobilis:\n{esc(vehicle_label(ctx.get('vehicle') or vehicle))}\n\n"
-                f"VIN:\n{esc(vehicle.get('vin'))}\n\n"
-                "✅ Ankstesnis gedimo aprašymas išsaugotas. Toliau schemos, procedūros ir gamintojo informacija bus parenkama pagal šį automobilį.",
-                component_keyboard_or_menu(ctx),
-            )
-        else:
-            send_message(
-                chat_id,
-                f"🚗 <b>VIN gautas</b>\n\nAutomobilis:\n{esc(vehicle_label(ctx.get('vehicle') or vehicle))}\n\nVIN:\n{esc(vehicle.get('vin'))}\n\nDabar apibūdinkite gedimą.",
-                clean_menu(),
-            )
+        decoded = decode_vin(vehicle.get("vin"))
+        if not decoded.get("ok"):
+            send_message(chat_id, f"⚠️ {esc(decoded.get('error') or 'VIN nepavyko dekoduoti.')}", clean_menu())
+            return jsonify({"ok": True})
+
+        merged_vehicle = merge_decoded_vehicle(previous_ctx.get("vehicle"), decoded)
+        ctx = update_context(BASE_DIR, chat_id, "VIN susietas", {"vehicle": merged_vehicle})
+        markup = component_keyboard_or_menu(ctx) if active_before_message else clean_menu()
+        send_message(chat_id, vin_message(ctx.get("vehicle") or merged_vehicle, active_before_message), markup)
         return jsonify({"ok":True})
 
     component_answer, component_markup = answer_component(BASE_DIR, text, ctx)
