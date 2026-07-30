@@ -169,7 +169,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V33","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V34","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():

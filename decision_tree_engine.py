@@ -2,6 +2,7 @@ from pathlib import Path
 
 from decision_tree_loader import find_tree, load_tree
 from decision_session import load_decision_session, save_decision_session, clear_decision_session
+from context_engine import save_completed_diagnostic
 
 
 def esc(value):
@@ -205,7 +206,22 @@ def handle_decision_callback(base_dir: Path, chat_id: str, callback_data: str):
     next_text = render_node(tree, next_node, session)
     next_kb = keyboard_for_node(tree, next_node)
 
-    if (tree.get("nodes") or {}).get(next_node, {}).get("type") == "result":
+    result_node = (tree.get("nodes") or {}).get(next_node, {})
+    if result_node.get("type") == "result":
+        completed_at = __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat()
+        result_data = {
+            "tree_id": tree.get("id"),
+            "tree_title": tree.get("title"),
+            "node_id": next_node,
+            "text": result_node.get("text"),
+            "probability": result_node.get("probability"),
+            "recommended_fix": result_node.get("recommended_fix"),
+            "notes": result_node.get("notes") or [],
+            "answers": session.get("answers") or [],
+            "vehicle": session.get("ctx_vehicle") or {},
+            "completed_at": completed_at,
+        }
+        save_completed_diagnostic(base_dir, chat_id, result_data)
         clear_decision_session(base_dir, chat_id)
 
     return next_text, next_kb

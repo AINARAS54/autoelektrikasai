@@ -35,17 +35,67 @@ def clear_context(base_dir: Path, chat_id: str):
     if p.exists():
         p.unlink()
 
+
+def _archive_dir(base_dir: Path) -> Path:
+    d = Path(base_dir) / "cases_archive"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def save_completed_diagnostic(base_dir: Path, chat_id: str, result: dict) -> str:
+    """Persist a completed diagnostic immediately, without clearing active context.
+
+    This makes the result visible in history as soon as the decision tree reaches
+    a result node. The same completed session is not archived twice when the user
+    later presses "Nauja diagnostika".
+    """
+    ctx = load_context(base_dir, chat_id)
+    now = datetime.datetime.now(datetime.UTC)
+    case_id = ctx.get("last_completed_case_id")
+
+    # Reuse the id only when this exact completed result was already saved.
+    result_key = f"{result.get('tree_id')}:{result.get('node_id')}:{result.get('completed_at', '')}"
+    if case_id and ctx.get("last_completed_result_key") == result_key:
+        return case_id
+
+    case_id = f"AE-{now.strftime('%Y%m%d-%H%M%S-%f')}-{_safe_chat_id(chat_id)}"
+    snapshot = json.loads(json.dumps(ctx, ensure_ascii=False))
+    snapshot["case_id"] = case_id
+    snapshot["archived_at"] = now.isoformat()
+    snapshot["completed_at"] = result.get("completed_at") or now.isoformat()
+    snapshot["status"] = "completed"
+    snapshot["diagnostic_result"] = result
+
+    _archive_dir(base_dir).joinpath(f"{case_id}.json").write_text(
+        json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+    ctx["diagnostic_completed"] = True
+    ctx["last_completed_case_id"] = case_id
+    ctx["last_completed_result_key"] = result_key
+    ctx["diagnostic_result"] = result
+    save_context(base_dir, chat_id, ctx)
+    return case_id
+
 def archive_context(base_dir: Path, chat_id: str):
     ctx = load_context(base_dir, chat_id)
     if not ctx.get("vehicle") and not ctx.get("history") and not ctx.get("topic"):
         clear_context(base_dir, chat_id)
         return None
-    d = Path(base_dir) / "cases_archive"
-    d.mkdir(parents=True, exist_ok=True)
+
+    # A completed decision-tree result is already saved immediately. Do not
+    # create a duplicate when the user starts a new diagnostic.
+    if ctx.get("diagnostic_completed") and ctx.get("last_completed_case_id"):
+        case_id = ctx.get("last_completed_case_id")
+        clear_context(base_dir, chat_id)
+        return case_id
+
+    d = _archive_dir(base_dir)
     now = datetime.datetime.now(datetime.UTC)
-    case_id = ctx.get("case_id") or f"AE-{now.strftime('%Y%m%d-%H%M%S')}-{_safe_chat_id(chat_id)}"
+    case_id = ctx.get("case_id") or f"AE-{now.strftime('%Y%m%d-%H%M%S-%f')}-{_safe_chat_id(chat_id)}"
     ctx["case_id"] = case_id
     ctx["archived_at"] = now.isoformat()
+    ctx.setdefault("status", "incomplete")
     (d / f"{case_id}.json").write_text(json.dumps(ctx, ensure_ascii=False, indent=2), encoding="utf-8")
     clear_context(base_dir, chat_id)
     return case_id
@@ -150,7 +200,7 @@ def get_range_summary(ctx: dict) -> str:
 
 
 def archived_diagnostics_summary(base_dir: Path, chat_id: str, limit: int = 10) -> str:
-    """Return a compact list of this chat's archived diagnostic sessions."""
+    """Return completed and manually archived diagnostics for this chat."""
     archive_dir = Path(base_dir) / "cases_archive"
     safe_id = _safe_chat_id(chat_id)
     if not archive_dir.exists():
@@ -162,17 +212,32 @@ def archived_diagnostics_summary(base_dir: Path, chat_id: str, limit: int = 10) 
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
+
         vehicle = data.get("vehicle") if isinstance(data.get("vehicle"), dict) else {}
         label_parts = [vehicle.get("brand"), vehicle.get("model"), vehicle.get("year")]
         label = " ".join(str(x) for x in label_parts if x) or "Automobilis nenurodytas"
-        archived_at = data.get("archived_at", "")
-        date = archived_at[:10] if archived_at else "Data nenurodyta"
-        topic = data.get("subtopic") or data.get("topic") or "Diagnostika"
-        items.append((archived_at, f"• {date} — {label} — {topic}"))
+
+        result = data.get("diagnostic_result") if isinstance(data.get("diagnostic_result"), dict) else {}
+        saved_at = data.get("completed_at") or data.get("archived_at") or ""
+        date = saved_at[:16].replace("T", " ") if saved_at else "Data nenurodyta"
+        title = result.get("tree_title") or data.get("subtopic") or data.get("topic") or "Diagnostika"
+        conclusion = result.get("text") or ""
+        probability = result.get("probability")
+
+        line = f"• <b>{esc_history(date)}</b> — {esc_history(label)}\n  {esc_history(title)}"
+        if conclusion:
+            line += f"\n  Rezultatas: {esc_history(conclusion[:140])}"
+        if probability is not None:
+            line += f"\n  Tikimybė: ~{esc_history(probability)} %"
+        items.append((saved_at, line))
 
     if not items:
         return "📂 <b>Ankstesnės diagnostikos</b>\n\nIšsaugotų diagnostikų dar nėra."
 
     items.sort(key=lambda item: item[0], reverse=True)
-    lines = [line for _, line in items[:limit]]
-    return "📂 <b>Ankstesnės diagnostikos</b>\n\n" + "\n".join(lines)
+    return "📂 <b>Ankstesnės diagnostikos</b>\n\n" + "\n\n".join(line for _, line in items[:limit])
+
+
+def esc_history(value) -> str:
+    return str(value or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
