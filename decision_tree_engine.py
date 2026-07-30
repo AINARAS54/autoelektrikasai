@@ -16,7 +16,7 @@ def yes_no_keyboard():
     return {
         "inline_keyboard": [
             [_button("✅ Taip", "dt:yes"), _button("❌ Ne", "dt:no")],
-            [_button("⏹ Baigti diagnostiką", "dt:stop")]
+            [_button("🆕 Nauja diagnostika", "new_diagnostic")]
         ]
     }
 
@@ -25,7 +25,7 @@ def next_keyboard():
     return {
         "inline_keyboard": [
             [_button("➡️ Tęsti", "dt:next")],
-            [_button("⏹ Baigti diagnostiką", "dt:stop")]
+            [_button("🆕 Nauja diagnostika", "new_diagnostic")]
         ]
     }
 
@@ -33,7 +33,8 @@ def next_keyboard():
 def finish_keyboard():
     return {
         "inline_keyboard": [
-            [_button("✅ Baigti", "dt:stop")]
+            [_button("🆕 Nauja diagnostika", "new_diagnostic")],
+            [_button("📂 Ankstesnės diagnostikos", "diagnostic_history")],
         ]
     }
 
@@ -103,52 +104,33 @@ def render_node(tree: dict, node_id: str, session: dict | None = None) -> str:
         return "Diagnostikos žingsnis nerastas."
 
     node_type = node.get("type", "question")
-    header = render_header(tree)
+    # Pilna antraštė rodoma tik pirmame diagnostikos žingsnyje.
+    is_first_node = not (session or {}).get("answers")
+    header = render_header(tree) if is_first_node else ""
+    prefix = f"{header}\n\n" if header else ""
 
     if node_type == "question":
-        return f"""{header}
-
-❓ <b>Klausimas</b>
-{esc(node.get("text", ""))}"""
+        return f"{prefix}❓ <b>Klausimas</b>\n{esc(node.get('text', ''))}"
 
     if node_type == "action":
         steps = node.get("steps") or []
         steps_txt = render_steps(steps) if steps else esc(node.get("text", ""))
         question = node.get("question")
-
-        # V20.1:
-        # veiksmas gali turėti po-veiksmo klausimą su Taip/Ne šakomis.
         if question:
-            return f"""{header}
-
-🔧 <b>Veiksmas</b>
-{steps_txt}
-
-❓ <b>Po veiksmo</b>
-{esc(question)}"""
-
-        return f"""{header}
-
-🔧 <b>Veiksmas</b>
-{steps_txt}"""
+            return f"{prefix}🔧 <b>Veiksmas</b>\n{steps_txt}\n\n❓ <b>Po veiksmo</b>\n{esc(question)}"
+        return f"{prefix}🔧 <b>Veiksmas</b>\n{steps_txt}"
 
     if node_type == "result":
         probability = node.get("probability")
-        probability_txt = f"\nTikimybė: apie {probability} %" if probability is not None else ""
-
+        probability_txt = f"\n\n<b>Tikimybė:</b> apie {esc(probability)} %" if probability is not None else ""
         fix = node.get("recommended_fix")
-        fix_txt = f"\n\nRekomenduojamas remontas:\n{esc(fix)}" if fix else ""
-
+        fix_txt = f"\n\n<b>Rekomenduojamas remontas:</b>\n{esc(fix)}" if fix else ""
         notes = node.get("notes") or []
         notes_txt = "\n".join([f"• {esc(x)}" for x in notes]) if notes else ""
-        notes_block = f"\n\nPastabos:\n{notes_txt}" if notes_txt else ""
+        notes_block = f"\n\n<b>Kiti patikrinimai:</b>\n{notes_txt}" if notes_txt else ""
+        return f"✅ <b>Rezultatas</b>\n{esc(node.get('text', ''))}{probability_txt}{fix_txt}{notes_block}"
 
-        return f"""{header}
-
-✅ <b>Išvada</b>
-{esc(node.get("text", ""))}{probability_txt}{fix_txt}{notes_block}"""
-
-    return f"{header}\n\n{esc(node.get('text', ''))}"
+    return f"{prefix}{esc(node.get('text', ''))}"
 
 
 def start_tree(base_dir: Path, chat_id: str, text: str, ctx: dict):
@@ -181,7 +163,7 @@ def handle_decision_callback(base_dir: Path, chat_id: str, callback_data: str):
 
     if callback_data == "dt:stop":
         clear_decision_session(base_dir, chat_id)
-        return "Diagnostika baigta.", None
+        return "Diagnostika užbaigta.", finish_keyboard()
 
     source_file = session.get("source_file")
     if not source_file:
@@ -217,7 +199,7 @@ def handle_decision_callback(base_dir: Path, chat_id: str, callback_data: str):
 
     if not next_node:
         clear_decision_session(base_dir, chat_id)
-        return "Diagnostikos medis baigtas.", None
+        return "Diagnostika užbaigta.", finish_keyboard()
 
     session["current_node"] = next_node
     save_decision_session(base_dir, chat_id, session)

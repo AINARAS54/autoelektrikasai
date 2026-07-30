@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from response_formatter import clean_telegram_text
 from vehicle_engine import detect_vehicle, vehicle_label
 from intent_engine import detect_intent
-from context_engine import update_context, clear_context, archive_context
+from context_engine import update_context, clear_context, archive_context, archived_diagnostics_summary
 from obd_engine import answer_obd
 from procedure_engine import answer_procedure
 from price_engine import price_answer
@@ -19,6 +19,7 @@ from ev_engine import battery_analysis
 from service_engine import answer_service
 from vision_engine import handle_vehicle_photo
 from decision_tree_engine import handle_decision_callback
+from decision_session import clear_decision_session
 from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
 
@@ -69,7 +70,7 @@ def send_message(chat_id, text, reply_markup=None):
     return telegram_api("sendMessage", payload)
 
 def clean_menu():
-    return {"inline_keyboard":[[{"text":"📂 Nauja byla","callback_data":"new_case"}]]}
+    return {"inline_keyboard":[[{"text":"🆕 Nauja diagnostika","callback_data":"new_diagnostic"}], [{"text":"📂 Ankstesnės diagnostikos","callback_data":"diagnostic_history"}]]}
 
 def fallback_ai_answer(text: str, ctx: dict) -> str:
     profile = get_vehicle_profile(BASE_DIR, ctx)
@@ -94,14 +95,23 @@ Griežtai laikykis automobilio profilio. Nesiūlyk starterio, generatoriaus,
         logger.exception("AI fallback failed")
         return "Nepavyko paruošti atsakymo. Parašykite daugiau automobilio duomenų arba gedimo požymių."
 
-def handle_new_case(chat_id: str):
+def handle_new_diagnostic(chat_id: str):
+    clear_decision_session(BASE_DIR, chat_id)
     case_id = archive_context(BASE_DIR, chat_id)
-    text = "📂 Ankstesnė byla išsaugota.\n\n🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą." if case_id else "🆕 Nauja byla pradėta.\n\nĮveskite automobilio duomenis ir apibūdinkite gedimą."
-    send_message(chat_id, text)
+    text = (
+        "📂 Ankstesnė diagnostika išsaugota.\n\n"
+        "🆕 Nauja diagnostikos sesija pradėta.\n\n"
+        "Įveskite automobilio duomenis ir apibūdinkite gedimą."
+        if case_id
+        else
+        "🆕 Nauja diagnostikos sesija pradėta.\n\n"
+        "Įveskite automobilio duomenis ir apibūdinkite gedimą."
+    )
+    send_message(chat_id, text, clean_menu())
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V23","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V26","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():
@@ -119,8 +129,11 @@ def telegram_webhook():
             answer, markup = handle_decision_callback(BASE_DIR, chat_id, data)
             send_message(chat_id, answer, markup)
             return jsonify({"ok":True})
-        if data == "new_case":
-            handle_new_case(chat_id)
+        if data in {"new_case", "new_diagnostic"}:
+            handle_new_diagnostic(chat_id)
+            return jsonify({"ok":True})
+        if data == "diagnostic_history":
+            send_message(chat_id, archived_diagnostics_summary(BASE_DIR, chat_id), clean_menu())
             return jsonify({"ok":True})
         send_message(chat_id, "Pasirinkimas neatpažintas.")
         return jsonify({"ok":True})
@@ -149,11 +162,11 @@ def telegram_webhook():
         send_message(chat_id, START_TEXT)
         return jsonify({"ok":True})
     if intent == "NEW_CASE":
-        handle_new_case(chat_id)
+        handle_new_diagnostic(chat_id)
         return jsonify({"ok":True})
     if intent == "CLEAR":
         clear_context(BASE_DIR, chat_id)
-        send_message(chat_id, "Byla išvalyta. Galite pradėti iš naujo.")
+        send_message(chat_id, "Diagnostikos sesija išvalyta. Galite pradėti iš naujo.", clean_menu())
         return jsonify({"ok":True})
 
     vehicle = detect_vehicle(text)

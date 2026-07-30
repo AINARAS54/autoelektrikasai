@@ -119,3 +119,32 @@ def get_range_summary(ctx: dict) -> str:
     if m.get("range_loss_percent") is not None:
         lines.append(f"Sumažėjimas: apie {m.get('range_loss_percent')} %")
     return "\n".join(lines)
+
+
+def archived_diagnostics_summary(base_dir: Path, chat_id: str, limit: int = 10) -> str:
+    """Return a compact list of this chat's archived diagnostic sessions."""
+    archive_dir = Path(base_dir) / "cases_archive"
+    safe_id = _safe_chat_id(chat_id)
+    if not archive_dir.exists():
+        return "📂 <b>Ankstesnės diagnostikos</b>\n\nIšsaugotų diagnostikų dar nėra."
+
+    items = []
+    for path in archive_dir.glob(f"*-{safe_id}.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        vehicle = data.get("vehicle") if isinstance(data.get("vehicle"), dict) else {}
+        label_parts = [vehicle.get("brand"), vehicle.get("model"), vehicle.get("year")]
+        label = " ".join(str(x) for x in label_parts if x) or "Automobilis nenurodytas"
+        archived_at = data.get("archived_at", "")
+        date = archived_at[:10] if archived_at else "Data nenurodyta"
+        topic = data.get("subtopic") or data.get("topic") or "Diagnostika"
+        items.append((archived_at, f"• {date} — {label} — {topic}"))
+
+    if not items:
+        return "📂 <b>Ankstesnės diagnostikos</b>\n\nIšsaugotų diagnostikų dar nėra."
+
+    items.sort(key=lambda item: item[0], reverse=True)
+    lines = [line for _, line in items[:limit]]
+    return "📂 <b>Ankstesnės diagnostikos</b>\n\n" + "\n".join(lines)
