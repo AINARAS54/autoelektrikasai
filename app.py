@@ -22,7 +22,7 @@ from decision_tree_engine import handle_decision_callback
 from decision_session import clear_decision_session
 from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
-from component_info_engine import answer_component, component_keyboard
+from component_info_engine import answer_component, component_keyboard, unavailable_component_answer
 from fuse_document_engine import resolve_fuse_documents, fuse_document_caption
 from technical_library_engine import register_file, register_resolved_items, library_summary
 
@@ -108,7 +108,7 @@ def send_fuse_schematics(chat_id: str, ctx: dict):
     send_message(chat_id, f"🔎 Ieškoma {esc(vehicle_label(ctx.get('vehicle') or {}))} saugiklių schemos...")
     result = resolve_fuse_documents(BASE_DIR, ctx)
     if not result.get("ok"):
-        send_message(chat_id, "🧩 Šio automobilio saugiklių schema šiuo metu neprieinama.", component_keyboard_or_menu(ctx))
+        send_message(chat_id, result.get("message") or "Patvirtintos schemos rasti nepavyko.", clean_menu())
         return
     items = result.get("items") or []
     register_resolved_items(BASE_DIR, ctx, items)
@@ -168,7 +168,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V30","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V32","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():
@@ -196,7 +196,7 @@ def telegram_webhook():
                 send_message(chat_id, library_summary(BASE_DIR, ctx), component_keyboard_or_menu(ctx))
                 return jsonify({"ok":True})
             answer, markup = answer_component(BASE_DIR, "", ctx, forced_topic=topic)
-            send_message(chat_id, answer or "Šiam automobiliui informacija dar neparuošta.", markup or clean_menu())
+            send_message(chat_id, answer or unavailable_component_answer(ctx, topic), markup or component_keyboard_or_menu(ctx))
             return jsonify({"ok":True})
         if data in {"new_case", "new_diagnostic"}:
             handle_new_diagnostic(chat_id)
