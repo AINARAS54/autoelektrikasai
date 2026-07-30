@@ -1,0 +1,130 @@
+{
+  "vehicle_label": "BMW i3",
+  "topics": {
+    "fuses": {
+      "title": "pagrindinių saugiklių vietos",
+      "intro": "BMW i3 saugikliai paskirstyti keliose vietose. Tiksli saugiklių numeracija ir paskirtis priklauso nuo komplektacijos bei VIN.",
+      "sections": [
+        {
+          "heading": "1️⃣ Salono saugiklių blokas",
+          "body": "Keleivio pusėje, po prietaisų skydelio apdaila. Čia yra dalis 12 V, komforto ir valdymo grandinių saugiklių."
+        },
+        {
+          "heading": "2️⃣ Galinė 12 V maitinimo zona",
+          "body": "Bagažinės zonoje, prie 12 V akumuliatoriaus ir galinių elektros komponentų. Čia tikrinamos pagrindinės 12 V maitinimo jungtys ir didesnės srovės apsaugos."
+        },
+        {
+          "heading": "3️⃣ Aukštos įtampos sistemos apsaugos",
+          "body": "HV apsaugos yra aukštos įtampos sistemos dalis ir nėra skirtos įprastam vartotojo patikrinimui."
+        },
+        {
+          "heading": "Pagal dabartinę diagnostiką pirmiausia tikrinkite",
+          "items": [
+            "12 V akumuliatoriaus įtampą ir apkrovos būklę",
+            "pagrindinius 12 V maitinimo saugiklius",
+            "masės taškus ir gnybtų kontaktą",
+            "BDC maitinimo bei pažadinimo grandines"
+          ]
+        }
+      ],
+      "warning": "Neardykite oranžine spalva pažymėtų HV grandinių be EV saugos kvalifikacijos ir tinkamų apsaugos priemonių.",
+      "note": "Tikslią saugiklių paskirtį tikrinkite pagal automobilio VIN skirtą BMW saugiklių planą."
+    },
+    "battery_12v": {
+      "title": "12 V akumuliatoriaus patikra",
+      "intro": "Silpnas 12 V maitinimas gali neleisti pažadinti valdymo blokų ir įjungti READY režimo, net kai aukštos įtampos baterija yra įkrauta.",
+      "sections": [
+        {
+          "heading": "Patikrinkite",
+          "items": [
+            "ramybės įtampą prieš bandymą įjungti automobilį",
+            "įtampos kritimą pažadinant automobilį",
+            "gnybtų švarą ir prispaudimą",
+            "masės laidą ir jungtis",
+            "ar DC/DC sistema pradeda palaikyti 12 V tinklą įjungus automobilį"
+          ]
+        }
+      ],
+      "warning": "Vien įtampos matavimo ne visada pakanka – susidėvėjęs akumuliatorius gali rodyti normalią įtampą be apkrovos, bet stipriai kristi pažadinimo metu."
+    },
+    "bdc": {
+      "title": "BDC modulio diagnostika",
+      "intro": "BDC valdo daug kėbulo, pažadinimo ir prieigos funkcijų. READY gedimo atveju pirmiausia tikrinamas jo maitinimas, masė, ryšys ir pažadinimo sąlygos, o ne iš karto keičiamas pats modulis.",
+      "sections": [
+        {
+          "heading": "Rekomenduojama eiga",
+          "items": [
+            "nuskaityti visų valdymo blokų klaidas su ISTA arba suderinama diagnostika",
+            "patikrinti BDC maitinimo saugiklius",
+            "patikrinti nuolatinį ir pažadinimo maitinimą",
+            "patikrinti masės grandines",
+            "įvertinti ryšio klaidas ir terminalų būsenas"
+          ]
+        }
+      ],
+      "warning": "BDC keitimas ar programavimas atliekamas tik patvirtinus maitinimo, ryšio ir pačio modulio gedimą."
+    },
+    "diagram": {
+      "title": "saugiklių schemos gavimas",
+      "intro": "BMW nuo 2019 m. saugiklių paskirstymo planą pateikia pagal konkretų VIN, todėl universali numerių lentelė gali neatitikti jūsų automobilio.",
+      "sections": [
+        {
+          "heading": "Ką daryti",
+          "items": [
+            "paruošti 17 simbolių VIN",
+            "atidaryti oficialų BMW saugiklių paskirstymo planą",
+            "pagal VIN atsisiųsti konkretaus automobilio PDF",
+            "sulyginti saugiklio numerį su tikrinama BDC arba 12 V grandine"
+          ]
+        }
+      ],
+      "note": "Įkėlus VIN arba saugiklių plano nuotrauką, botas gali ją susieti su aktyvia diagnostikos sesija."
+    },
+    "check_procedure": {
+      "title": "READY gedimo pirminė patikros procedūra",
+      "sections": [
+        {
+          "heading": "1. 12 V sistema",
+          "items": [
+            "pamatuoti 12 V akumuliatoriaus įtampą",
+            "stebėti įtampos kritimą pažadinant automobilį",
+            "patikrinti gnybtus ir masės taškus"
+          ]
+        },
+        {
+          "heading": "2. Saugikliai ir maitinimas",
+          "items": [
+            "patikrinti pagrindines 12 V apsaugas",
+            "patikrinti BDC maitinimo grandines",
+            "nekeisti saugiklio nepašalinus trumpo jungimo priežasties"
+          ]
+        },
+        {
+          "heading": "3. Diagnostika",
+          "items": [
+            "nuskaityti visų blokų klaidas",
+            "patikrinti terminalų ir pažadinimo būsenas",
+            "įvertinti HV interlock bei saugos klaidas tik su EV kvalifikacija"
+          ]
+        }
+      ],
+      "warning": "Jei randamos HV saugos arba izoliacijos klaidos, tolesnę patikrą turi atlikti EV kvalifikaciją turintis specialistas."
+    },
+    "hv_safety": {
+      "title": "aukštos įtampos sauga",
+      "intro": "BMW i3 aukštos įtampos grandinės atpažįstamos pagal oranžinius kabelius ir specialius įspėjamuosius ženklus.",
+      "sections": [
+        {
+          "heading": "Nedarykite savarankiškai",
+          "items": [
+            "neatjunkite oranžinių HV jungčių",
+            "neatidarykite aukštos įtampos baterijos",
+            "netikrinkite izoliacijos įprastu multimetru",
+            "nekeiskite HV saugiklių be saugos procedūros"
+          ]
+        }
+      ],
+      "warning": "Aukštos įtampos sistema gali išlikti pavojinga ir išjungus automobilį. Reikalinga gamintojo numatyta atjungimo, laukimo ir įtampos nebuvimo patvirtinimo procedūra."
+    }
+  }
+}

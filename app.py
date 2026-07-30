@@ -22,6 +22,7 @@ from decision_tree_engine import handle_decision_callback
 from decision_session import clear_decision_session
 from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
+from component_info_engine import answer_component
 
 try:
     from openai import OpenAI
@@ -111,7 +112,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V26","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V27","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():
@@ -128,6 +129,12 @@ def telegram_webhook():
         if data.startswith("dt:"):
             answer, markup = handle_decision_callback(BASE_DIR, chat_id, data)
             send_message(chat_id, answer, markup)
+            return jsonify({"ok":True})
+        if data.startswith("comp:"):
+            from context_engine import load_context
+            ctx = load_context(BASE_DIR, chat_id)
+            answer, markup = answer_component(BASE_DIR, "", ctx, forced_topic=data.split(":", 1)[1])
+            send_message(chat_id, answer or "Šiam automobiliui informacija dar neparuošta.", markup or clean_menu())
             return jsonify({"ok":True})
         if data in {"new_case", "new_diagnostic"}:
             handle_new_diagnostic(chat_id)
@@ -173,6 +180,11 @@ def telegram_webhook():
     if intent == "VIN" and vehicle.get("vin"):
         ctx = update_context(BASE_DIR, chat_id, text, {"vehicle":vehicle})
         send_message(chat_id, f"🚗 <b>VIN gautas</b>\n\nAutomobilis:\n{esc(vehicle_label(ctx.get('vehicle') or vehicle))}\n\nVIN:\n{esc(vehicle.get('vin'))}\n\nDabar apibūdinkite gedimą.", clean_menu())
+        return jsonify({"ok":True})
+
+    component_answer, component_markup = answer_component(BASE_DIR, text, ctx)
+    if component_answer:
+        send_message(chat_id, component_answer, component_markup)
         return jsonify({"ok":True})
 
     route = resolve_route(BASE_DIR, chat_id, text, ctx)
