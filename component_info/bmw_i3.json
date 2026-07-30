@@ -65,20 +65,20 @@
       "warning": "BDC keitimas ar programavimas atliekamas tik patvirtinus maitinimo, ryšio ir pačio modulio gedimą."
     },
     "diagram": {
-      "title": "saugiklių schemos gavimas",
-      "intro": "BMW nuo 2019 m. saugiklių paskirstymo planą pateikia pagal konkretų VIN, todėl universali numerių lentelė gali neatitikti jūsų automobilio.",
+      "title": "saugiklių schema",
+      "intro": "Schema parenkama pagal aktyvios diagnostikos automobilį. Pirmiausia tikrinama vietinė bazė; jei ji tuščia, sistema automatiškai ieško leidžiamuose gamintojo ir techniniuose šaltiniuose.",
       "sections": [
         {
-          "heading": "Ką daryti",
+          "heading": "Automatinė eiga",
           "items": [
-            "paruošti 17 simbolių VIN",
-            "atidaryti oficialų BMW saugiklių paskirstymo planą",
-            "pagal VIN atsisiųsti konkretaus automobilio PDF",
-            "sulyginti saugiklio numerį su tikrinama BDC arba 12 V grandine"
+            "ieškoma pagal markę, modelį, metus ir turimą VIN",
+            "rastą PDF arba paveikslėlį botas parodo tiesiogiai pokalbyje",
+            "failas išsaugomas vietinėje talpykloje kitam naudojimui",
+            "nepatvirtinti saugiklių numeriai nėra išgalvojami"
           ]
         }
       ],
-      "note": "Įkėlus VIN arba saugiklių plano nuotrauką, botas gali ją susieti su aktyvia diagnostikos sesija."
+      "note": "Paspaudus mygtuką „Saugiklių schema“, paieška ir failo pateikimas pradedami automatiškai."
     },
     "check_procedure": {
       "title": "READY gedimo pirminė patikros procedūra",

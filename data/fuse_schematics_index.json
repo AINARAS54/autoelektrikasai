@@ -1,0 +1,11 @@
+{
+  "vehicles": {},
+  "remote_sources": {
+    "bmw_i3_2019": [],
+    "bmw_i3": []
+  },
+  "README": {
+    "vehicles": "Automatiškai pildoma atsisiųstų arba rankiniu būdu įkeltų schemų rodyklė.",
+    "remote_sources": "Čia galima įrašyti patvirtintus tiesioginius gamintojo ar techninių šaltinių URL. Pavyzdys: [{\"url\": \"https://.../diagram.pdf\", \"source_name\": \"BMW techninė dokumentacija\"}]"
+  }
+}

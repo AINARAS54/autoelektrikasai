@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from response_formatter import clean_telegram_text
 from vehicle_engine import detect_vehicle, vehicle_label
 from intent_engine import detect_intent
-from context_engine import update_context, clear_context, archive_context, archived_diagnostics_summary
+from context_engine import update_context, clear_context, archive_context, archived_diagnostics_summary, load_context, has_active_diagnostic
 from obd_engine import answer_obd
 from procedure_engine import answer_procedure
 from price_engine import price_answer
@@ -22,7 +22,8 @@ from decision_tree_engine import handle_decision_callback
 from decision_session import clear_decision_session
 from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
-from component_info_engine import answer_component
+from component_info_engine import answer_component, component_keyboard
+from fuse_schematic_engine import resolve_fuse_schematics, schematic_caption
 
 try:
     from openai import OpenAI
@@ -70,8 +71,61 @@ def send_message(chat_id, text, reply_markup=None):
         payload["reply_markup"] = reply_markup
     return telegram_api("sendMessage", payload)
 
+def send_document(chat_id, file_path: str, caption: str = "", reply_markup=None):
+    if not BOT_TOKEN:
+        return None
+    data = {"chat_id": chat_id, "caption": clean_telegram_text(caption), "parse_mode": "HTML"}
+    if reply_markup:
+        data["reply_markup"] = json.dumps(reply_markup, ensure_ascii=False)
+    try:
+        with open(file_path, "rb") as fh:
+            r = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendDocument", data=data, files={"document": fh}, timeout=60)
+        if not r.ok:
+            logger.error("Telegram document error: %s %s", r.status_code, r.text)
+        return r.json()
+    except Exception as exc:
+        logger.exception("Telegram document upload failed: %s", exc)
+        return None
+
+def send_photo(chat_id, file_path: str, caption: str = "", reply_markup=None):
+    if not BOT_TOKEN:
+        return None
+    data = {"chat_id": chat_id, "caption": clean_telegram_text(caption), "parse_mode": "HTML"}
+    if reply_markup:
+        data["reply_markup"] = json.dumps(reply_markup, ensure_ascii=False)
+    try:
+        with open(file_path, "rb") as fh:
+            r = requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto", data=data, files={"photo": fh}, timeout=60)
+        if not r.ok:
+            logger.error("Telegram photo error: %s %s", r.status_code, r.text)
+        return r.json()
+    except Exception as exc:
+        logger.exception("Telegram photo upload failed: %s", exc)
+        return None
+
+def send_fuse_schematics(chat_id: str, ctx: dict):
+    send_message(chat_id, f"🔎 Ieškoma {esc(vehicle_label(ctx.get('vehicle') or {}))} saugiklių schemos...")
+    result = resolve_fuse_schematics(BASE_DIR, ctx)
+    if not result.get("ok"):
+        send_message(chat_id, result.get("message") or "Patvirtintos schemos rasti nepavyko.", clean_menu())
+        return
+    items = result.get("items") or []
+    for index, item in enumerate(items):
+        markup = clean_menu() if index == len(items) - 1 else None
+        caption = schematic_caption(ctx, item)
+        if item.get("type") == "photo":
+            send_photo(chat_id, item.get("path"), caption, markup)
+        else:
+            send_document(chat_id, item.get("path"), caption, markup)
+
 def clean_menu():
     return {"inline_keyboard":[[{"text":"🆕 Nauja diagnostika","callback_data":"new_diagnostic"}], [{"text":"📂 Ankstesnės diagnostikos","callback_data":"diagnostic_history"}]]}
+
+def component_keyboard_or_menu(ctx: dict):
+    vehicle = ctx.get("vehicle") if isinstance(ctx.get("vehicle"), dict) else {}
+    if str(vehicle.get("brand", "")).lower() == "bmw" and str(vehicle.get("model", "")).lower().replace(" ", "") == "i3":
+        return component_keyboard()
+    return clean_menu()
 
 def fallback_ai_answer(text: str, ctx: dict) -> str:
     profile = get_vehicle_profile(BASE_DIR, ctx)
@@ -112,7 +166,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V27","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V28","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():
@@ -131,9 +185,12 @@ def telegram_webhook():
             send_message(chat_id, answer, markup)
             return jsonify({"ok":True})
         if data.startswith("comp:"):
-            from context_engine import load_context
             ctx = load_context(BASE_DIR, chat_id)
-            answer, markup = answer_component(BASE_DIR, "", ctx, forced_topic=data.split(":", 1)[1])
+            topic = data.split(":", 1)[1]
+            if topic == "diagram":
+                send_fuse_schematics(chat_id, ctx)
+                return jsonify({"ok":True})
+            answer, markup = answer_component(BASE_DIR, "", ctx, forced_topic=topic)
             send_message(chat_id, answer or "Šiam automobiliui informacija dar neparuošta.", markup or clean_menu())
             return jsonify({"ok":True})
         if data in {"new_case", "new_diagnostic"}:
@@ -162,6 +219,8 @@ def telegram_webhook():
         send_message(chat_id, "Įveskite automobilio duomenis ir apibūdinkite gedimą.")
         return jsonify({"ok":True})
 
+    previous_ctx = load_context(BASE_DIR, chat_id)
+    active_before_message = has_active_diagnostic(previous_ctx)
     ctx = update_context(BASE_DIR, chat_id, text)
     intent = detect_intent(text, ctx)
 
@@ -178,8 +237,23 @@ def telegram_webhook():
 
     vehicle = detect_vehicle(text)
     if intent == "VIN" and vehicle.get("vin"):
-        ctx = update_context(BASE_DIR, chat_id, text, {"vehicle":vehicle})
-        send_message(chat_id, f"🚗 <b>VIN gautas</b>\n\nAutomobilis:\n{esc(vehicle_label(ctx.get('vehicle') or vehicle))}\n\nVIN:\n{esc(vehicle.get('vin'))}\n\nDabar apibūdinkite gedimą.", clean_menu())
+        # VIN is merged into the already active context. Do not reset the fault.
+        ctx = update_context(BASE_DIR, chat_id, "VIN susietas", {"vehicle": vehicle})
+        if active_before_message:
+            send_message(
+                chat_id,
+                f"🚗 <b>VIN sėkmingai susietas su aktyvia diagnostikos sesija</b>\n\n"
+                f"Automobilis:\n{esc(vehicle_label(ctx.get('vehicle') or vehicle))}\n\n"
+                f"VIN:\n{esc(vehicle.get('vin'))}\n\n"
+                "✅ Ankstesnis gedimo aprašymas išsaugotas. Toliau schemos, procedūros ir gamintojo informacija bus parenkama pagal šį automobilį.",
+                component_keyboard_or_menu(ctx),
+            )
+        else:
+            send_message(
+                chat_id,
+                f"🚗 <b>VIN gautas</b>\n\nAutomobilis:\n{esc(vehicle_label(ctx.get('vehicle') or vehicle))}\n\nVIN:\n{esc(vehicle.get('vin'))}\n\nDabar apibūdinkite gedimą.",
+                clean_menu(),
+            )
         return jsonify({"ok":True})
 
     component_answer, component_markup = answer_component(BASE_DIR, text, ctx)

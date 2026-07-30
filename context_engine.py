@@ -110,6 +110,34 @@ def update_context(base_dir: Path, chat_id: str, text: str, extra: dict | None =
     ctx["history"] = ctx["history"][-30:]
     return save_context(base_dir, chat_id, ctx)
 
+
+
+def has_active_diagnostic(ctx: dict) -> bool:
+    """True when context already contains a fault/diagnostic conversation.
+
+    Vehicle-only and VIN-only messages do not count as a diagnosed fault.
+    """
+    if ctx.get("active_diagnostic") or ctx.get("fault_id") or ctx.get("problem"):
+        return True
+    if ctx.get("topic") or ctx.get("subtopic"):
+        return True
+    vin_re = re.compile(r"^[A-HJ-NPR-Z0-9]{17}$", re.I)
+    ignored = {"/start", "start", "nauja diagnostika", "nauja sesija"}
+    for item in ctx.get("history") or []:
+        text = str((item or {}).get("user") or "").strip()
+        compact = text.replace(" ", "").upper()
+        if not text or text.lower() in ignored or vin_re.fullmatch(compact):
+            continue
+        # A message containing only make/model/year is vehicle setup, not a fault.
+        detected = detect_vehicle(text)
+        words = text.split()
+        if detected and len(words) <= 5 and not any(x in text.lower() for x in [
+            "ne", "klaida", "ged", "ready", "užsived", "uzsived", "neveik", "dega", "meta", "krauna", "suka"
+        ]):
+            continue
+        return True
+    return False
+
 def get_range_summary(ctx: dict) -> str:
     m = ctx.get("measurements") if isinstance(ctx.get("measurements"), dict) else {}
     old, cur = m.get("range_new_km"), m.get("range_current_km")
