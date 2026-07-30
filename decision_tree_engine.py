@@ -15,8 +15,7 @@ def _button(text: str, callback_data: str) -> dict:
 def yes_no_keyboard():
     return {
         "inline_keyboard": [
-            [_button("✅ Taip", "dt:yes"), _button("❌ Ne", "dt:no")],
-            [_button("🆕 Nauja diagnostika", "new_diagnostic")]
+            [_button("✅ Taip", "dt:yes"), _button("❌ Ne", "dt:no")]
         ]
     }
 
@@ -24,8 +23,7 @@ def yes_no_keyboard():
 def next_keyboard():
     return {
         "inline_keyboard": [
-            [_button("➡️ Tęsti", "dt:next")],
-            [_button("🆕 Nauja diagnostika", "new_diagnostic")]
+            [_button("➡️ Tęsti", "dt:next")]
         ]
     }
 
@@ -122,9 +120,9 @@ def render_node(tree: dict, node_id: str, session: dict | None = None) -> str:
 
     if node_type == "result":
         probability = node.get("probability")
-        probability_txt = f"\n\n<b>Tikimybė:</b> apie {esc(probability)} %" if probability is not None else ""
+        probability_txt = f"\n\n🎯 <b>Tikimybė:</b> ~{esc(probability)} %" if probability is not None else ""
         fix = node.get("recommended_fix")
-        fix_txt = f"\n\n<b>Rekomenduojamas remontas:</b>\n{esc(fix)}" if fix else ""
+        fix_txt = f"\n\n🔧 <b>Rekomenduojami veiksmai:</b>\n{esc(fix)}" if fix else ""
         notes = node.get("notes") or []
         notes_txt = "\n".join([f"• {esc(x)}" for x in notes]) if notes else ""
         notes_block = f"\n\n<b>Kiti patikrinimai:</b>\n{notes_txt}" if notes_txt else ""

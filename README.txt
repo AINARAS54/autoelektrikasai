@@ -1,19 +1,13 @@
-AutoElektrikas AI V3 – Online Sources
+AutoElektrikas AI V26.1 pataisymai
 
-Pridėta:
-- NHTSA vPIC VIN dekoderis
-- online_sources sluoksnis
-- external_obd_codes.json importui
-- CarAPI adapteris su tokenu
-- online_sources_config.json valdymui
+Pakeisti reikia tik vieną failą:
+- decision_tree_engine.py
 
-Taisyklės:
-- Vietinė bazė pirmoje vietoje.
-- Online šaltiniai tik papildo.
-- Klaidų kodai nėra galutinė diagnozė.
-- Scraping be leidimo nenaudojamas.
-- Kainos nerodomos.
+Kas pakeista:
+1. Diagnostikos metu po klausimu rodomi tik mygtukai „✅ Taip“ ir „❌ Ne“.
+2. Veiksmo žingsnyje rodomas tik „➡️ Tęsti“.
+3. „🆕 Nauja diagnostika“ ir „📂 Ankstesnės diagnostikos“ rodomi tik po galutinio rezultato.
+4. „Tikimybė: apie 80 %“ pakeista į „🎯 Tikimybė: ~80 %“.
+5. „Rekomenduojamas remontas“ pakeista į „🔧 Rekomenduojami veiksmai“.
 
-Paleidimas:
-pip install -r requirements.txt
-python app.py
+Įkelkite decision_tree_engine.py į pagrindinį projekto aplanką ir pakeiskite esamą failą.
