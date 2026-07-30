@@ -1,4 +1,4 @@
-import os, json, logging, datetime
+import os, json, logging, datetime, re
 from pathlib import Path
 import requests
 from flask import Flask, request, jsonify
@@ -15,7 +15,8 @@ from ev_engine import battery_analysis
 from service_engine import answer_service
 from vision_engine import handle_vehicle_photo
 
-from decision_tree_engine import start_tree, handle_decision_callback
+from decision_tree_engine import start_tree, handle_decision_callback, render_node, keyboard_for_node
+from decision_session import save_decision_session
 from decision_tree_router import should_offer_decision_tree
 
 try:
@@ -25,7 +26,7 @@ except Exception:
 
 
 # ==========================================================
-# AutoElektrikas AI V20
+# AutoElektrikas AI V21.1
 # app.py = router
 # V20: Diagnostic Decision Trees + Telegram buttons
 # ==========================================================
@@ -135,6 +136,131 @@ Jei trūksta duomenų, prašyk konkretaus matavimo arba kodo.
         return "Nepavyko paruošti atsakymo. Parašykite daugiau automobilio duomenų arba gedimo požymių."
 
 
+
+def normalize_symptom_text(text: str) -> str:
+    value = (text or "").lower()
+    for source, target in {
+        "ą": "a", "č": "c", "ę": "e", "ė": "e", "į": "i",
+        "š": "s", "ų": "u", "ū": "u", "ž": "z",
+    }.items():
+        value = value.replace(source, target)
+    value = re.sub(r"[^a-z0-9\s/+-]", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+SYMPTOM_TREE_ALIASES = {
+    "no_start_cranks.json": [
+        "starteris suka bet neuzsiveda",
+        "starteris suka bet nesikuria",
+        "suka bet neuzsiveda",
+        "suka bet nesikuria",
+        "variklis suka bet neuzsiveda"
+    ],
+    "no_crank.json": [
+        "starteris nesuka",
+        "starteris visai nesuka",
+        "paspaudus start nieko",
+        "pasukus rakta nieko",
+        "neprasuka variklio"
+    ],
+    "starts_then_stalls.json": [
+        "uzsiveda ir uzgesta",
+        "uzsiveda ir iskart uzgesta",
+        "pasileidzia ir uzgesta",
+        "variklis uzsiveda bet uzgesta"
+    ],
+    "alternator_not_charging.json": [
+        "nekrauna generatorius",
+        "generatorius nekrauna",
+        "akumuliatoriaus lempute",
+        "nera krovimo",
+        "per maza krovimo itampa",
+        "12 v nekrauna"
+    ],
+    "abs_warning.json": [
+        "dega abs",
+        "abs lempute",
+        "dega esp",
+        "esp lempute",
+        "abs neveikia",
+        "traction control lempute"
+    ],
+    "hv_not_ready.json": [
+        "neisijungia ready",
+        "neijungia ready",
+        "ready rezimas neisijungia",
+        "elektromobilis neisijungia",
+        "hibridas neisijungia",
+        "hv sistema nepasiruosia"
+    ],
+}
+
+
+def find_symptom_tree(base_dir: Path, text: str):
+    root = Path(base_dir) / "symptom_trees"
+    if not root.exists():
+        return None, None
+
+    normalized = normalize_symptom_text(text)
+    best_filename = None
+    best_score = 0
+    text_words = set(normalized.split())
+
+    for filename, aliases in SYMPTOM_TREE_ALIASES.items():
+        score = 0
+        for alias in aliases:
+            alias_n = normalize_symptom_text(alias)
+            if alias_n in normalized:
+                score += 10
+            else:
+                overlap = len(set(alias_n.split()) & text_words)
+                if overlap >= 2:
+                    score += overlap
+        if score > best_score:
+            best_filename = filename
+            best_score = score
+
+    if not best_filename or best_score < 4:
+        return None, None
+
+    path = root / best_filename
+    if not path.exists():
+        return None, None
+
+    try:
+        tree = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(tree, dict):
+            return None, None
+        tree["_source_file"] = str(path)
+        return tree, path
+    except Exception:
+        logger.exception("Nepavyko įkelti simptomų medžio: %s", path)
+        return None, None
+
+
+def should_offer_symptom_tree(base_dir: Path, text: str) -> bool:
+    tree, _ = find_symptom_tree(base_dir, text)
+    return tree is not None
+
+
+def start_symptom_tree(base_dir: Path, chat_id: str, text: str, ctx: dict):
+    tree, path = find_symptom_tree(base_dir, text)
+    if not tree or not path:
+        return None, None
+
+    start_node = tree.get("start", "start")
+    session = {
+        "tree_id": tree.get("id"),
+        "tree_title": tree.get("title"),
+        "source_file": str(path),
+        "current_node": start_node,
+        "answers": [],
+        "ctx_vehicle": ctx.get("vehicle", {}),
+        "tree_type": "symptom",
+    }
+    save_decision_session(base_dir, chat_id, session)
+    return render_node(tree, start_node, session), keyboard_for_node(tree, start_node)
+
 def handle_new_case(chat_id: str):
     case_id = archive_context(BASE_DIR, chat_id)
     if case_id:
@@ -155,12 +281,13 @@ def handle_new_case(chat_id: str):
 def health():
     return jsonify({
         "status": "ok",
-        "service": "AutoElektrikas AI V20",
+        "service": "AutoElektrikas AI V21.1",
         "features": [
             "router_app",
             "local_obd_database",
             "local_procedure_library",
             "decision_tree_diagnostics",
+            "symptom_tree_diagnostics",
             "telegram_yes_no_buttons",
             "case_context",
             "case_archive"
@@ -293,15 +420,23 @@ def telegram_webhook():
         return jsonify({"ok": True})
 
     # ------------------------------------------------------
-    # 7. EV / HV
+    # 7. V21.1 symptom trees
+    # ------------------------------------------------------
+    if should_offer_symptom_tree(BASE_DIR, text):
+        answer, markup = start_symptom_tree(BASE_DIR, chat_id, text, ctx)
+        if answer:
+            send_message(chat_id, answer, markup)
+            return jsonify({"ok": True})
+
+    # ------------------------------------------------------
+    # 8. EV / HV
     # ------------------------------------------------------
     if intent == "EV_BATTERY" or ctx.get("topic") == "HV_BATTERY":
         send_message(chat_id, battery_analysis(ctx), clean_menu())
         return jsonify({"ok": True})
 
     # ------------------------------------------------------
-    # 8. Symptom decision trees
-    # Example: battery drain, no communication, starter no crank
+    # 9. Other decision trees
     # ------------------------------------------------------
     if should_offer_decision_tree(BASE_DIR, text, ctx):
         answer, markup = start_tree(BASE_DIR, chat_id, text, ctx)
@@ -309,7 +444,7 @@ def telegram_webhook():
         return jsonify({"ok": True})
 
     # ------------------------------------------------------
-    # 9. Vehicle-only
+    # 10. Vehicle-only
     # ------------------------------------------------------
     if vehicle and len(text.split()) <= 5:
         send_message(
@@ -320,7 +455,7 @@ def telegram_webhook():
         return jsonify({"ok": True})
 
     # ------------------------------------------------------
-    # 10. AI fallback
+    # 11. AI fallback
     # ------------------------------------------------------
     send_message(chat_id, fallback_ai_answer(text, ctx), clean_menu())
     return jsonify({"ok": True})
