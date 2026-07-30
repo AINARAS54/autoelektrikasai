@@ -29,6 +29,41 @@ def detect_component_topic(text: str) -> str | None:
     return None
 
 
+def _diagnostic_state(ctx: dict) -> str:
+    """Return a conservative UI state without depending on one storage schema."""
+    raw = _norm(
+        ctx.get("diagnostic_status")
+        or ctx.get("status")
+        or (ctx.get("diagnostic") or {}).get("status")
+        if isinstance(ctx.get("diagnostic"), dict)
+        else ""
+    )
+
+    if raw in {"active", "in_progress", "running", "started", "vykdoma", "aktyvi"}:
+        return "active"
+    if raw in {"completed", "finished", "done", "archived", "baigta", "užbaigta", "uzbaigta"}:
+        return "completed"
+
+    # A final result is a stronger signal than a missing/legacy status field.
+    if any(ctx.get(key) for key in ("final_result", "diagnosis_result", "result", "completed_at")):
+        return "completed"
+
+    # Preserve navigation for legacy contexts that do not expose a state field.
+    return "unknown"
+
+
+def diagnostic_navigation_rows(ctx: dict) -> list[list[dict]]:
+    """Build navigation separately from technical-content buttons."""
+    state = _diagnostic_state(ctx)
+    if state == "active":
+        return []
+
+    return [[
+        {"text": "🆕 Nauja diagnostika", "callback_data": "new_diagnostic"},
+        {"text": "📂 Ankstesnės diagnostikos", "callback_data": "diagnostic_history"},
+    ]]
+
+
 def component_keyboard(base_dir: Path, ctx: dict) -> dict:
     available = available_topics(base_dir, ctx)
     has_diagram = bool(list_documents(base_dir, ctx, "fuse_diagram"))
@@ -60,10 +95,7 @@ def component_keyboard(base_dir: Path, ctx: dict) -> dict:
     if has_library:
         buttons.append([{"text": "📚 Techninė biblioteka", "callback_data": "comp:library"}])
 
-    buttons.append([
-        {"text": "🆕 Nauja diagnostika", "callback_data": "new_diagnostic"},
-        {"text": "📂 Ankstesnės diagnostikos", "callback_data": "diagnostic_history"},
-    ])
+    buttons.extend(diagnostic_navigation_rows(ctx))
     return {"inline_keyboard": buttons}
 
 
@@ -86,8 +118,7 @@ def unavailable_component_answer(ctx: dict, topic: str) -> str:
     subject = names.get(topic, "patvirtintos techninės informacijos")
     return (
         f"ℹ️ <b>{esc(label)}</b>\n\n"
-        f"Šiuo metu duomenų bazėje nėra {esc(subject)}.\n\n"
-        "Kad nebūtų pateikta netiksli informacija, bendras arba nepatvirtintas atsakymas nerodomas."
+        f"Šiuo metu {esc(subject)} šiam modeliui dar nėra techninėje bibliotekoje."
     )
 
 
