@@ -62,6 +62,9 @@ def component_keyboard() -> dict:
                 {"text": "⚠️ HV sauga", "callback_data": "comp:hv_safety"},
             ],
             [
+                {"text": "📚 Techninė biblioteka", "callback_data": "comp:library"},
+            ],
+            [
                 {"text": "🆕 Nauja diagnostika", "callback_data": "new_diagnostic"},
                 {"text": "📂 Ankstesnės diagnostikos", "callback_data": "diagnostic_history"},
             ],

@@ -24,6 +24,7 @@ from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
 from component_info_engine import answer_component, component_keyboard
 from fuse_document_engine import resolve_fuse_documents, fuse_document_caption
+from technical_library_engine import register_file, register_resolved_items, library_summary
 
 try:
     from openai import OpenAI
@@ -110,6 +111,7 @@ def send_fuse_schematics(chat_id: str, ctx: dict):
         send_message(chat_id, result.get("message") or "Patvirtintos schemos rasti nepavyko.", clean_menu())
         return
     items = result.get("items") or []
+    register_resolved_items(BASE_DIR, ctx, items)
     for index, item in enumerate(items):
         markup = clean_menu() if index == len(items) - 1 else None
         caption = fuse_document_caption(ctx, item)
@@ -166,7 +168,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V29","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V30","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():
@@ -190,6 +192,9 @@ def telegram_webhook():
             if topic == "diagram":
                 send_fuse_schematics(chat_id, ctx)
                 return jsonify({"ok":True})
+            if topic == "library":
+                send_message(chat_id, library_summary(BASE_DIR, ctx), component_keyboard_or_menu(ctx))
+                return jsonify({"ok":True})
             answer, markup = answer_component(BASE_DIR, "", ctx, forced_topic=topic)
             send_message(chat_id, answer or "Šiam automobiliui informacija dar neparuošta.", markup or clean_menu())
             return jsonify({"ok":True})
@@ -208,10 +213,32 @@ def telegram_webhook():
         return jsonify({"ok":True})
 
     if message.get("photo") or message.get("document"):
+        previous_ctx = load_context(BASE_DIR, chat_id)
+        active_before_upload = has_active_diagnostic(previous_ctx)
         answer, ctx_extra = handle_vehicle_photo(BASE_DIR, BOT_TOKEN, chat_id, message)
+        updated_ctx = previous_ctx
         if ctx_extra:
-            update_context(BASE_DIR, chat_id, "Įkelta nuotrauka", ctx_extra)
-        send_message(chat_id, answer, clean_menu())
+            context_payload = {k: v for k, v in ctx_extra.items() if not str(k).startswith("_")}
+            if context_payload:
+                updated_ctx = update_context(BASE_DIR, chat_id, "Įkeltas dokumentas", context_payload)
+            uploaded_file = ctx_extra.get("_uploaded_file")
+            if uploaded_file:
+                stored = register_file(
+                    BASE_DIR,
+                    updated_ctx,
+                    uploaded_file,
+                    source_name="Telegram įkėlimas",
+                    vision_result=ctx_extra.get("_vision_result") or {},
+                    confidence="user_uploaded",
+                )
+                if stored.get("ok"):
+                    answer += "\n\n📚 Failas įtrauktas į šio automobilio techninę biblioteką."
+        if active_before_upload:
+            answer += "\n\n✅ Ankstesnis gedimo aprašymas išsaugotas – diagnostika tęsiama toje pačioje sesijoje."
+            send_message(chat_id, answer, component_keyboard_or_menu(updated_ctx))
+        else:
+            answer += "\n\nDabar apibūdinkite gedimą."
+            send_message(chat_id, answer, clean_menu())
         return jsonify({"ok":True})
 
     text = (message.get("text") or "").strip()

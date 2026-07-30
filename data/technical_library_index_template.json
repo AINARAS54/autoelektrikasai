@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "vehicle": {
+    "brand": null,
+    "model": null,
+    "year": null,
+    "vin": null
+  },
+  "documents": []
+}
