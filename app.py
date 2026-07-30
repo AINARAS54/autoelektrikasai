@@ -23,7 +23,7 @@ from decision_session import clear_decision_session
 from unified_router import resolve_route
 from vehicle_profile_engine import get_vehicle_profile, profile_summary
 from component_info_engine import answer_component, component_keyboard
-from fuse_schematic_engine import resolve_fuse_schematics, schematic_caption
+from fuse_document_engine import resolve_fuse_documents, fuse_document_caption
 
 try:
     from openai import OpenAI
@@ -105,14 +105,14 @@ def send_photo(chat_id, file_path: str, caption: str = "", reply_markup=None):
 
 def send_fuse_schematics(chat_id: str, ctx: dict):
     send_message(chat_id, f"🔎 Ieškoma {esc(vehicle_label(ctx.get('vehicle') or {}))} saugiklių schemos...")
-    result = resolve_fuse_schematics(BASE_DIR, ctx)
+    result = resolve_fuse_documents(BASE_DIR, ctx)
     if not result.get("ok"):
         send_message(chat_id, result.get("message") or "Patvirtintos schemos rasti nepavyko.", clean_menu())
         return
     items = result.get("items") or []
     for index, item in enumerate(items):
         markup = clean_menu() if index == len(items) - 1 else None
-        caption = schematic_caption(ctx, item)
+        caption = fuse_document_caption(ctx, item)
         if item.get("type") == "photo":
             send_photo(chat_id, item.get("path"), caption, markup)
         else:
@@ -166,7 +166,7 @@ def handle_new_diagnostic(chat_id: str):
 
 @app.route("/", methods=["GET"])
 def health():
-    return jsonify({"status":"ok","service":"AutoElektrikas AI V28","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
+    return jsonify({"status":"ok","service":"AutoElektrikas AI V29","architecture":"vehicle_profile_first","time":datetime.datetime.now(datetime.UTC).isoformat()})
 
 @app.route("/telegram-webhook", methods=["POST"])
 def telegram_webhook():

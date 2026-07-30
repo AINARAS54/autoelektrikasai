@@ -1,29 +1,21 @@
 {
+  "version": 2,
   "vehicles": {},
-  "remote_sources": {
+  "source_pages": {
     "bmw_i3_2019": [
       {
+        "url": "https://fusecard.bmw.com/",
+        "source_name": "BMW Fuse Card",
+        "requires_vin": true
+      },
+      {
         "url": "https://fuse-box.info/bmw/bmw-i3-2014-2019-fuses-and-relay",
-        "source_name": "Fuse-box.info – BMW i3 saugiklių dėžės vieta ir schema"
+        "source_name": "Fuse-box.info"
       },
       {
         "url": "https://fubox.net/bmw/i3-2013-2022/",
-        "source_name": "FuBox – BMW i3 saugiklių schemos ir vietos"
-      }
-    ],
-    "bmw_i3": [
-      {
-        "url": "https://fuse-box.info/bmw/bmw-i3-2014-2019-fuses-and-relay",
-        "source_name": "Fuse-box.info – BMW i3 saugiklių dėžės vieta ir schema"
-      },
-      {
-        "url": "https://fubox.net/bmw/i3-2013-2022/",
-        "source_name": "FuBox – BMW i3 saugiklių schemos ir vietos"
+        "source_name": "FuBox"
       }
     ]
-  },
-  "README": {
-    "vehicles": "Automatiškai pildoma atsisiųstų arba rankiniu būdu įkeltų schemų rodyklė.",
-    "remote_sources": "Patvirtinti techniniai puslapiai. V28.1 variklis iš jų ištraukia ir Telegram pokalbyje parodo schemų bei saugiklių dėžės vietų paveikslėlius."
   }
 }
