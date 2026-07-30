@@ -1,0 +1,81 @@
+{
+  "id": "bmw_i3_charging_full",
+  "title": "BMW i3 – išplėstinė įkrovimo diagnostika",
+  "code": "bmw_i3_charging_full",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "ISTA arba suderinama diagnostika",
+    "Patikimas kabelis / stotelė",
+    "EV saugos procedūra"
+  ],
+  "start": "q_other_source",
+  "nodes": {
+    "q_other_source": {
+      "type": "question",
+      "text": "Ar automobilis nekrauna ir su kitu kabeliu bei kitoje stotelėje?",
+      "yes": "q_port_lock",
+      "no": "r_external"
+    },
+    "q_port_lock": {
+      "type": "question",
+      "text": "Ar įkrovimo lizdo užraktas suveikia ir kabelis atpažįstamas?",
+      "yes": "q_kle_comm",
+      "no": "r_lock"
+    },
+    "q_kle_comm": {
+      "type": "question",
+      "text": "Ar diagnostika prisijungia prie KLE ir ar yra aktyvių KLE / EME / SME klaidų?",
+      "yes": "q_cp_pp",
+      "no": "r_kle_power"
+    },
+    "q_cp_pp": {
+      "type": "question",
+      "text": "Ar CP / PP signalai ir įkrovimo leidimas live data atrodo logiški?",
+      "yes": "q_12v",
+      "no": "r_signal"
+    },
+    "q_12v": {
+      "type": "question",
+      "text": "Ar 12 V sistema stabili ir nekrenta bandant pradėti įkrovimą?",
+      "yes": "r_kle_eme",
+      "no": "r_12v"
+    },
+    "r_external": {
+      "type": "result",
+      "text": "Tikėtina kabelio, stotelės arba išorinio maitinimo problema.",
+      "probability": 85,
+      "recommended_fix": "Tikrinti kitu patikimu kabeliu ir stotele."
+    },
+    "r_lock": {
+      "type": "result",
+      "text": "Tikėtina įkrovimo lizdo užrakto arba jo daviklio problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti užrakto mechanizmą, daviklį, laidyną ir klaidas."
+    },
+    "r_kle_power": {
+      "type": "result",
+      "text": "Tikėtina KLE maitinimo, masės arba ryšio problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti KLE saugiklius, maitinimą, mases ir CAN ryšį."
+    },
+    "r_signal": {
+      "type": "result",
+      "text": "Tikėtina CP / PP signalo, lizdo arba kabelio atpažinimo problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti CP/PP signalus, lizdo laidyną ir kabelį."
+    },
+    "r_12v": {
+      "type": "result",
+      "text": "Silpna 12 V sistema gali blokuoti įkrovimo pradžią.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti 12 V akumuliatorių ir DC/DC veikimą."
+    },
+    "r_kle_eme": {
+      "type": "result",
+      "text": "Tikėtina KLE, EME arba įkrovimo leidimų problema.",
+      "probability": 70,
+      "recommended_fix": "Analizuoti KLE/EME/SME live data, aušinimą ir klaidų sąlygas."
+    }
+  }
+}

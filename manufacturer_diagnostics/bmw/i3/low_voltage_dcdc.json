@@ -1,0 +1,57 @@
+{
+  "id": "bmw_i3_low_voltage_dcdc",
+  "title": "BMW i3 – 12 V ir DC/DC diagnostika",
+  "code": "bmw_i3_low_voltage_dcdc",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Vidutinis",
+  "tools": [
+    "Multimetras",
+    "Akumuliatoriaus testeris",
+    "ISTA arba suderinama diagnostika"
+  ],
+  "start": "q_rest_voltage",
+  "nodes": {
+    "q_rest_voltage": {
+      "type": "question",
+      "text": "Ar 12 V akumuliatoriaus ramybės įtampa yra pakankama ir akumuliatorius išlaiko apkrovos testą?",
+      "yes": "q_ready_voltage",
+      "no": "r_bad_12v"
+    },
+    "q_ready_voltage": {
+      "type": "question",
+      "text": "Ar READY režime 12 V įtampa pakyla maždaug iki įkrovimo lygio?",
+      "yes": "q_drain",
+      "no": "r_dcdc"
+    },
+    "q_drain": {
+      "type": "question",
+      "text": "Ar po užrakinimo ir užmigimo ramybės srovė išlieka per didelė?",
+      "yes": "r_parasitic",
+      "no": "r_usage_or_intermittent"
+    },
+    "r_bad_12v": {
+      "type": "result",
+      "text": "Tikėtinas nusidėvėjęs 12 V akumuliatorius arba blogos jungtys.",
+      "probability": 85,
+      "recommended_fix": "Pakeisti / patikrinti tinkamą 12 V akumuliatorių, gnybtus ir mases."
+    },
+    "r_dcdc": {
+      "type": "result",
+      "text": "Tikėtina DC/DC arba EME aktyvavimo problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti EME klaidas, HV leidimą, DC/DC live data ir 12 V apkrovą."
+    },
+    "r_parasitic": {
+      "type": "result",
+      "text": "Tikėtina parazitinė srovė arba neužmiegantis valdymo modulis.",
+      "probability": 80,
+      "recommended_fix": "Tikrinti ramybės srovę, CAN pažadinimą, telematiką ir komforto modulius."
+    },
+    "r_usage_or_intermittent": {
+      "type": "result",
+      "text": "DC/DC veikia ir ramybės srovė normali. Tikėtina periodinė arba naudojimo režimo problema.",
+      "probability": 55,
+      "recommended_fix": "Stebėti 12 V įtampą ilgesnį laiką ir analizuoti klaidų istoriją."
+    }
+  }
+}

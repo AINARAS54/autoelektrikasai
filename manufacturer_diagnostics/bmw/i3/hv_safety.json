@@ -1,0 +1,69 @@
+{
+  "id": "bmw_i3_hv_safety",
+  "title": "BMW i3 – HVIL, izoliacijos ir kontaktorių diagnostika",
+  "code": "bmw_i3_hv_safety",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "ISTA arba suderinama diagnostika",
+    "EV saugos įranga",
+    "Izoliacijos matavimas pagal procedūrą"
+  ],
+  "start": "q_fault_type",
+  "nodes": {
+    "q_fault_type": {
+      "type": "question",
+      "text": "Ar klaida aiškiai susijusi su HVIL / interlock grandine?",
+      "yes": "q_connectors",
+      "no": "q_isolation"
+    },
+    "q_connectors": {
+      "type": "question",
+      "text": "Ar neseniai buvo ardyta HV sistema, atjungta servisinių jungčių arba keisti komponentai?",
+      "yes": "r_hvil_connector",
+      "no": "r_hvil_wiring"
+    },
+    "q_isolation": {
+      "type": "question",
+      "text": "Ar SME rodo izoliacijos varžos klaidą?",
+      "yes": "q_wet_damage",
+      "no": "r_contactors"
+    },
+    "q_wet_damage": {
+      "type": "question",
+      "text": "Ar yra drėgmės, aušinimo skysčio nuotėkio arba pažeistų HV laidų požymių?",
+      "yes": "r_isolation_component",
+      "no": "r_isolation_test"
+    },
+    "r_hvil_connector": {
+      "type": "result",
+      "text": "Tikėtina neužfiksuota HV jungtis arba atvira interlock grandinė.",
+      "probability": 85,
+      "recommended_fix": "Pagal saugos procedūrą patikrinti HV jungčių užraktus ir interlock tęstinumą."
+    },
+    "r_hvil_wiring": {
+      "type": "result",
+      "text": "Tikėtina HVIL laidyno, servisinių jungčių arba komponento interlock problema.",
+      "probability": 75,
+      "recommended_fix": "Sekti HVIL grandinę pagal schemą ir tikrinti kiekvieną saugos kilpos dalį."
+    },
+    "r_isolation_component": {
+      "type": "result",
+      "text": "Tikėtina konkretaus HV komponento arba laidyno izoliacijos problema.",
+      "probability": 85,
+      "recommended_fix": "Lokalizuoti izoliacijos nuotėkį pagal gamintojo saugos procedūrą."
+    },
+    "r_isolation_test": {
+      "type": "result",
+      "text": "Reikalingas kontroliuojamas izoliacijos varžos testas ir komponentų atskyrimas.",
+      "probability": 70,
+      "recommended_fix": "Atlikti tik kvalifikuotam EV specialistui pagal BMW procedūrą."
+    },
+    "r_contactors": {
+      "type": "result",
+      "text": "Tikėtina kontaktorių, priešįkrovimo arba HV leidimo problema.",
+      "probability": 75,
+      "recommended_fix": "Analizuoti SME kontaktorių būsenas, priešįkrovimo procesą ir klaidas."
+    }
+  }
+}

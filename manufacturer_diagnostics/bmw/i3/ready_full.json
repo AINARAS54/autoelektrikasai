@@ -1,0 +1,105 @@
+{
+  "id": "bmw_i3_ready_full",
+  "title": "BMW i3 – išplėstinė READY režimo diagnostika",
+  "code": "bmw_i3_ready_full",
+  "priority": "🔴 Aukštas",
+  "difficulty": "Aukštas",
+  "tools": [
+    "ISTA arba suderinama diagnostika",
+    "12 V įtampos matavimas",
+    "EV saugos procedūra"
+  ],
+  "start": "q_cluster",
+  "nodes": {
+    "q_cluster": {
+      "type": "question",
+      "text": "Ar prietaisų skydelis ir centrinis ekranas įsijungia normaliai?",
+      "yes": "q_12v",
+      "no": "r_low_voltage_or_bdc"
+    },
+    "q_12v": {
+      "type": "question",
+      "text": "Ar 12 V akumuliatoriaus įtampa ramybės būsenoje ir bandant įjungti READY yra stabili?",
+      "yes": "q_sme_comm",
+      "no": "r_12v"
+    },
+    "q_sme_comm": {
+      "type": "question",
+      "text": "Ar diagnostikos įranga prisijungia prie SME ir EME modulių?",
+      "yes": "q_hv_codes",
+      "no": "r_comm_power"
+    },
+    "q_hv_codes": {
+      "type": "question",
+      "text": "Ar SME / EME yra HVIL, izoliacijos arba kontaktorių klaidų?",
+      "yes": "q_hvil_or_isolation",
+      "no": "q_brake_selector"
+    },
+    "q_hvil_or_isolation": {
+      "type": "question",
+      "text": "Ar klaida aiškiai nurodo HVIL arba izoliacijos varžos sutrikimą?",
+      "yes": "r_hv_safety",
+      "no": "r_contactors"
+    },
+    "q_brake_selector": {
+      "type": "question",
+      "text": "Ar stabdžio pedalo signalas ir P padėties / pavaros leidimas matomi teisingai live data?",
+      "yes": "q_dcdc",
+      "no": "r_interlock"
+    },
+    "q_dcdc": {
+      "type": "question",
+      "text": "Ar bandant įjungti READY 12 V sistemos įtampa pakyla, rodydama DC/DC aktyvaciją?",
+      "yes": "r_advanced_ready",
+      "no": "r_dcdc_eme"
+    },
+    "r_low_voltage_or_bdc": {
+      "type": "result",
+      "text": "Tikėtina 12 V maitinimo, BDC pažadinimo arba pagrindinių maitinimo grandinių problema.",
+      "probability": 80,
+      "recommended_fix": "Patikrinti 12 V akumuliatorių, pagrindinius saugiklius, mases, BDC maitinimą ir pažadinimo grandines."
+    },
+    "r_12v": {
+      "type": "result",
+      "text": "Labiausiai tikėtina silpna arba nestabili 12 V sistema.",
+      "probability": 85,
+      "recommended_fix": "Atlikti 12 V akumuliatoriaus apkrovos testą, patikrinti gnybtus, mases ir vėliau DC/DC krovimą."
+    },
+    "r_comm_power": {
+      "type": "result",
+      "text": "Tikėtina SME / EME maitinimo, masės arba ryšio problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti modulio maitinimus, mases, CAN ryšį ir susijusius saugiklius."
+    },
+    "r_hv_safety": {
+      "type": "result",
+      "text": "READY blokuoja HVIL arba izoliacijos saugos problema.",
+      "probability": 90,
+      "recommended_fix": "Diagnozuoti HVIL grandinę ir izoliacijos varžą tik pagal BMW EV saugos procedūrą."
+    },
+    "r_contactors": {
+      "type": "result",
+      "text": "Tikėtina HV kontaktorių, jų valdymo arba HV baterijos leidimo problema.",
+      "probability": 80,
+      "recommended_fix": "Analizuoti SME kontaktorių būsenas, priešįkrovimo grandinę ir klaidų sąlygas."
+    },
+    "r_interlock": {
+      "type": "result",
+      "text": "READY leidimą blokuoja stabdžio, pavaros padėties arba kita įjungimo sąlyga.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti stabdžio jungiklio, selektoriaus ir BDC leidimų live data."
+    },
+    "r_dcdc_eme": {
+      "type": "result",
+      "text": "Tikėtina EME / DC/DC aktyvavimo arba HV leidimo problema.",
+      "probability": 75,
+      "recommended_fix": "Patikrinti EME klaidas, DC/DC būseną, HV leidimus ir 12 V apkrovą."
+    },
+    "r_advanced_ready": {
+      "type": "result",
+      "text": "Pagrindinės sąlygos atrodo tinkamos, todėl reikia išplėstinės BMW i3 READY sekos analizės.",
+      "probability": 55,
+      "recommended_fix": "Analizuoti BDC, SME, EME ir DSC live data bei leidimų būsenas."
+    }
+  }
+}

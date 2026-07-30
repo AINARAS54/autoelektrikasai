@@ -27,9 +27,50 @@
     "Izoliacijos varža",
     "DC/DC veikimas"
   ],
-  "safety_notes": [
-    "Aukštos įtampos darbus atlikti tik pagal EV saugos procedūras.",
-    "Neatjungti HV jungčių be saugaus sistemos išjungimo."
+  "manufacturer_diagnostic_routes": [
+    {
+      "keywords": [
+        "ready",
+        "neįsijungia",
+        "neisijungia",
+        "neužsiveda",
+        "neuzsiveda",
+        "starteris"
+      ],
+      "tree": "bmw/i3/ready_full.json"
+    },
+    {
+      "keywords": [
+        "12 v",
+        "12v",
+        "akumuliatorius silpnas",
+        "dc/dc",
+        "dcdc",
+        "žema įtampa",
+        "zema itampa"
+      ],
+      "tree": "bmw/i3/low_voltage_dcdc.json"
+    },
+    {
+      "keywords": [
+        "hvil",
+        "izoliacija",
+        "kontaktorius",
+        "aukštos įtampos klaida",
+        "aukstos itampos klaida"
+      ],
+      "tree": "bmw/i3/hv_safety.json"
+    },
+    {
+      "keywords": [
+        "nekrauna",
+        "neįkrauna",
+        "neikrauna",
+        "krovimas neveikia",
+        "charging"
+      ],
+      "tree": "bmw/i3/charging_full.json"
+    }
   ],
   "symptom_redirects": [
     {
