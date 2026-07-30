@@ -28,8 +28,8 @@ MAX_FILE_BYTES = int(os.getenv("FUSE_MAX_FILE_BYTES", str(18 * 1024 * 1024)))
 HTTP_TIMEOUT = int(os.getenv("FUSE_HTTP_TIMEOUT", "18"))
 ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg", ".webp"}
 DEFAULT_TRUSTED_DOMAINS = [
-    "bmw.com", "bmwgroup.com", "bmwtechinfo.bmwgroup.com",
-    "fuse-box.info", "car-box.info", "manualslib.com",
+    "bmw.com", "bmwgroup.com", "bmwtechinfo.bmwgroup.com", "fusecard.bmw.com",
+    "fuse-box.info", "car-box.info", "manualslib.com", "fubox.net", "startmycar.com",
 ]
 
 
@@ -226,19 +226,77 @@ def _bing_candidates(ctx: dict) -> list[dict]:
 
 
 def _extract_media_links(page_url: str, html: str) -> list[str]:
-    found: list[str] = []
-    patterns = [
-        r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
-        r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']',
-        r'(?:href|src)=["\']([^"\']+\.(?:pdf|png|jpe?g|webp)(?:\?[^"\']*)?)["\']',
-    ]
-    for pattern in patterns:
-        for match in re.findall(pattern, html, flags=re.I):
-            url = urljoin(page_url, match)
-            if _domain_allowed(url) and url not in found:
-                found.append(url)
-    return found[:12]
+    """Extract real diagram/location media from technical HTML pages.
 
+    Automotive reference sites often lazy-load images through data-src,
+    data-lazy-src, srcset or JSON-LD, so looking only at src/href misses the
+    actual schematics.
+    """
+    found: list[str] = []
+
+    def add(raw: str) -> None:
+        raw = (raw or "").strip().replace("&amp;", "&")
+        if not raw or raw.startswith(("data:", "javascript:")):
+            return
+        for part in raw.split(","):
+            candidate = part.strip().split(" ", 1)[0]
+            if not candidate:
+                continue
+            url = urljoin(page_url, candidate)
+            suffix = Path(urlparse(url).path).suffix.lower()
+            if suffix in ALLOWED_EXTENSIONS and url not in found:
+                found.append(url)
+
+    attrs = re.findall(
+        r"(?:href|src|data-src|data-lazy-src|data-original|data-url|srcset|data-srcset)\s*=\s*['\"]([^'\"]+)['\"]",
+        html,
+        flags=re.I,
+    )
+    for value in attrs:
+        add(value)
+
+    for value in re.findall(
+        r"(?:content|contentUrl|image|url)\s*[=:]\s*['\"](https?://[^'\"]+\.(?:pdf|png|jpe?g|webp)(?:\?[^'\"]*)?)['\"]",
+        html,
+        flags=re.I,
+    ):
+        add(value)
+
+    positive = re.compile(r"fuse|relay|diagram|schema|box|location|layout|allocation|sicherung", re.I)
+    negative = re.compile(r"(?:^|[\/_-])(?:logo|icon|avatar|sprite|banner|ad|ads|tracking|pixel)(?:[\/_.-]|$)", re.I)
+    ranked = sorted(
+        found,
+        key=lambda u: (
+            0 if positive.search(u) else 1,
+            1 if negative.search(u) else 0,
+            -len(u),
+        ),
+    )
+    return [u for u in ranked if not negative.search(u)][:24]
+
+
+def _source_pages(base_dir: Path, ctx: dict) -> list[dict]:
+    """Built-in model pages used when the editable index is still empty."""
+    vehicle = _vehicle(ctx)
+    brand = _norm(vehicle.get("brand"))
+    model = _norm(vehicle.get("model")).replace(" ", "")
+    if brand == "bmw" and model == "i3":
+        return [
+            {
+                "url": "https://fuse-box.info/bmw/bmw-i3-2014-2019-fuses-and-relay",
+                "source_name": "Fuse-box.info – BMW i3 saugiklių vietos ir schemos",
+            },
+            {
+                "url": "https://fubox.net/bmw/i3-2013-2022/",
+                "source_name": "FuBox – BMW i3 saugiklių schemos",
+            },
+            {
+                "url": "https://fusecard.bmw.com/",
+                "source_name": "BMW oficiali saugiklių paskirstymo kortelė",
+                "requires_vin": True,
+            },
+        ]
+    return []
 
 def _download_candidate(base_dir: Path, ctx: dict, candidate: dict) -> dict | None:
     url = candidate.get("url")
@@ -312,7 +370,9 @@ def resolve_fuse_schematics(base_dir: Path, ctx: dict) -> dict:
     if existing:
         return {"ok": True, "items": existing, "from_cache": True}
 
-    candidates = _configured_urls(base_dir, ctx) + _openai_candidates(ctx) + _bing_candidates(ctx)
+    # Deterministic model pages are checked before AI/search discovery. This
+    # makes the button useful even while the local database is empty.
+    candidates = _configured_urls(base_dir, ctx) + _source_pages(base_dir, ctx) + _openai_candidates(ctx) + _bing_candidates(ctx)
     downloaded = []
     seen = set()
     for candidate in candidates:
@@ -329,7 +389,12 @@ def resolve_fuse_schematics(base_dir: Path, ctx: dict) -> dict:
     if downloaded:
         return {"ok": True, "items": downloaded, "from_cache": False}
 
-    missing_search = not os.getenv("BING_SEARCH_API_KEY", "").strip() and not os.getenv("OPENAI_API_KEY", "").strip() and not _configured_urls(base_dir, ctx)
+    missing_search = (
+        not os.getenv("BING_SEARCH_API_KEY", "").strip()
+        and not os.getenv("OPENAI_API_KEY", "").strip()
+        and not _configured_urls(base_dir, ctx)
+        and not _source_pages(base_dir, ctx)
+    )
     if missing_search:
         message = (
             "🧩 <b>Saugiklių schema nerasta vietinėje bazėje.</b>\n\n"
