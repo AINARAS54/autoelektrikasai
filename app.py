@@ -276,6 +276,14 @@ def telegram_webhook():
         send_message(chat_id, vin_message(ctx.get("vehicle") or merged_vehicle, active_before_message), markup)
         return jsonify({"ok":True})
 
+    # Matavimo ir patikros procedūros turi prioritetą prieš komponentų vietų
+    # biblioteką. Pvz. „kaip patikrinti 12 V akumuliatorių“ yra procedūra,
+    # o ne modelio specifinės komponento vietos užklausa.
+    procedure_answer = answer_procedure(BASE_DIR, text, ctx)
+    if procedure_answer:
+        send_message(chat_id, procedure_answer, clean_menu())
+        return jsonify({"ok": True})
+
     component_answer, component_markup = answer_component(BASE_DIR, text, ctx)
     if component_answer:
         send_message(chat_id, component_answer, component_markup)
@@ -302,12 +310,6 @@ def telegram_webhook():
     if route_name == "PRICE":
         send_message(chat_id, price_answer(text, ctx), clean_menu())
         return jsonify({"ok":True})
-    if route_name == "PROCEDURE":
-        answer = answer_procedure(BASE_DIR, text, ctx)
-        if answer:
-            send_message(chat_id, answer, clean_menu())
-            return jsonify({"ok":True})
-
     service_answer = answer_service(BASE_DIR, text, ctx)
     if service_answer:
         send_message(chat_id, service_answer, clean_menu())

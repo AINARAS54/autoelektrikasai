@@ -1,0 +1,25 @@
+{
+  "id": "generic_12v_battery_test",
+  "title": "12 V akumuliatoriaus patikra",
+  "keywords": [
+    "kaip patikrinti 12 v akumuliatoriu",
+    "12 v akumuliatoriu kaip patikrinti",
+    "patikrinti 12v baterija",
+    "12v baterijos patikra",
+    "akumuliatoriaus itampa"
+  ],
+  "tools": ["Skaitmeninis multimetras", "Pageidautina – 12 V akumuliatoriaus apkrovos testeris"],
+  "safety": ["Nematuokite oranžine spalva pažymėtų aukštos įtampos grandinių.", "Laikykitės automobilio gamintojo saugos reikalavimų."],
+  "steps": [
+    {"text": "Išjunkite automobilį ir palaukite bent 20–30 minučių, kad 12 V sistema nusistovėtų.", "expected": "Ramybės įtampa matuojama tiesiai ant akumuliatoriaus gnybtų."},
+    {"text": "Nustatykite multimetrą į nuolatinės įtampos (DC V) režimą ir pamatuokite įtampą.", "expected": "Apie 12,6–12,8 V – pilnai įkrautas; apie 12,4 V – dalinai įkrautas; žemiau 12,2 V – reikalingas įkrovimas ir papildoma patikra."},
+    {"text": "Įjunkite automobilio 12 V vartotojus arba paleidimo / READY režimą ir stebėkite įtampos kritimą.", "expected": "Trumpas kritimas galimas, tačiau ryškus kritimas iki maždaug 10 V ar mažiau rodo silpną akumuliatorių arba blogą kontaktą."},
+    {"text": "READY režime patikrinkite DC/DC krovimą.", "expected": "Dažniausiai matoma maždaug 13,5–14,8 V; tiksli norma priklauso nuo modelio ir valdymo strategijos."},
+    {"text": "Jeigu įmanoma, atlikite apkrovos arba laidumo testą ir patikrinkite gnybtų bei masės jungčių būklę."}
+  ],
+  "interpretation": [
+    "Žema ramybės įtampa nebūtinai reiškia sugedusį akumuliatorių – pirmiausia jį pilnai įkraukite ir pakartokite testą.",
+    "Gera įtampa be apkrovos, bet didelis kritimas apkrovos metu dažniausiai rodo sumažėjusią talpą arba padidėjusią vidinę varžą.",
+    "Normali akumuliatoriaus įtampa, bet nestabilus maitinimas gali rodyti blogus gnybtus, masę, saugiklį ar DC/DC grandinę."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "generic_fuse_test",
+  "title": "Saugiklio patikra",
+  "keywords": ["kaip patikrinti saugikli", "saugiklio patikra", "tikrinti saugiklius", "ar saugiklis geras"],
+  "tools": ["Multimetras arba kontrolinė lemputė", "Saugus priėjimas prie saugiklių bloko"],
+  "safety": ["Prieš išimdami saugiklį išjunkite atitinkamą grandinę.", "HV saugiklių netikrinkite be EV kvalifikacijos ir gamintojo procedūros."],
+  "steps": [
+    {"text": "Pagal schemą nustatykite tikrinamą saugiklį ir jo nominalą."},
+    {"text": "Neišėmę saugiklio patikrinkite įtampą abiejuose jo kontroliniuose taškuose.", "expected": "Kai grandinė aktyvi, įtampa turi būti abiejose pusėse."},
+    {"text": "Jei reikia, išimkite saugiklį ir pamatuokite tęstinumą.", "expected": "Geras saugiklis turi labai mažą varžą; OL / begalinė varža reiškia perdegimą."},
+    {"text": "Prieš keisdami perdegusį saugiklį patikrinkite, ar grandinėje nėra trumpojo jungimo."},
+    {"text": "Keiskite tik tokio paties tipo ir nominalo saugikliu."}
+  ],
+  "interpretation": ["Įtampa tik vienoje saugiklio pusėje reiškia perdegusį saugiklį.", "Nėra įtampos abiejose pusėse – tikrinkite grandinės maitinimą prieš saugiklį."]
+}

@@ -1,42 +1,58 @@
+from __future__ import annotations
+
 import json
 from pathlib import Path
+
+from procedure_catalog_engine import find_generic_procedure, format_generic_procedure
 from vehicle_engine import brand_slug, vehicle_label
 
-def esc(v): return str(v or "").replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-def norm(t): return (t or "").lower()
+
+def esc(value):
+    return str(value or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def norm(text):
+    return (text or "").lower()
+
 
 def load_proc(path: Path):
     try:
         return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, ValueError, TypeError):
         return None
 
+
 def score_proc(proc: dict, text: str) -> int:
-    t = norm(text)
+    query = norm(text)
     score = 0
-    for k in proc.get("keywords", []):
-        if norm(k) in t:
+    for keyword in proc.get("keywords", []):
+        if norm(str(keyword)) in query:
             score += 5
     title = norm(proc.get("title", ""))
-    for word in t.split():
+    for word in query.split():
         if len(word) > 3 and word in title:
             score += 1
     return score
 
+
 def find_local_procedure(base_dir: Path, text: str, ctx: dict):
-    brand = brand_slug(ctx.get("vehicle") or {}) or "bmw"
+    brand = brand_slug(ctx.get("vehicle") or {})
+    if not brand:
+        return None
     proc_dir = Path(base_dir) / "procedures" / brand
     if not proc_dir.exists():
         return None
+
     best, best_score = None, 0
     for path in proc_dir.glob("*.json"):
         proc = load_proc(path)
         if not isinstance(proc, dict):
             continue
-        s = score_proc(proc, text)
-        if s > best_score:
-            best_score, best = s, proc
+        score = score_proc(proc, text)
+        if score > best_score:
+            best_score, best = score, proc
     return best if best_score >= 3 else None
+
 
 def format_procedure(proc: dict, ctx: dict) -> str:
     car = vehicle_label(ctx.get("vehicle") or {}, fallback=proc.get("vehicle", "Automobilis"))
@@ -46,42 +62,48 @@ def format_procedure(proc: dict, ctx: dict) -> str:
     steps = proc.get("steps") or []
     expected = proc.get("expected_result") or proc.get("result") or ""
     failed = proc.get("if_failed") or proc.get("notes") or []
-    tools_txt = "\n".join([f"• {esc(x)}" for x in tools]) if tools else ""
-    steps_txt = "\n".join([f"{i+1}. {esc(x)}" for i, x in enumerate(steps)]) if steps else "1. Procedūros žingsniai nenurodyti."
-    failed_txt = "\n".join([f"• {esc(x)}" for x in failed]) if failed else ""
-    parts = [f"📘 <b>{esc(title)}</b>", "", "🚗 Automobilis:", esc(car)]
-    if when: parts += ["", "Kada naudoti:", esc(when)]
-    if tools_txt: parts += ["", "Reikalinga:", tools_txt]
-    parts += ["", "🔧 Žingsniai:", steps_txt]
-    if expected: parts += ["", "✅ Tikėtinas rezultatas:", esc(expected)]
-    if failed_txt: parts += ["", "❗ Jei nepavyksta:", failed_txt]
+    if isinstance(failed, str):
+        failed = [failed]
+
+    tools_text = "\n".join(f"• {esc(item)}" for item in tools) if tools else ""
+    step_lines = []
+    for index, step in enumerate(steps, 1):
+        if isinstance(step, dict):
+            step_lines.append(f"{index}. {esc(step.get('text', ''))}")
+            if step.get("expected"):
+                step_lines.append(f"   ✅ {esc(step.get('expected'))}")
+        else:
+            step_lines.append(f"{index}. {esc(step)}")
+    steps_text = "\n".join(step_lines) if step_lines else "1. Procedūros žingsniai nenurodyti."
+    failed_text = "\n".join(f"• {esc(item)}" for item in failed) if failed else ""
+
+    parts = [f"📘 <b>{esc(title)}</b>", "", f"🚗 {esc(car)}"]
+    if when:
+        parts += ["", "Kada naudoti:", esc(when)]
+    if tools_text:
+        parts += ["", "🧰 <b>Reikės</b>", tools_text]
+    parts += ["", "🔧 <b>Žingsniai</b>", steps_text]
+    if expected:
+        parts += ["", "✅ <b>Tikėtinas rezultatas</b>", esc(expected)]
+    if failed_text:
+        parts += ["", "❗ <b>Jei nepavyksta</b>", failed_text]
     return "\n".join(parts)
 
-def answer_12v(ctx: dict) -> str:
-    car = vehicle_label(ctx.get("vehicle") or {}, fallback="Automobilis")
-    return f"""📘 <b>12 V akumuliatoriaus keitimas</b>
-
-🚗 Automobilis:
-{esc(car)}
-
-Keitimo eiga:
-1. Išjunkite automobilį ir palaukite kelias minutes.
-2. Atjunkite įkrovimo laidą, jei jis prijungtas.
-3. Pasiekite 12 V akumuliatorių pagal konkretaus modelio vietą.
-4. Pirmiausia atjunkite neigiamą (-) gnybtą.
-5. Tada atjunkite teigiamą (+) gnybtą.
-6. Įdėkite naują tinkamos talpos ir tipo akumuliatorių.
-7. Prijunkite teigiamą (+), po to neigiamą (-) gnybtą.
-8. Jei reikia, atlikite akumuliatoriaus registraciją / BMS adaptaciją.
-
-Svarbu:
-EV automobiliuose po 12 V akumuliatoriaus keitimo rekomenduojama patikrinti DC/DC krovimą ir ištrinti senas klaidas."""
 
 def answer_procedure(base_dir: Path, text: str, ctx: dict) -> str | None:
-    t = norm(text)
-    if any(x in t for x in ["start bater", "starto bater", "12v", "12 v", "starto akumuliator"]):
-        return answer_12v(ctx)
-    proc = find_local_procedure(base_dir, text, ctx)
-    if proc:
-        return format_procedure(proc, ctx)
+    """Return a safe procedure answer before component-location routing.
+
+    Routing order:
+    1. Generic measurement/check procedure.
+    2. Manufacturer-specific local procedure.
+    3. None, allowing the remaining diagnostic router to continue.
+    """
+    generic = find_generic_procedure(base_dir, text)
+    if generic:
+        car = vehicle_label(ctx.get("vehicle") or {}, fallback="")
+        return format_generic_procedure(generic, car)
+
+    local = find_local_procedure(base_dir, text, ctx)
+    if local:
+        return format_procedure(local, ctx)
     return None

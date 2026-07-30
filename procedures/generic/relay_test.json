@@ -1,0 +1,14 @@
+{
+  "id": "generic_relay_test",
+  "title": "Automobilinės relės patikra",
+  "keywords": ["kaip patikrinti rele", "reles patikra", "tikrinti rele"],
+  "tools": ["Multimetras", "12 V maitinimo šaltinis, jei relė tikrinama nuėmus"],
+  "steps": [
+    {"text": "Pagal schemą nustatykite relės ritės ir kontaktų išvadus."},
+    {"text": "Patikrinkite, ar į ritę ateina valdymo įtampa ir masė."},
+    {"text": "Nuėmus relę pamatuokite ritės varžą ir įsitikinkite, kad nėra trūkio ar trumpojo jungimo."},
+    {"text": "Paduokite nominalią įtampą ritei ir patikrinkite, ar kontaktai persijungia bei turi mažą varžą."}
+  ],
+  "safety": ["Nešuntuokite nežinomų išvadų ir nenaudokite didesnio saugiklio."],
+  "interpretation": ["Spragtelėjimas nepatvirtina gerų galios kontaktų – juos būtina pamatuoti."]
+}

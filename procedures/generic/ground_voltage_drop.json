@@ -1,0 +1,13 @@
+{
+  "id": "generic_ground_voltage_drop",
+  "title": "Masės grandinės įtampos kritimo patikra",
+  "keywords": ["kaip patikrinti mase", "mases patikra", "itampu kritimas maseje", "blogas mases kontaktas"],
+  "tools": ["Skaitmeninis multimetras"],
+  "steps": [
+    {"text": "Įjunkite tikrinamos grandinės apkrovą."},
+    {"text": "Vieną matuoklio laidą prijunkite prie akumuliatoriaus neigiamo gnybto, kitą – prie tikrinamo komponento masės taško."},
+    {"text": "Pamatuokite įtampos kritimą veikiant apkrovai.", "expected": "Kuo mažesnis kritimas, tuo geriau; tiksli riba priklauso nuo grandinės, tačiau kelių dešimtųjų volto kritimas jau gali būti reikšmingas mažos srovės valdymo grandinėse."},
+    {"text": "Jei kritimas per didelis, patikrinkite gnybtus, laidą, koroziją ir tvirtinimo tašką."}
+  ],
+  "interpretation": ["Varžos matavimas be apkrovos gali neparodyti blogo kontakto, todėl pirmenybė teikiama įtampos kritimo testui veikiant grandinei."]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "generic_parasitic_draw_test",
+  "title": "Parazitinės 12 V srovės nuotėkio patikra",
+  "keywords": ["sroves nuotekio patikra", "parazitine srove", "akumuliatorius issikrauna per nakti", "ramybes srove"],
+  "tools": ["Srovės replės mažoms DC srovėms arba tinkamai apsaugotas multimetras"],
+  "safety": ["Nejunkite didelių vartotojų, kai multimetras nuosekliai prijungtas srovės režimu.", "EV automobiliuose valdymo blokų užmigimas gali užtrukti; vadovaukitės gamintojo procedūra."],
+  "steps": [
+    {"text": "Pilnai įkraukite 12 V akumuliatorių ir išjunkite visus vartotojus."},
+    {"text": "Užrakinkite automobilį arba imituokite uždarytas duris ir palaukite, kol valdymo blokai užmigs."},
+    {"text": "Pamatuokite ramybės srovę nepertraukdami maitinimo, jei įmanoma."},
+    {"text": "Jeigu srovė per didelė, po vieną atjunkite grandines pagal saugiklių schemą ir stebėkite pokytį."}
+  ],
+  "interpretation": ["Leistina ramybės srovė priklauso nuo automobilio ir įrangos; universalaus vieno skaičiaus nėra.", "Grandinė, kurią atjungus srovė ryškiai sumažėja, yra pagrindinis tolesnės diagnostikos taikinys."]
+}
