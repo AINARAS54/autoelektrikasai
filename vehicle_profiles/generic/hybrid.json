@@ -1,0 +1,10 @@
+{
+  "platform": "HYBRID",
+  "has_starter": null,
+  "has_alternator": null,
+  "has_spark_plugs": true,
+  "has_injectors": true,
+  "has_hv_battery": true,
+  "has_12v_battery": true,
+  "has_dcdc": true
+}

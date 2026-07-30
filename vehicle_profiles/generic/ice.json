@@ -1,0 +1,10 @@
+{
+  "platform": "ICE",
+  "has_starter": true,
+  "has_alternator": true,
+  "has_spark_plugs": null,
+  "has_injectors": true,
+  "has_hv_battery": false,
+  "has_12v_battery": true,
+  "has_dcdc": false
+}

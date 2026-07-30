@@ -1,0 +1,14 @@
+{
+  "platform": "EV",
+  "has_starter": false,
+  "has_alternator": false,
+  "has_spark_plugs": false,
+  "has_injectors": false,
+  "has_hv_battery": true,
+  "has_12v_battery": true,
+  "has_dcdc": true,
+  "notes": [
+    "BMW i3 neturi įprasto starterio ar generatoriaus.",
+    "12 V sistemą krauna DC/DC keitiklis."
+  ]
+}
