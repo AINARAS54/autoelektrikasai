@@ -429,9 +429,7 @@ def resolve_fuse_documents(base_dir: Path, ctx: dict) -> dict:
         "ok": False,
         "items": [],
         "message": (
-            "🧩 <b>Tikros saugiklių schemos rasti nepavyko.</b>\n\n"
-            "Paieška atmetė salono nuotraukas, piktogramas ir kitus vaizdus be numeracijos. "
-            "Bus rodomos tik patvirtintos saugiklių paskirstymo schemos arba techninio PDF puslapiai."
+            "🧩 Šio automobilio saugiklių schema šiuo metu neprieinama."
         ),
     }
 

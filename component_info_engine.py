@@ -46,30 +46,61 @@ def detect_component_topic(text: str) -> str | None:
     return None
 
 
-def component_keyboard() -> dict:
-    return {
-        "inline_keyboard": [
-            [
-                {"text": "🔋 12 V akumuliatorius", "callback_data": "comp:battery_12v"},
-                {"text": "📍 Saugiklių vietos", "callback_data": "comp:fuses"},
-            ],
-            [
-                {"text": "🔧 BDC modulis", "callback_data": "comp:bdc"},
-                {"text": "🧩 Saugiklių schema", "callback_data": "comp:diagram"},
-            ],
-            [
-                {"text": "📄 Patikros procedūra", "callback_data": "comp:check_procedure"},
-                {"text": "⚠️ HV sauga", "callback_data": "comp:hv_safety"},
-            ],
-            [
-                {"text": "📚 Techninė biblioteka", "callback_data": "comp:library"},
-            ],
-            [
-                {"text": "🆕 Nauja diagnostika", "callback_data": "new_diagnostic"},
-                {"text": "📂 Ankstesnės diagnostikos", "callback_data": "diagnostic_history"},
-            ],
-        ]
+def _has_library_documents(base_dir: Path, ctx: dict, document_type: str | None = None) -> bool:
+    try:
+        from technical_library_engine import list_documents
+        return bool(list_documents(base_dir, ctx, document_type=document_type))
+    except Exception:
+        return False
+
+
+def available_component_topics(base_dir: Path, ctx: dict) -> set[str]:
+    """Return only actions that can provide useful information now.
+
+    Static component topics are available when the active vehicle data file has
+    real content for them. File-backed actions are available only when a local
+    document exists, so the user never sees a button that leads to an empty
+    result.
+    """
+    key = _vehicle_key(ctx)
+    if not key:
+        return set()
+    data = _load_vehicle_data(base_dir, key)
+    topics = data.get("topics") if isinstance(data.get("topics"), dict) else {}
+    available = {
+        topic for topic in ("battery_12v", "fuses", "bdc", "check_procedure", "hv_safety")
+        if isinstance(topics.get(topic), dict) and topics.get(topic)
     }
+    if _has_library_documents(base_dir, ctx, "fuse_diagram"):
+        available.add("diagram")
+    if _has_library_documents(base_dir, ctx):
+        available.add("library")
+    return available
+
+
+def component_keyboard(base_dir: Path, ctx: dict) -> dict:
+    available = available_component_topics(base_dir, ctx)
+    buttons = {
+        "battery_12v": {"text": "🔋 12 V akumuliatorius", "callback_data": "comp:battery_12v"},
+        "fuses": {"text": "📍 Saugiklių vietos", "callback_data": "comp:fuses"},
+        "bdc": {"text": "🔧 BDC modulis", "callback_data": "comp:bdc"},
+        "diagram": {"text": "🧩 Saugiklių schema", "callback_data": "comp:diagram"},
+        "check_procedure": {"text": "📄 Patikros procedūra", "callback_data": "comp:check_procedure"},
+        "hv_safety": {"text": "⚠️ HV sauga", "callback_data": "comp:hv_safety"},
+        "library": {"text": "📚 Techninė biblioteka", "callback_data": "comp:library"},
+    }
+    rows = []
+    for pair in (("battery_12v", "fuses"), ("bdc", "diagram"), ("check_procedure", "hv_safety")):
+        row = [buttons[name] for name in pair if name in available]
+        if row:
+            rows.append(row)
+    if "library" in available:
+        rows.append([buttons["library"]])
+    rows.append([
+        {"text": "🆕 Nauja diagnostika", "callback_data": "new_diagnostic"},
+        {"text": "📂 Ankstesnės diagnostikos", "callback_data": "diagnostic_history"},
+    ])
+    return {"inline_keyboard": rows}
 
 
 def _vehicle_label(ctx: dict, data: dict) -> str:
@@ -118,4 +149,4 @@ def answer_component(base_dir: Path, text: str, ctx: dict, forced_topic: str | N
     if note:
         lines.append(f"\nℹ️ {esc(note)}")
 
-    return "\n".join(lines), component_keyboard()
+    return "\n".join(lines), component_keyboard(base_dir, ctx)

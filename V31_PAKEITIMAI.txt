@@ -1,0 +1,20 @@
+AUTOELEKTRIKAS AI V31
+
+Pakeisti failai:
+- app.py
+- component_info_engine.py
+- fuse_document_engine.py
+
+Kas pakeista:
+- Mygtukai sudaromi dinamiškai pagal realiai prieinamą informaciją.
+- „Saugiklių schema“ nerodoma, kol techninėje bibliotekoje nėra tikros schemos.
+- „Techninė biblioteka“ nerodoma, kol joje nėra dokumentų.
+- Komponentų mygtukai rodomi tik tada, kai konkretaus automobilio duomenų faile yra turinys.
+- Vartotojui neberodomi komentarai apie atmestas nuotraukas, piktogramas ar paieškos filtravimą.
+- Paspaudus senoje žinutėje likusį schemos mygtuką, rodomas tik trumpas pranešimas, kad schema neprieinama.
+
+Įkėlimas:
+1. Nukopijuokite šiuos failus į projekto pagrindinį katalogą.
+2. Patvirtinkite Replace / Pakeisti.
+3. GitHub atlikite Commit changes.
+4. Render atlikite Clear build cache & deploy.

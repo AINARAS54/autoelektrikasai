@@ -108,7 +108,7 @@ def send_fuse_schematics(chat_id: str, ctx: dict):
     send_message(chat_id, f"🔎 Ieškoma {esc(vehicle_label(ctx.get('vehicle') or {}))} saugiklių schemos...")
     result = resolve_fuse_documents(BASE_DIR, ctx)
     if not result.get("ok"):
-        send_message(chat_id, result.get("message") or "Patvirtintos schemos rasti nepavyko.", clean_menu())
+        send_message(chat_id, "🧩 Šio automobilio saugiklių schema šiuo metu neprieinama.", component_keyboard_or_menu(ctx))
         return
     items = result.get("items") or []
     register_resolved_items(BASE_DIR, ctx, items)
@@ -126,7 +126,7 @@ def clean_menu():
 def component_keyboard_or_menu(ctx: dict):
     vehicle = ctx.get("vehicle") if isinstance(ctx.get("vehicle"), dict) else {}
     if str(vehicle.get("brand", "")).lower() == "bmw" and str(vehicle.get("model", "")).lower().replace(" ", "") == "i3":
-        return component_keyboard()
+        return component_keyboard(BASE_DIR, ctx)
     return clean_menu()
 
 def fallback_ai_answer(text: str, ctx: dict) -> str:
